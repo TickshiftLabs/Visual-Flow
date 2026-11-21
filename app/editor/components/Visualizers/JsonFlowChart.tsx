@@ -140,9 +140,19 @@ function Chart({
       }))
     );
     onNodeCountChange?.(graph.nodes.length);
-    // Small graphs are fitted whole. For big ones that would shrink the
-    // nodes past reading size, so start on the root at a readable zoom.
-    const timer = setTimeout(() => {
+  }, [graph, positions, setNodes, onNodeCountChange]);
+
+  // Frame each new layout once, as soon as the canvas has a size. (Waiting a
+  // fixed delay instead was a guess that could miss on a slow load.)
+  // Small graphs are fitted whole. For big ones that would shrink the nodes
+  // past reading size, so start on the root at a readable zoom.
+  const canvasReady = useStore((s) => s.width > 0 && s.height > 0);
+  const framedLayout = useRef<typeof positions | null>(null);
+  useEffect(() => {
+    if (!canvasReady || framedLayout.current === positions) return;
+    const frame = requestAnimationFrame(() => {
+      // Marked here, not above, so a cancelled frame is retried.
+      framedLayout.current = positions;
       const { width, height } = store.getState();
       let right = 0;
       let bottom = 0;
@@ -153,7 +163,23 @@ function Chart({
       }
       const fitZoom = Math.min(width / (right || 1), height / (bottom || 1));
       if (fitZoom >= MIN_READABLE_ZOOM) {
-        fitView(FIT_OPTIONS);
+        // Frame the layout from its known size rather than calling fitView:
+        // fitView measures whatever nodes React Flow has at that instant, and
+        // right after a re-layout those can still be the old positions.
+        const room = 1 - FIT_OPTIONS.padding * 2;
+        const zoom = Math.min(
+          (width * room) / (right || 1),
+          (height * room) / (bottom || 1),
+          FIT_OPTIONS.maxZoom
+        );
+        setViewport(
+          {
+            x: (width - right * zoom) / 2,
+            y: (height - bottom * zoom) / 2,
+            zoom,
+          },
+          { duration: FIT_OPTIONS.duration }
+        );
       } else {
         const root = positions.get(ROOT_ID);
         const rootNode = graph.nodes[0];
@@ -176,18 +202,9 @@ function Chart({
           { duration: 250 }
         );
       }
-    }, 60);
-    return () => clearTimeout(timer);
-  }, [
-    graph,
-    positions,
-    direction,
-    setNodes,
-    fitView,
-    setViewport,
-    store,
-    onNodeCountChange,
-  ]);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [canvasReady, graph, positions, direction, setViewport, store]);
 
   // Collapse changes only flip visibility; dragged positions are kept.
   useEffect(() => {
@@ -292,6 +309,7 @@ function Chart({
       target: e.target,
       // Left-to-right edges leave from the row; top-to-bottom from the node's base.
       sourceHandle: direction === "LR" ? `row-${e.sourceRow}` : "bottom",
+      targetHandle: direction === "LR" ? "left" : "top",
       type: edgeType,
       hidden: hidden.has(e.target),
       className: route.has(e.target) ? "vf-edge-on" : undefined,

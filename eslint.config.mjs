@@ -10,7 +10,12 @@ const eslintConfig = [
       "@typescript-eslint/no-unused-vars": "off",
     },
   },
-  { ignores: [".next/**", "next-env.d.ts", "jest.config.js", "tailwind.config.js"] },
+  {
+    // Playwright fixtures call a function named `use`, which is not a React hook.
+    files: ["e2e/**"],
+    rules: { "react-hooks/rules-of-hooks": "off" },
+  },
+  { ignores: [".next/**", "next-env.d.ts", "jest.config.js", "tailwind.config.js", "test-results/**", "playwright-report/**"] },
 ];
 
 export default eslintConfig;

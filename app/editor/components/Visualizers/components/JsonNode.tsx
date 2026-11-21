@@ -61,21 +61,31 @@ function JsonNode({ data }: NodeProps) {
       } ${dimmed ? "opacity-25" : ""}`}
       style={{ width: NODE_WIDTH }}
     >
+      {/* Both sets of attachment points are always present; the edges pick
+          the pair for the current direction. Mounting them only when needed
+          left React Flow with stale measurements after a direction change,
+          and a line could go missing. */}
       <Handle
         type="target"
-        position={vertical ? Position.Top : Position.Left}
-        style={vertical ? hiddenHandle : { ...hiddenHandle, top: HEADER_HEIGHT / 2 }}
+        id="left"
+        position={Position.Left}
+        style={{ ...hiddenHandle, top: HEADER_HEIGHT / 2 }}
         isConnectable={false}
       />
-      {vertical && (
-        <Handle
-          type="source"
-          id="bottom"
-          position={Position.Bottom}
-          style={hiddenHandle}
-          isConnectable={false}
-        />
-      )}
+      <Handle
+        type="target"
+        id="top"
+        position={Position.Top}
+        style={hiddenHandle}
+        isConnectable={false}
+      />
+      <Handle
+        type="source"
+        id="bottom"
+        position={Position.Bottom}
+        style={hiddenHandle}
+        isConnectable={false}
+      />
 
       <div
         className={`flex items-center gap-2 border-b border-vf-rule px-2.5 text-vf-text ${
@@ -140,7 +150,7 @@ function JsonNode({ data }: NodeProps) {
                 </span>
               )}
             </span>
-            {hasChildren && !vertical && (
+            {hasChildren && (
               <Handle
                 type="source"
                 id={`row-${i}`}
