@@ -15,11 +15,25 @@ export interface Position {
   y: number;
 }
 
-/** Left-to-right tree layout. Returns the top-left corner of every node. */
-export function layoutGraph(graph: Graph): Map<string, Position> {
+export type Direction = "LR" | "TB";
+
+/**
+ * Tree layout, growing left-to-right or top-to-bottom. Returns the top-left
+ * corner of every node.
+ */
+export function layoutGraph(
+  graph: Graph,
+  direction: Direction = "LR"
+): Map<string, Position> {
   const g = new dagre.graphlib.Graph();
   g.setDefaultEdgeLabel(() => ({}));
-  g.setGraph({ rankdir: "LR", nodesep: 28, ranksep: 90, marginx: 0, marginy: 0 });
+  g.setGraph({
+    rankdir: direction,
+    nodesep: 28,
+    ranksep: direction === "LR" ? 90 : 70,
+    marginx: 0,
+    marginy: 0,
+  });
 
   for (const node of graph.nodes) {
     g.setNode(node.id, { width: NODE_WIDTH, height: nodeHeight(node) });

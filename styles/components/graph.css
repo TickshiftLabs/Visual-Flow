@@ -20,3 +20,26 @@
 .react-flow__attribution {
   display: none !important;
 }
+
+/* 3D view: node name tags */
+.vf-3d-label {
+  padding: 2px 7px;
+  border: 1px solid #1c1f23;
+  border-radius: 5px;
+  background: rgba(14, 16, 18, 0.78);
+  color: #c4c8cd;
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 11.5px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.vf-3d-label-selected {
+  border-color: #c8f169;
+  background: #c8f169;
+  color: #0b0c0e;
+}
+
+.vf-3d-label-dim {
+  opacity: 0.35;
+}

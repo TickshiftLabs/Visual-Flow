@@ -53,6 +53,12 @@ export default function Home() {
     if (savedSettings.view) {
       useJsonStore.getState().setView(savedSettings.view);
     }
+    if (savedSettings.graphDirection) {
+      useJsonStore.getState().setGraphDirection(savedSettings.graphDirection);
+    }
+    if (savedSettings.layout3d) {
+      useJsonStore.getState().setLayout3d(savedSettings.layout3d);
+    }
 
     if (savedSettings.autoSaveEnabled) {
       const jsonContent = storageService.getJsonData();
@@ -137,13 +143,7 @@ export default function Home() {
 
   const { mainRef, handleMouseDown } = useMouseInteractions();
 
-  const handleEdgeStyleChange = (style: string) => {
-    setEdgeType(style);
-  };
 
-  const handleToggleGrid = (show: boolean) => {
-    setShowGrid(show);
-  };
 
   return (
     <main
@@ -164,14 +164,7 @@ export default function Home() {
       <DragOverlay isVisible={isFileDragging} error={dragError} />
       <Header />
 
-      <SettingsDialog
-        open={isSettingsOpen}
-        onOpenChange={setIsSettingsOpen}
-        edgeStyle={edgeType}
-        onEdgeStyleChange={handleEdgeStyleChange}
-        showGrid={showGrid}
-        onToggleGrid={handleToggleGrid}
-      />
+      <SettingsDialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
 
       <OcrProcessingStatus
         isProcessing={isOcrProcessing}

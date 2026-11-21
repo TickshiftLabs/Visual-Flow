@@ -8,7 +8,9 @@ interface AppSettings {
   edgeStyle?: string;
   showGrid?: boolean;
   autoSaveEnabled?: boolean;
-  view?: 'graph' | 'tree';
+  view?: 'graph' | 'tree' | '3d';
+  graphDirection?: 'LR' | 'TB';
+  layout3d?: 'constellation' | 'cone';
 }
 
 // Default settings

@@ -1,7 +1,10 @@
 import { create } from 'zustand';
 import { storageService } from '../utils/storageService';
 
-export type ViewMode = 'graph' | 'tree';
+export type ViewMode = 'graph' | 'tree' | '3d';
+/** Which way the 2D graph grows: left-to-right or top-to-bottom. */
+export type GraphDirection = 'LR' | 'TB';
+export type Layout3d = 'constellation' | 'cone';
 
 interface JsonState {
   // JSON data
@@ -17,6 +20,8 @@ interface JsonState {
   showGrid: boolean;
   /** Which visualisation fills the right-hand panel. */
   view: ViewMode;
+  graphDirection: GraphDirection;
+  layout3d: Layout3d;
   isSettingsOpen: boolean;
   
   // Processing states
@@ -34,6 +39,8 @@ interface JsonState {
   setEdgeType: (type: string) => void;
   setShowGrid: (show: boolean) => void;
   setView: (view: ViewMode) => void;
+  setGraphDirection: (direction: GraphDirection) => void;
+  setLayout3d: (layout: Layout3d) => void;
   setIsSettingsOpen: (isOpen: boolean) => void;
   setOcrProcessing: (isProcessing: boolean) => void;
   setOcrProgress: (progress: number | undefined) => void;
@@ -53,6 +60,8 @@ export const useJsonStore = create<JsonState>((set, get) => ({
   edgeType: 'default',
   showGrid: true,
   view: 'graph',
+  graphDirection: 'LR',
+  layout3d: 'constellation',
   isSettingsOpen: false,
   isOcrProcessing: false,
   ocrProgress: undefined,
@@ -77,6 +86,14 @@ export const useJsonStore = create<JsonState>((set, get) => ({
   setView: (view) => {
     set({ view });
     storageService.saveSettings({ view });
+  },
+  setGraphDirection: (graphDirection) => {
+    set({ graphDirection });
+    storageService.saveSettings({ graphDirection });
+  },
+  setLayout3d: (layout3d) => {
+    set({ layout3d });
+    storageService.saveSettings({ layout3d });
   },
   setIsSettingsOpen: (isOpen) => set({ isSettingsOpen: isOpen }),
   setOcrProcessing: (isProcessing) => set({ isOcrProcessing: isProcessing }),

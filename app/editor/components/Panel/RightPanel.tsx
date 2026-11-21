@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import dynamic from "next/dynamic";
 import JsonFlowChart from "../Visualizers/JsonFlowChart";
 import TreeView from "../Visualizers/TreeView";
 import { countJsonNodes } from "@/constants/limits";
@@ -6,9 +7,20 @@ import { useJsonStore, type ViewMode } from "@/store/useJsonStore";
 import { useFileOperations } from "@/hooks/useFileOperations";
 import { SAMPLE_FILE_NAME, SAMPLE_JSON } from "@/constants/sampleJson";
 
+// The 3D library is large, so it's only downloaded when the 3D view is opened.
+const Graph3D = dynamic(() => import("../Visualizers/Graph3D"), {
+  ssr: false,
+  loading: () => (
+    <div className="grid h-full place-items-center font-vf-mono text-xs text-vf-dim">
+      loading 3D view…
+    </div>
+  ),
+});
+
 const VIEWS: Array<{ id: ViewMode; label: string }> = [
   { id: "graph", label: "Graph" },
   { id: "tree", label: "Tree" },
+  { id: "3d", label: "3D" },
 ];
 
 const emptyButton =
@@ -83,6 +95,8 @@ export default function RightPanel() {
       {hasGraph ? (
         view === "tree" ? (
           <TreeView jsonData={visualizationJson} />
+        ) : view === "3d" ? (
+          <Graph3D jsonData={visualizationJson} />
         ) : (
           <JsonFlowChart
             jsonData={visualizationJson}

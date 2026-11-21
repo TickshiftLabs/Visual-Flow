@@ -24,6 +24,7 @@ import {
 } from "./graph/buildGraph";
 import { layoutGraph, nodeHeight, NODE_WIDTH } from "./graph/graphLayout";
 import { collapseKey, useGraphStore } from "@/store/useGraphStore";
+import { useJsonStore } from "@/store/useJsonStore";
 
 const nodeTypes = { json: JsonNode };
 const proOptions = { hideAttribution: true };
@@ -102,7 +103,11 @@ function Chart({
     }
   }, [jsonData]);
 
-  const positions = useMemo(() => layoutGraph(graph), [graph]);
+  const direction = useJsonStore((s) => s.graphDirection);
+  const positions = useMemo(
+    () => layoutGraph(graph, direction),
+    [graph, direction]
+  );
 
   // Everything below a collapsed row is hidden.
   const hidden = useMemo(() => {
@@ -150,20 +155,36 @@ function Chart({
         const root = positions.get(ROOT_ID);
         const rootNode = graph.nodes[0];
         if (!root || !rootNode) return;
+        // Root at the left edge (left-to-right) or the top (top-to-bottom).
+        const rootCentreX = root.x + NODE_WIDTH / 2;
+        const rootCentreY = root.y + nodeHeight(rootNode) / 2;
         setViewport(
-          {
-            x: 48 - root.x * START_ZOOM,
-            y:
-              height / 2 -
-              (root.y + nodeHeight(rootNode) / 2) * START_ZOOM,
-            zoom: START_ZOOM,
-          },
+          direction === "LR"
+            ? {
+                x: 48 - root.x * START_ZOOM,
+                y: height / 2 - rootCentreY * START_ZOOM,
+                zoom: START_ZOOM,
+              }
+            : {
+                x: width / 2 - rootCentreX * START_ZOOM,
+                y: 64 - root.y * START_ZOOM,
+                zoom: START_ZOOM,
+              },
           { duration: 250 }
         );
       }
     }, 60);
     return () => clearTimeout(timer);
-  }, [graph, positions, setNodes, fitView, setViewport, store, onNodeCountChange]);
+  }, [
+    graph,
+    positions,
+    direction,
+    setNodes,
+    fitView,
+    setViewport,
+    store,
+    onNodeCountChange,
+  ]);
 
   // Collapse changes only flip visibility; dragged positions are kept.
   useEffect(() => {
@@ -198,7 +219,8 @@ function Chart({
       id: e.id,
       source: e.source,
       target: e.target,
-      sourceHandle: `row-${e.sourceRow}`,
+      // Left-to-right edges leave from the row; top-to-bottom from the node's base.
+      sourceHandle: direction === "LR" ? `row-${e.sourceRow}` : "bottom",
       type: edgeType,
       hidden: hidden.has(e.target),
       className: route.has(e.target) ? "vf-edge-on" : undefined,
@@ -206,7 +228,7 @@ function Chart({
       selectable: false,
       focusable: false,
     }));
-  }, [graph, edgeType, hidden, selectedId]);
+  }, [graph, edgeType, hidden, selectedId, direction]);
 
   return (
     <ReactFlow
@@ -239,8 +261,8 @@ function Chart({
       )}
 
       <Panel
-        position="top-left"
-        className={`${panelClass} !ml-[150px] flex gap-3.5 px-3 py-[7px]`}
+        position="bottom-right"
+        className={`${panelClass} flex gap-3.5 px-3 py-[7px]`}
       >
         {legend.map((item) => (
           <span key={item.label} className="flex items-center gap-1.5">

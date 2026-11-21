@@ -1,6 +1,7 @@
 import { memo } from "react";
 import { Handle, Position, type NodeProps } from "@xyflow/react";
 import { collapseKey, useGraphStore } from "@/store/useGraphStore";
+import { useJsonStore } from "@/store/useJsonStore";
 import type { GraphNode, NodeKind, ValueKind } from "../graph/buildGraph";
 import { HEADER_HEIGHT, NODE_WIDTH, ROW_HEIGHT } from "../graph/graphLayout";
 
@@ -39,6 +40,7 @@ function JsonNode({ data }: NodeProps) {
   const query = useGraphStore((s) => s.query.trim().toLowerCase());
   const collapsed = useGraphStore((s) => s.collapsed);
   const toggleCollapsed = useGraphStore((s) => s.toggleCollapsed);
+  const vertical = useJsonStore((s) => s.graphDirection === "TB");
 
   const labelHit = query !== "" && matches(node.label, query);
   const rowHits = node.rows.map(
@@ -57,10 +59,19 @@ function JsonNode({ data }: NodeProps) {
     >
       <Handle
         type="target"
-        position={Position.Left}
-        style={{ ...hiddenHandle, top: HEADER_HEIGHT / 2 }}
+        position={vertical ? Position.Top : Position.Left}
+        style={vertical ? hiddenHandle : { ...hiddenHandle, top: HEADER_HEIGHT / 2 }}
         isConnectable={false}
       />
+      {vertical && (
+        <Handle
+          type="source"
+          id="bottom"
+          position={Position.Bottom}
+          style={hiddenHandle}
+          isConnectable={false}
+        />
+      )}
 
       <div
         className={`flex items-center gap-2 border-b border-vf-rule px-2.5 text-vf-text ${
@@ -121,11 +132,11 @@ function JsonNode({ data }: NodeProps) {
               {row.display}
               {hasChildren && (
                 <span className="ml-1.5 text-vf-dim">
-                  {isCollapsed ? "+" : "→"}
+                  {isCollapsed ? "+" : vertical ? "↓" : "→"}
                 </span>
               )}
             </span>
-            {hasChildren && (
+            {hasChildren && !vertical && (
               <Handle
                 type="source"
                 id={`row-${i}`}
