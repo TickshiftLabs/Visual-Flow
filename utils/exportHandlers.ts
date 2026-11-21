@@ -74,7 +74,11 @@ async function exportGraph(
   quality?: number
 ) {
   const element = document.querySelector<HTMLElement>(selector);
-  if (!element || element.querySelectorAll(".react-flow__node").length === 0) {
+  if (!element) {
+    errorToast("Switch to the Graph view to export an image.");
+    return;
+  }
+  if (element.querySelectorAll(".react-flow__node").length === 0) {
     errorToast("No data to export. Please add valid JSON data first.");
     return;
   }

@@ -50,6 +50,10 @@ export default function Home() {
       setShowGrid(savedSettings.showGrid);
     }
 
+    if (savedSettings.view) {
+      useJsonStore.getState().setView(savedSettings.view);
+    }
+
     if (savedSettings.autoSaveEnabled) {
       const jsonContent = storageService.getJsonData();
       if (jsonContent && jsonContent.content) {

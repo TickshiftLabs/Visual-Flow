@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { storageService } from '../utils/storageService';
 
+export type ViewMode = 'graph' | 'tree';
+
 interface JsonState {
   // JSON data
   jsonData: string;
@@ -13,6 +15,8 @@ interface JsonState {
   collapseLeftPanel: boolean;
   edgeType: string;
   showGrid: boolean;
+  /** Which visualisation fills the right-hand panel. */
+  view: ViewMode;
   isSettingsOpen: boolean;
   
   // Processing states
@@ -29,6 +33,7 @@ interface JsonState {
   toggleLeftPanel: () => void;
   setEdgeType: (type: string) => void;
   setShowGrid: (show: boolean) => void;
+  setView: (view: ViewMode) => void;
   setIsSettingsOpen: (isOpen: boolean) => void;
   setOcrProcessing: (isProcessing: boolean) => void;
   setOcrProgress: (progress: number | undefined) => void;
@@ -47,6 +52,7 @@ export const useJsonStore = create<JsonState>((set, get) => ({
   collapseLeftPanel: false,
   edgeType: 'default',
   showGrid: true,
+  view: 'graph',
   isSettingsOpen: false,
   isOcrProcessing: false,
   ocrProgress: undefined,
@@ -67,6 +73,10 @@ export const useJsonStore = create<JsonState>((set, get) => ({
   setShowGrid: (show) => {
     set({ showGrid: show });
     storageService.saveSettings({ showGrid: show });
+  },
+  setView: (view) => {
+    set({ view });
+    storageService.saveSettings({ view });
   },
   setIsSettingsOpen: (isOpen) => set({ isSettingsOpen: isOpen }),
   setOcrProcessing: (isProcessing) => set({ isOcrProcessing: isProcessing }),

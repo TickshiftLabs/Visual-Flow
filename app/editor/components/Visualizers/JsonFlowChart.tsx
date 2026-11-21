@@ -240,7 +240,7 @@ function Chart({
 
       <Panel
         position="top-left"
-        className={`${panelClass} flex gap-3.5 px-3 py-[7px]`}
+        className={`${panelClass} !ml-[150px] flex gap-3.5 px-3 py-[7px]`}
       >
         {legend.map((item) => (
           <span key={item.label} className="flex items-center gap-1.5">

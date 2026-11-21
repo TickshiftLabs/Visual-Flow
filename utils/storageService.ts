@@ -8,6 +8,7 @@ interface AppSettings {
   edgeStyle?: string;
   showGrid?: boolean;
   autoSaveEnabled?: boolean;
+  view?: 'graph' | 'tree';
 }
 
 // Default settings

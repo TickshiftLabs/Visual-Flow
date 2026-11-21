@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import JsonFlowChart from "../Visualizers/JsonFlowChart";
-import { useJsonStore } from "@/store/useJsonStore";
+import TreeView from "../Visualizers/TreeView";
+import { countJsonNodes } from "@/constants/limits";
+import { useJsonStore, type ViewMode } from "@/store/useJsonStore";
 import { useFileOperations } from "@/hooks/useFileOperations";
 import { SAMPLE_FILE_NAME, SAMPLE_JSON } from "@/constants/sampleJson";
+
+const VIEWS: Array<{ id: ViewMode; label: string }> = [
+  { id: "graph", label: "Graph" },
+  { id: "tree", label: "Tree" },
+];
 
 const emptyButton =
   "inline-flex h-[38px] cursor-pointer items-center rounded-[7px] px-4 text-sm font-semibold transition duration-150 hover:-translate-y-px";
@@ -17,6 +24,8 @@ export default function RightPanel() {
     setJsonData,
     setVisualizationJson,
     setFileName,
+    view,
+    setView,
   } = useJsonStore();
 
   const { importFile } = useFileOperations({
@@ -34,15 +43,54 @@ export default function RightPanel() {
   // only fall back to the empty screen when the editor is actually empty.
   const hasGraph = !!visualizationJson && jsonData.trim() !== "";
 
+  // The graph reports its own node count; in other views nothing would,
+  // so keep the status bar right from here.
+  useEffect(() => {
+    if (view === "graph" || !hasGraph) return;
+    try {
+      setNodeCount(countJsonNodes(JSON.parse(visualizationJson)));
+    } catch {
+      // keep the last count while the text is invalid
+    }
+  }, [view, hasGraph, visualizationJson, setNodeCount]);
+
   return (
-    <div className="h-full min-w-0 flex-1 overflow-hidden bg-vf-bg2">
+    <div className="relative h-full min-w-0 flex-1 overflow-hidden bg-vf-bg2">
+      {hasGraph && (
+        <div
+          role="tablist"
+          aria-label="View"
+          className="absolute left-3.5 top-3.5 z-10 flex gap-0.5 rounded-[9px] border border-vf-line bg-vf-panel/90 p-[3px] backdrop-blur"
+        >
+          {VIEWS.map((v) => (
+            <button
+              key={v.id}
+              role="tab"
+              aria-selected={view === v.id}
+              onClick={() => setView(v.id)}
+              className={`cursor-pointer rounded-md px-[11px] py-1 font-vf-mono text-xs transition-colors ${
+                view === v.id
+                  ? "bg-vf-line text-vf-text"
+                  : "text-vf-dim hover:text-vf-text"
+              }`}
+            >
+              {v.label}
+            </button>
+          ))}
+        </div>
+      )}
+
       {hasGraph ? (
-        <JsonFlowChart
-          jsonData={visualizationJson}
-          onNodeCountChange={setNodeCount}
-          edgeType={edgeType}
-          showGrid={showGrid}
-        />
+        view === "tree" ? (
+          <TreeView jsonData={visualizationJson} />
+        ) : (
+          <JsonFlowChart
+            jsonData={visualizationJson}
+            onNodeCountChange={setNodeCount}
+            edgeType={edgeType}
+            showGrid={showGrid}
+          />
+        )
       ) : (
         <div className="grid h-full place-items-center bg-[radial-gradient(rgba(255,255,255,0.055)_1px,transparent_1px)] bg-[length:22px_22px] px-6 text-center">
           <div>
