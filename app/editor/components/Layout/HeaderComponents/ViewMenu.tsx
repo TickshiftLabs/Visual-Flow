@@ -1,53 +1,56 @@
 import React from "react";
-import { Eye, Play, LayoutGrid, Layers, GitBranch } from "lucide-react";
+import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useJsonStore } from "@/store/useJsonStore";
+
+const itemClass =
+  "cursor-pointer hover:bg-vf-line hover:text-vf-text transition-colors focus:bg-vf-line focus:text-vf-text";
 
 interface ViewMenuProps {
-  onApplyChanges?: () => void;
+  onOpenSettings: () => void;
 }
 
-export default function ViewMenu({ onApplyChanges }: ViewMenuProps) {
+export default function ViewMenu({ onOpenSettings }: ViewMenuProps) {
+  const { collapseLeftPanel, toggleLeftPanel, showGrid, setShowGrid } =
+    useJsonStore();
+
+  const tick = (on: boolean) => (
+    <Check className={`mr-2 h-4 w-4 ${on ? "opacity-100" : "opacity-0"}`} />
+  );
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
           size="sm"
-          className="text-gray-300 hover:text-white hover:bg-gray-800 cursor-pointer transition-colors select-none focus:ring-0 focus:outline-none"
+          className="h-8 px-2.5 text-sm font-normal text-vf-soft hover:text-vf-text hover:bg-vf-panel cursor-pointer transition-colors select-none focus:ring-0 focus:outline-none"
         >
-          <Eye className="mr-1 h-4 w-4" />
           View
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 bg-[#1e1e1e] border border-gray-700 shadow-lg z-50">
-        <DropdownMenuLabel>View Options</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-
-        <DropdownMenuItem className="cursor-pointer hover:bg-gray-800 hover:text-white transition-colors focus:bg-gray-700 focus:text-white">
-          <LayoutGrid className="mr-2 h-4 w-4" />
-          <span>Diagram View</span>
+      <DropdownMenuContent className="w-56 border border-vf-line bg-vf-panel font-vf-sans text-vf-soft shadow-xl z-50">
+        <DropdownMenuItem onClick={toggleLeftPanel} className={itemClass}>
+          {tick(!collapseLeftPanel)}
+          <span>Code panel</span>
         </DropdownMenuItem>
         <DropdownMenuItem
-          className="opacity-50 cursor-not-allowed inline-flex whitespace-nowrap text-xs"
-          title="3D View coming soon"
-          disabled
+          onClick={() => setShowGrid(!showGrid)}
+          className={itemClass}
         >
-          <Layers className="mr-2 h-4 w-4" />
-          <span>3D Node View</span>
-          <span className="ml-2 text-xs text-gray-500">(Coming soon)</span>
+          {tick(showGrid)}
+          <span>Grid</span>
         </DropdownMenuItem>
-        <DropdownMenuItem className="opacity-50 cursor-not-allowed inline-flex whitespace-nowrap text-xs">
-          <GitBranch className="mr-2 h-4 w-4" />
-          <span>Tree View</span>
-          <span className="ml-2 text-xs text-gray-500">(Coming soon)</span>
+        <DropdownMenuSeparator className="bg-vf-line" />
+        <DropdownMenuItem onClick={onOpenSettings} className={itemClass}>
+          <span className="ml-6">Settings…</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

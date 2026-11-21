@@ -1,298 +1,242 @@
-import Editor from "@monaco-editor/react";
+import Editor, { type Monaco, type OnMount } from "@monaco-editor/react";
 import { useState, useRef, useEffect, useCallback } from "react";
 import JsonErrorMessage from "./JsonErrorMessage";
-import { Play } from "lucide-react";
-import { storageService } from "@/utils/storageService";
 import { useJsonStore } from "@/store/useJsonStore";
-
 import { validateJsonAgainstFreeLimits } from "@/constants/limits";
 import { errorToast } from "@/lib/toast";
 import { useSupabase } from "@/components/Auth/SupabaseProvider";
+import { useGraphStore } from "@/store/useGraphStore";
+import { locatePath } from "../Visualizers/graph/locatePath";
+
+type CodeEditor = Parameters<OnMount>[0];
+
+const MIN_WIDTH = 18; // % of the window
+const MAX_WIDTH = 60;
+const DEFAULT_WIDTH = 30;
+
+const THEME = "vf-dark";
+
+/** Monaco theme matching the app palette. */
+function defineTheme(monaco: Monaco) {
+  monaco.editor.defineTheme(THEME, {
+    base: "vs-dark",
+    inherit: true,
+    rules: [
+      { token: "string.key.json", foreground: "c4c8cd" },
+      { token: "string.value.json", foreground: "e6c08a" },
+      { token: "number", foreground: "8ab4ff" },
+      { token: "keyword.json", foreground: "f29a9a" },
+      { token: "delimiter", foreground: "6b727c" },
+    ],
+    colors: {
+      "editor.background": "#0b0c0e",
+      "editor.foreground": "#c4c8cd",
+      "editorLineNumber.foreground": "#555b64",
+      "editorLineNumber.activeForeground": "#8b919a",
+      "editorCursor.foreground": "#c8f169",
+      "editor.selectionBackground": "#c8f16933",
+      "editor.inactiveSelectionBackground": "#c8f1691a",
+      "editorWidget.background": "#131518",
+      "editorWidget.border": "#26292e",
+      "scrollbarSlider.background": "#26292e88",
+      "scrollbarSlider.hoverBackground": "#3a3f46aa",
+      "editorError.foreground": "#f29a9a",
+      // Brackets all take the punctuation colour instead of rainbow pairs.
+      ...Object.fromEntries(
+        [1, 2, 3, 4, 5, 6].map((n) => [
+          `editorBracketHighlight.foreground${n}`,
+          "#6b727c",
+        ])
+      ),
+    },
+  });
+}
+
+const editorOptions = {
+  minimap: { enabled: false },
+  scrollBeyondLastLine: false,
+  automaticLayout: true,
+  fontSize: 12.5,
+  lineHeight: 21,
+  fontFamily: "var(--font-jetbrains-mono), ui-monospace, monospace",
+  lineNumbers: "on",
+  lineNumbersMinChars: 3,
+  tabSize: 2,
+  stickyScroll: { enabled: false },
+  padding: { top: 14, bottom: 14 },
+  placeholder: "Paste or type JSON here…",
+  bracketPairColorization: { enabled: false },
+  guides: { bracketPairs: false, indentation: false },
+  renderLineHighlight: "none",
+  occurrencesHighlight: "off",
+  matchBrackets: "never",
+  overviewRulerLanes: 0,
+  scrollbar: { verticalScrollbarSize: 10, horizontalScrollbarSize: 10 },
+} as const;
 
 export default function LeftPanel() {
-  const {
-    jsonData,
-    setJsonData,
-    collapseLeftPanel,
-    isValidJson,
-    applyChangesToVisualization,
-  } = useJsonStore();
-
-  // Get user subscription status
+  const { jsonData, setJsonData, collapseLeftPanel, isValidJson } =
+    useJsonStore();
   const { isPro } = useSupabase();
 
-  const [width, setWidth] = useState(20);
+  const [width, setWidth] = useState(DEFAULT_WIDTH);
   const [isEditorLoaded, setIsEditorLoaded] = useState(false);
-  const resizingRef = useRef(false);
-  const startXRef = useRef(0);
-  const startWidthRef = useRef(0);
-  const panelRef = useRef<HTMLDivElement>(null);
-  const placeholderRef = useRef<HTMLDivElement>(null);
+  const [isResizing, setIsResizing] = useState(false);
+  const dragStart = useRef({ x: 0, width: DEFAULT_WIDTH });
+  const lastLimitWarning = useRef<string | null>(null);
 
-  // Add a state to track if we should show the placeholder
-  const [showPlaceholder, setShowPlaceholder] = useState(true);
+  const editorRef = useRef<CodeEditor | null>(null);
+  const decorations = useRef<ReturnType<
+    CodeEditor["createDecorationsCollection"]
+  > | null>(null);
+  const selectedPath = useGraphStore((s) => s.selectedPath);
+  const revealedPath = useRef<typeof selectedPath>(null);
 
-  // Editor options to disable minimap and customize other settings
-  const editorOptions = {
-    minimap: { enabled: false },
-    scrollBeyondLastLine: false,
-    automaticLayout: true,
-    fontSize: 14,
-    lineNumbers: "on",
-    renderIndentGuides: true,
-    tabSize: 2,
-    stickyScroll: { enabled: false },
-  };
-
-  // Helper function to update placeholder visibility
-  const updatePlaceholderVisibility = (content: string | undefined) => {
-    const shouldShow = !content || content.trim() === "";
-    setShowPlaceholder(shouldShow);
-  };
-
-  // Check for content on initial render and whenever jsonInput changes
+  // Highlight the selected node's lines, and scroll to them when the
+  // selection changes (not on every keystroke while it stays selected).
   useEffect(() => {
-    // Function to check if we have content
-    const checkForContent = () => {
-      // Check direct jsonInput prop
-      if (jsonData && jsonData.trim() !== "") {
-        setShowPlaceholder(false);
-        return;
-      }
+    const editor = editorRef.current;
+    const model = editor?.getModel();
+    if (!editor || !model) return;
 
-      // If no direct jsonInput, check localStorage
-      const storedData = storageService.getJsonData();
-      if (
-        storedData &&
-        storedData.content &&
-        storedData.content.trim() !== ""
-      ) {
-        setShowPlaceholder(false);
-        return;
-      }
+    const range = selectedPath && locatePath(model.getValue(), selectedPath);
+    if (!range) {
+      decorations.current?.clear();
+      revealedPath.current = null;
+      return;
+    }
 
-      // No content found, show placeholder
-      setShowPlaceholder(true);
+    const start = model.getPositionAt(range.start);
+    const end = model.getPositionAt(range.end);
+    const lines = {
+      startLineNumber: start.lineNumber,
+      startColumn: 1,
+      endLineNumber: end.lineNumber,
+      endColumn: model.getLineMaxColumn(end.lineNumber),
     };
+    const items = [
+      {
+        range: lines,
+        options: {
+          isWholeLine: true,
+          className: "vf-line-selected",
+          marginClassName: "vf-line-selected-margin",
+        },
+      },
+    ];
+    if (decorations.current) decorations.current.set(items);
+    else decorations.current = editor.createDecorationsCollection(items);
 
-    // Run the check
-    checkForContent();
-  }, [jsonData]);
+    if (revealedPath.current !== selectedPath) {
+      revealedPath.current = selectedPath;
+      // Short ranges are centred; long ones are shown from their first line.
+      const visible = editor.getVisibleRanges()[0];
+      const fits =
+        visible &&
+        end.lineNumber - start.lineNumber <
+          visible.endLineNumber - visible.startLineNumber;
+      if (fits) editor.revealRangeInCenterIfOutsideViewport(lines, 0);
+      else editor.revealLineNearTop(start.lineNumber, 0);
+    }
+  }, [selectedPath, jsonData, isEditorLoaded]);
 
-  // Handle editor content change
   const handleEditorChange = (value: string | undefined) => {
     const newValue = value || "";
 
-    // Check if the content exceeds free limits for non-pro users
+    // Warn free users once per distinct limit message, not on every keystroke.
     if (newValue.trim() && !isPro) {
-      try {
-        // Only validate if it's valid JSON
-        const parsedJson = JSON.parse(newValue);
-        const validation = validateJsonAgainstFreeLimits(newValue, isPro);
-
-        if (!validation.isValid) {
-          // Show error toast but still allow editing
+      const validation = validateJsonAgainstFreeLimits(newValue, isPro);
+      if (!validation.isValid && !validation.isFormatError) {
+        if (lastLimitWarning.current !== validation.message) {
           errorToast(`${validation.message}. Upgrade for more!`);
+          lastLimitWarning.current = validation.message ?? null;
         }
-      } catch (e) {
-        // Invalid JSON, no need to validate limits
+      } else if (validation.isValid) {
+        lastLimitWarning.current = null;
       }
     }
 
-    // Update the JSON data regardless of validation
     setJsonData(newValue);
-
-    // Update placeholder visibility based on content
-    updatePlaceholderVisibility(newValue);
   };
 
-  // Handle editor load complete
-  const handleEditorDidMount = (editor: any) => {
-    setIsEditorLoaded(true);
-
-    // Disable bracket pair guides and other overlays directly on the editor instance
-    editor.updateOptions({
-      bracketPairColorization: { enabled: false },
-      guides: { bracketPairs: false, indentation: false },
-      renderLineHighlight: "none",
-      occurrencesHighlight: false,
-      folding: true,
-      matchBrackets: "never",
-      renderIndentGuides: false,
-    });
-
-    // Access the internal editor model and disable bracket pair guides
-    const model = editor.getModel();
-    if (model) {
-      // This is a more direct way to disable bracket pair guides
-      model._bracketPairColorizer?.dispose();
-    }
-
-    // Check again for content when editor mounts
-    if (jsonData && jsonData.trim() !== "") {
-      setShowPlaceholder(false);
-    } else {
-      // Double-check localStorage directly
-      const storedData = storageService.getJsonData();
-      if (
-        storedData &&
-        storedData.content &&
-        storedData.content.trim() !== ""
-      ) {
-        setShowPlaceholder(false);
-      }
-    }
-  };
-
-  // Add effect to update placeholder when jsonData changes
-  useEffect(() => {
-    updatePlaceholderVisibility(jsonData);
-  }, [jsonData]);
-
-  // Add a state to track active resizing
-  const [isResizing, setIsResizing] = useState(false);
-
-  // Handle mouse move to resize - also wrap in useCallback first
   const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (!resizingRef.current) return;
-
-    const containerWidth = document.body.clientWidth;
-    const deltaX = e.clientX - startXRef.current;
-    const deltaPercentage = (deltaX / containerWidth) * 100;
-
-    // Calculate new width with constraints (min 20%, max 80%)
-    const newWidth = Math.min(
-      Math.max(startWidthRef.current + deltaPercentage, 20),
-      40
+    const delta =
+      ((e.clientX - dragStart.current.x) / document.body.clientWidth) * 100;
+    setWidth(
+      Math.min(Math.max(dragStart.current.width + delta, MIN_WIDTH), MAX_WIDTH)
     );
-    setWidth(newWidth);
   }, []);
 
-  // Then update handleMouseUp to include handleMouseMove in dependencies
-  const handleMouseUp = useCallback(() => {
-    resizingRef.current = false;
-    setIsResizing(false); // Reset resizing state
-    document.removeEventListener("mousemove", handleMouseMove);
-    document.removeEventListener("mouseup", handleMouseUp);
-  }, [handleMouseMove]);
+  const stopResizing = useCallback(() => setIsResizing(false), []);
 
-  // Handle mouse down to start resizing
-  const handleMouseDown = (e: React.MouseEvent) => {
-    resizingRef.current = true;
-    setIsResizing(true); // Set resizing state to true
-    startXRef.current = e.clientX;
-    startWidthRef.current = width;
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
-  };
-
-  // Clean up event listeners
   useEffect(() => {
+    if (!isResizing) return;
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", stopResizing);
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("mouseup", stopResizing);
     };
-  }, [handleMouseMove, handleMouseUp]);
+  }, [isResizing, handleMouseMove, stopResizing]);
+
+  const startResizing = (e: React.MouseEvent) => {
+    dragStart.current = { x: e.clientX, width };
+    setIsResizing(true);
+  };
 
   return (
     <div
-      className={`transition-all duration-300 ease-in-out overflow-hidden ${
-        collapseLeftPanel ? "w-0 opacity-0" : ""
+      className={`relative shrink-0 overflow-hidden ${
+        isResizing ? "" : "transition-[width] duration-300 ease-in-out"
       }`}
-      style={{
-        width: collapseLeftPanel ? "0" : `${width}vw`,
-        maxWidth: collapseLeftPanel ? "0" : `${width}vw`,
-      }}
+      style={{ width: collapseLeftPanel ? 0 : `${width}vw` }}
     >
       <div
-        ref={panelRef}
-        className={`relative h-screen flex flex-col border-r border-gray-700 overflow-hidden transition-opacity duration-300 ${
-          collapseLeftPanel ? "opacity-0" : "opacity-100"
-        }`}
+        className="flex h-full flex-col border-r border-vf-rule bg-vf-bg"
         style={{ width: `${width}vw` }}
       >
         <JsonErrorMessage
           isVisible={!isValidJson && jsonData !== "" && isEditorLoaded}
         />
 
-        <div className="flex-grow relative overflow-hidden">
+        <div className="relative min-h-0 flex-1">
           {!isEditorLoaded && (
-            <div className="absolute inset-0 z-20 flex items-center justify-center bg-[#1e1e1e]">
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-                <p className="text-gray-400">Loading editor...</p>
-              </div>
+            <div className="absolute inset-0 z-20 flex items-center justify-center bg-vf-bg font-vf-mono text-xs text-vf-dim">
+              loading editor…
             </div>
           )}
 
           <Editor
             height="100%"
             width="100%"
-            theme="vs-dark"
+            theme={THEME}
             defaultLanguage="json"
             value={jsonData}
             onChange={handleEditorChange}
-            options={
-              {
-                ...editorOptions,
-                padding: { top: 16, bottom: 16 },
-              } as any
-            }
-            onMount={handleEditorDidMount}
+            options={editorOptions as any}
+            beforeMount={defineTheme}
+            onMount={(editor) => {
+              editorRef.current = editor;
+              setIsEditorLoaded(true);
+            }}
             loading={null}
             className="monaco-editor-container"
           />
-
-          {/* Conditionally render placeholder based on state */}
-          {showPlaceholder && (
-            <div
-              ref={placeholderRef}
-              className="absolute top-4 left-16 pointer-events-none z-10 text-gray-400"
-            >
-              <h3 className="text-md font-medium mb-2">Paste your JSON here</h3>
-              <pre className="opacity-70 font-mono">
-                {`{
-      "example": "value",
-      "numbers": 123,
-      "boolean": true,
-      "array": [1, 2, 3],
-      "nested": {
-        "key": "value"
-      }
-    }`}
-              </pre>
-            </div>
-          )}
         </div>
+      </div>
 
-        {/* Apply Changes button */}
-        {isValidJson && jsonData && jsonData.trim() !== "" && (
-          <div className="p-2 border-t border-gray-700 bg-gray-800">
-            <button
-              onClick={applyChangesToVisualization}
-              className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition-colors"
-            >
-              <Play size={16} />
-              <span>Apply Changes</span>
-            </button>
-          </div>
-        )}
-
-        {/* Resize handle */}
+      {/* Resize handle */}
+      <div
+        className="group absolute right-0 top-0 z-30 h-full w-2 cursor-col-resize"
+        onMouseDown={startResizing}
+      >
         <div
-          className="absolute top-0 right-0 h-full z-30 cursor-col-resize group"
-          style={{ width: "8px" }}
-          onMouseDown={handleMouseDown}
-        >
-          {/* Visual indicator line */}
-          <div
-            className={`absolute right-0 h-full top-0 transition-all duration-150 ${
-              isResizing
-                ? "w-0.5 bg-blue-500"
-                : "w-px bg-gray-700 group-hover:w-0.5 group-hover:bg-blue-500"
-            }`}
-          ></div>
-        </div>
+          className={`absolute right-0 top-0 h-full transition-all duration-150 ${
+            isResizing
+              ? "w-0.5 bg-vf-acc"
+              : "w-px bg-transparent group-hover:w-0.5 group-hover:bg-vf-acc/60"
+          }`}
+        />
       </div>
     </div>
   );

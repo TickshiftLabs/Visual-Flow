@@ -144,11 +144,11 @@ export default function Home() {
   return (
     <main
       ref={mainRef}
-      className={`min-h-screen flex flex-col h-screen overflow-hidden ${
+      className={`flex h-screen flex-col overflow-hidden bg-vf-bg font-vf-sans text-sm text-vf-text antialiased ${
         isFileDragging
           ? dragError
-            ? "bg-red-900/20 ring-2 ring-red-500 ring-inset"
-            : "bg-gray-900 ring-2 ring-indigo-500 ring-inset"
+            ? "ring-2 ring-inset ring-vf-err"
+            : "ring-2 ring-inset ring-vf-acc"
           : ""
       }`}
       onMouseDown={handleMouseDown}
@@ -173,7 +173,7 @@ export default function Home() {
         isProcessing={isOcrProcessing}
         progress={ocrProgress}
       />
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex min-h-0 flex-1 overflow-hidden">
         <LeftPanel />
         <RightPanel />
       </div>

@@ -4,6 +4,7 @@ import { storageService } from '../utils/storageService';
 interface JsonState {
   // JSON data
   jsonData: string;
+  fileName: string;
   visualizationJson: string;
   isValidJson: boolean;
   
@@ -21,6 +22,7 @@ interface JsonState {
   
   // Actions
   setJsonData: (data: string) => void;
+  setFileName: (name: string) => void;
   setVisualizationJson: (data: string) => void;
   setIsValidJson: (isValid: boolean) => void;
   setNodeCount: (count: number) => void;
@@ -38,6 +40,7 @@ interface JsonState {
 export const useJsonStore = create<JsonState>((set, get) => ({
   // Initial state
   jsonData: '',
+  fileName: 'untitled.json',
   visualizationJson: '',
   isValidJson: true,
   nodeCount: 0,
@@ -52,6 +55,7 @@ export const useJsonStore = create<JsonState>((set, get) => ({
   
   // Actions
   setJsonData: (data) => set({ jsonData: data }),
+  setFileName: (name) => set({ fileName: name }),
   setVisualizationJson: (data) => set({ visualizationJson: data }),
   setIsValidJson: (isValid) => set({ isValidJson: isValid }),
   setNodeCount: (count) => set({ nodeCount: count }),

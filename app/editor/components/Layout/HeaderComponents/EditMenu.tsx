@@ -69,32 +69,29 @@ export default function EditMenu() {
         <Button
           variant="ghost"
           size="sm"
-          className="text-gray-300 hover:text-white hover:bg-gray-800 cursor-pointer transition-colors select-none focus:ring-0 focus:outline-none"
+          className="h-8 px-2.5 text-sm font-normal text-vf-soft hover:text-vf-text hover:bg-vf-panel cursor-pointer transition-colors select-none focus:ring-0 focus:outline-none"
         >
-          <FileCode className="mr-1 h-4 w-4" />
           Edit
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 bg-[#1e1e1e] border border-gray-700 shadow-lg z-50">
-        <DropdownMenuLabel>Edit Options</DropdownMenuLabel>
-        <DropdownMenuSeparator />
+      <DropdownMenuContent className="w-56 border border-vf-line bg-vf-panel font-vf-sans text-vf-soft shadow-xl z-50">
         <DropdownMenuItem
           onClick={handleFormatJson}
-          className="cursor-pointer hover:bg-gray-800 hover:text-white transition-colors focus:bg-gray-700 focus:text-white"
+          className="cursor-pointer hover:bg-vf-line hover:text-vf-text transition-colors focus:bg-vf-line focus:text-vf-text"
         >
           <FileCode className="mr-2 h-4 w-4" />
           <span>Format JSON</span>
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={handleMinimizeJson}
-          className="cursor-pointer hover:bg-gray-800 hover:text-white transition-colors focus:bg-gray-700 focus:text-white"
+          className="cursor-pointer hover:bg-vf-line hover:text-vf-text transition-colors focus:bg-vf-line focus:text-vf-text"
         >
           <Minimize className="mr-2 h-4 w-4" />
           <span>Minimize JSON</span>
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={handleCopyJson}
-          className="cursor-pointer hover:bg-gray-800 hover:text-white transition-colors focus:bg-gray-700 focus:text-white"
+          className="cursor-pointer hover:bg-vf-line hover:text-vf-text transition-colors focus:bg-vf-line focus:text-vf-text"
         >
           <Copy className="mr-2 h-4 w-4" />
           <span>Copy JSON</span>

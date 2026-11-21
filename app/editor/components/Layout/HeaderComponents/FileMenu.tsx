@@ -142,18 +142,15 @@ export default function FileMenu({ onUpgradeClick }: FileMenuProps) {
         <Button
           variant="ghost"
           size="sm"
-          className="text-gray-300 hover:text-white hover:bg-gray-800 cursor-pointer transition-colors select-none focus:ring-0 focus:outline-none"
+          className="h-8 px-2.5 text-sm font-normal text-vf-soft hover:text-vf-text hover:bg-vf-panel cursor-pointer transition-colors select-none focus:ring-0 focus:outline-none"
         >
-          <FileIcon className="mr-1 h-4 w-4" />
           File
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 bg-[#1e1e1e] border border-gray-700 shadow-lg z-50">
-        <DropdownMenuLabel>File Options</DropdownMenuLabel>
-        <DropdownMenuSeparator />
+      <DropdownMenuContent className="w-56 border border-vf-line bg-vf-panel font-vf-sans text-vf-soft shadow-xl z-50">
         <DropdownMenuItem
           onClick={handleSaveJson}
-          className="cursor-pointer hover:bg-gray-800 hover:text-white transition-colors focus:bg-gray-700 focus:text-white focus:ring-0 focus:outline-none"
+          className="cursor-pointer hover:bg-vf-line hover:text-vf-text transition-colors focus:bg-vf-line focus:text-vf-text focus:ring-0 focus:outline-none"
         >
           <Save className="h-4 w-4" />
           <span>Save</span>
@@ -161,14 +158,14 @@ export default function FileMenu({ onUpgradeClick }: FileMenuProps) {
 
         {/* Import submenu with JSON and Image options */}
         <DropdownMenuSub>
-          <DropdownMenuSubTrigger className="cursor-pointer hover:bg-gray-800 hover:text-white transition-colors focus:bg-gray-700 focus:text-white focus:ring-0 focus:outline-none">
+          <DropdownMenuSubTrigger className="cursor-pointer hover:bg-vf-line hover:text-vf-text transition-colors focus:bg-vf-line focus:text-vf-text focus:ring-0 focus:outline-none">
             <Upload className="mr-2 h-4 w-4" />
             <span>Import</span>
           </DropdownMenuSubTrigger>
-          <DropdownMenuSubContent className="bg-[#1e1e1e] border border-gray-700 shadow-lg">
+          <DropdownMenuSubContent className="border border-vf-line bg-vf-panel font-vf-sans text-vf-soft shadow-xl">
             <DropdownMenuItem
               onClick={importFile}
-              className="cursor-pointer hover:bg-gray-800 hover:text-white transition-colors focus:bg-gray-700 focus:text-white focus:ring-0 focus:outline-none"
+              className="cursor-pointer hover:bg-vf-line hover:text-vf-text transition-colors focus:bg-vf-line focus:text-vf-text focus:ring-0 focus:outline-none"
             >
               <FileJson className="mr-2 h-4 w-4" />
               <span>JSON File</span>
@@ -177,12 +174,12 @@ export default function FileMenu({ onUpgradeClick }: FileMenuProps) {
             {/* Image import - premium feature */}
             <DropdownMenuItem
               onClick={handleImportImageClick}
-              className="cursor-pointer hover:bg-gray-800 hover:text-white transition-colors focus:bg-gray-700 focus:text-white focus:ring-0 focus:outline-none"
+              className="cursor-pointer hover:bg-vf-line hover:text-vf-text transition-colors focus:bg-vf-line focus:text-vf-text focus:ring-0 focus:outline-none"
             >
               <ImageIcon className="mr-2 h-4 w-4" />
               <span>Image (OCR)</span>
               {!isPremiumUser && (
-                <span className="ml-auto text-xs text-yellow-400">PRO</span>
+                <span className="ml-auto font-vf-mono text-[10.5px] text-vf-acc">PRO</span>
               )}
             </DropdownMenuItem>
           </DropdownMenuSubContent>
@@ -190,44 +187,44 @@ export default function FileMenu({ onUpgradeClick }: FileMenuProps) {
 
         {/* Export submenu with image format options */}
         <DropdownMenuSub>
-          <DropdownMenuSubTrigger className="cursor-pointer hover:bg-gray-800 hover:text-white transition-colors focus:bg-gray-700 focus:text-white focus:ring-0 focus:outline-none">
+          <DropdownMenuSubTrigger className="cursor-pointer hover:bg-vf-line hover:text-vf-text transition-colors focus:bg-vf-line focus:text-vf-text focus:ring-0 focus:outline-none">
             <Download className="mr-2 h-4 w-4" />
             <span>Export</span>
           </DropdownMenuSubTrigger>
-          <DropdownMenuSubContent className="bg-[#1e1e1e] border border-gray-700 shadow-lg">
+          <DropdownMenuSubContent className="border border-vf-line bg-vf-panel font-vf-sans text-vf-soft shadow-xl">
             {/* PNG export - premium feature */}
             <DropdownMenuItem
               onClick={handleExportPngClick}
-              className="cursor-pointer hover:bg-gray-800 hover:text-white transition-colors focus:bg-gray-700 focus:text-white focus:ring-0 focus:outline-none"
+              className="cursor-pointer hover:bg-vf-line hover:text-vf-text transition-colors focus:bg-vf-line focus:text-vf-text focus:ring-0 focus:outline-none"
             >
               <FileImage className="mr-2 h-4 w-4" />
               <span>PNG Image</span>
               {!isPremiumUser && (
-                <span className="ml-auto text-xs text-yellow-400">PRO</span>
+                <span className="ml-auto font-vf-mono text-[10.5px] text-vf-acc">PRO</span>
               )}
             </DropdownMenuItem>
 
             {/* JPG export - premium feature */}
             <DropdownMenuItem
               onClick={handleExportJpgClick}
-              className="cursor-pointer hover:bg-gray-800 hover:text-white transition-colors focus:bg-gray-700 focus:text-white focus:ring-0 focus:outline-none"
+              className="cursor-pointer hover:bg-vf-line hover:text-vf-text transition-colors focus:bg-vf-line focus:text-vf-text focus:ring-0 focus:outline-none"
             >
               <FileImage className="mr-2 h-4 w-4" />
               <span>JPG Image</span>
               {!isPremiumUser && (
-                <span className="ml-auto text-xs text-yellow-400">PRO</span>
+                <span className="ml-auto font-vf-mono text-[10.5px] text-vf-acc">PRO</span>
               )}
             </DropdownMenuItem>
 
             {/* SVG export - premium feature */}
             <DropdownMenuItem
               onClick={handleExportSvgClick}
-              className="cursor-pointer hover:bg-gray-800 hover:text-white transition-colors focus:bg-gray-700 focus:text-white focus:ring-0 focus:outline-none"
+              className="cursor-pointer hover:bg-vf-line hover:text-vf-text transition-colors focus:bg-vf-line focus:text-vf-text focus:ring-0 focus:outline-none"
             >
               <FileText className="mr-2 h-4 w-4" />
               <span>SVG Vector</span>
               {!isPremiumUser && (
-                <span className="ml-auto text-xs text-yellow-400">PRO</span>
+                <span className="ml-auto font-vf-mono text-[10.5px] text-vf-acc">PRO</span>
               )}
             </DropdownMenuItem>
           </DropdownMenuSubContent>

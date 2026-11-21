@@ -11,6 +11,15 @@ import { createClient, isSupabaseConfigured } from "@/utils/superbase/client";
 import { User, Session } from "@supabase/supabase-js";
 
 // Define the type only once and include refreshSubscription
+/**
+ * Development-only switch: set NEXT_PUBLIC_FORCE_PRO=true in .env.local to
+ * treat everyone as Pro so paid features can be tested without an account.
+ * Ignored in production builds.
+ */
+const FORCE_PRO =
+  process.env.NODE_ENV !== "production" &&
+  process.env.NEXT_PUBLIC_FORCE_PRO === "true";
+
 type SupabaseContextType = {
   user: User | null;
   session: Session | null;
@@ -137,7 +146,7 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
     user,
     session,
     isLoading,
-    isPro,
+    isPro: isPro || FORCE_PRO,
     signOut,
     refreshSubscription,
   };

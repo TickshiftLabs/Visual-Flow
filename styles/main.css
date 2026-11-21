@@ -1,14 +1,7 @@
 @import "tailwindcss" important;
 
-@import "./base/typography.css";
-
-@import "./components/nodes.css";
-@import "./components/edges.css";
-@import "./components/controls.css";
-@import "./components/buttons.css";
-
-@import "./utils/animations.css";
-@import "./utils/effects.css";
+@import "./components/graph.css";
+@import "./components/editor.css";
 
 :root {
   --background: #ffffff;
@@ -24,6 +17,9 @@
   /* Landing page ("Precision") tokens */
   --color-vf-bg: #0b0c0e;
   --color-vf-bg2: #0e1012;
+  --color-vf-panel: #131518;
+  --color-vf-faint: #555b64;
+  --color-vf-err: #f29a9a;
   --color-vf-rule: #1c1f23;
   --color-vf-line: #26292e;
   --color-vf-text: #ecedee;

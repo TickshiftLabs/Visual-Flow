@@ -2,6 +2,7 @@ import { useCallback, useRef } from "react";
 import { successToast, errorToast } from "../lib/toast";
 import { validateJsonAgainstFreeLimits } from "../constants/limits";
 import { useSupabase } from "../components/Auth/SupabaseProvider";
+import { useJsonStore } from "../store/useJsonStore";
 
 interface UseFileOperationsProps {
   setJsonData: (data: string) => void;
@@ -48,6 +49,7 @@ export function useFileOperations({
           
           // If validation passes or user is premium, update the content
           setJsonData(content);
+          useJsonStore.getState().setFileName(file.name);
           // Call the callback if provided
           if (onSuccessfulLoad) {
             onSuccessfulLoad(content);
