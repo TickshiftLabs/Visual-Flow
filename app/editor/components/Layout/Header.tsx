@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Logo from "@/components/Logo";
 import UpgradeModal from "@/components/PremiumFeatures/UpgradeModal";
 import { useJsonStore } from "@/store/useJsonStore";
 import { useGraphStore } from "@/store/useGraphStore";
@@ -62,12 +63,8 @@ export default function Header() {
 
   return (
     <header className="relative flex h-12 shrink-0 items-center gap-1 border-b border-vf-rule bg-vf-bg pl-3.5 pr-3">
-      <Link
-        href="/"
-        className="mr-3 flex items-center gap-[9px] font-semibold tracking-[-0.01em] text-vf-text"
-      >
-        <span className="block size-[9px] rounded-[2px] bg-vf-acc" />
-        Visual Flow
+      <Link href="/" className="mr-3">
+        <Logo />
       </Link>
 
       <FileMenu onUpgradeClick={handleUpgradeClick} />

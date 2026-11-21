@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useSupabase } from "@/components/Auth/SupabaseProvider";
+import Logo from "@/components/Logo";
 import { Btn, GITHUB_URL, WRAP } from "./parts";
 
 const links = [
@@ -19,12 +20,8 @@ export default function Header() {
   return (
     <nav className="sticky top-0 z-50 border-b border-vf-rule bg-vf-bg/80 backdrop-blur-md">
       <div className={`${WRAP} flex h-[60px] items-center gap-7 text-sm`}>
-        <Link
-          href="/"
-          className="mr-auto flex items-center gap-[9px] font-semibold tracking-[-0.01em]"
-        >
-          <span className="block size-[9px] rounded-[2px] bg-vf-acc" />
-          Visual Flow
+        <Link href="/" className="mr-auto">
+          <Logo />
         </Link>
 
         {links.map((l) => (
