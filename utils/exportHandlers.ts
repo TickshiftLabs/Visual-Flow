@@ -83,6 +83,8 @@ async function exportGraph(
     return;
   }
 
+  // Shadows are dropped for the capture (see .vf-exporting in graph.css).
+  element.classList.add("vf-exporting");
   try {
     await fitGraphToView();
 
@@ -105,6 +107,8 @@ async function exportGraph(
         error instanceof Error ? error.message : "Unknown error"
       }`
     );
+  } finally {
+    element.classList.remove("vf-exporting");
   }
 }
 

@@ -59,6 +59,9 @@ export default function Home() {
     if (savedSettings.layout3d) {
       useJsonStore.getState().setLayout3d(savedSettings.layout3d);
     }
+    if (savedSettings.nodeShadows !== undefined) {
+      useJsonStore.getState().setNodeShadows(savedSettings.nodeShadows);
+    }
 
     if (savedSettings.autoSaveEnabled) {
       const jsonContent = storageService.getJsonData();

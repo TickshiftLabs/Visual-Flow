@@ -97,6 +97,8 @@ export default function SettingsDialog({
     setGraphDirection,
     layout3d,
     setLayout3d,
+    nodeShadows,
+    setNodeShadows,
   } = useJsonStore();
 
   // Autosave lives in localStorage only; re-read it each time the dialog opens.
@@ -146,6 +148,13 @@ export default function SettingsDialog({
                 { value: "default", label: "Curved" },
                 { value: "smoothstep", label: "Stepped" },
               ]}
+            />
+            <Choice
+              label="Node shadows"
+              hint="Always left out of exported images."
+              value={nodeShadows ? "on" : "off"}
+              onChange={(v) => setNodeShadows(v === "on")}
+              options={ON_OFF}
             />
             <Choice
               label="Background grid"

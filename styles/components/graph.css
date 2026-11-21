@@ -17,6 +17,31 @@
   cursor: grabbing;
 }
 
+/* Node cards */
+.vf-node {
+  transition: opacity 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.vf-node.vf-node-shadow {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.vf-node.vf-node-selected {
+  box-shadow: 0 0 0 3px rgba(200, 241, 105, 0.12);
+}
+
+.vf-node.vf-node-selected.vf-node-shadow {
+  box-shadow: 0 0 0 3px rgba(200, 241, 105, 0.12),
+    0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* Image export: flat cards, switched off instantly (no fade mid-capture).
+   Soft shadows add file size and nothing else. */
+.vf-flow.vf-exporting .vf-node.vf-node {
+  box-shadow: none;
+  transition: none;
+}
+
 .react-flow__attribution {
   display: none !important;
 }

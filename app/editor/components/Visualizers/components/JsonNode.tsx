@@ -41,6 +41,7 @@ function JsonNode({ data }: NodeProps) {
   const collapsed = useGraphStore((s) => s.collapsed);
   const toggleCollapsed = useGraphStore((s) => s.toggleCollapsed);
   const vertical = useJsonStore((s) => s.graphDirection === "TB");
+  const shadows = useJsonStore((s) => s.nodeShadows);
 
   const labelHit = query !== "" && matches(node.label, query);
   const rowHits = node.rows.map(
@@ -50,9 +51,13 @@ function JsonNode({ data }: NodeProps) {
 
   return (
     <div
-      className={`rounded-[9px] border bg-vf-panel font-vf-mono text-xs shadow-[0_10px_30px_rgba(0,0,0,0.35)] transition-[opacity,border-color,box-shadow] duration-150 ${
+      // Shadow, glow and transitions live in graph.css (.vf-node…) rather than
+      // Tailwind utilities, so the export rule there can switch them off.
+      className={`vf-node rounded-[9px] border bg-vf-panel font-vf-mono text-xs ${
+        shadows ? "vf-node-shadow" : ""
+      } ${
         isSelected
-          ? "border-vf-acc shadow-[0_0_0_3px_rgba(200,241,105,0.12),0_10px_30px_rgba(0,0,0,0.35)]"
+          ? "vf-node-selected border-vf-acc"
           : "border-vf-line hover:border-[#3a3f46]"
       } ${dimmed ? "opacity-25" : ""}`}
       style={{ width: NODE_WIDTH }}

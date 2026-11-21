@@ -11,6 +11,7 @@ interface AppSettings {
   view?: 'graph' | 'tree' | '3d';
   graphDirection?: 'LR' | 'TB';
   layout3d?: 'constellation' | 'cone';
+  nodeShadows?: boolean;
 }
 
 // Default settings

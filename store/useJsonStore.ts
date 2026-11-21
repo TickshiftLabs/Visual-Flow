@@ -22,6 +22,8 @@ interface JsonState {
   view: ViewMode;
   graphDirection: GraphDirection;
   layout3d: Layout3d;
+  /** Soft drop shadow under each node card in the graph view. */
+  nodeShadows: boolean;
   isSettingsOpen: boolean;
   
   // Processing states
@@ -41,6 +43,7 @@ interface JsonState {
   setView: (view: ViewMode) => void;
   setGraphDirection: (direction: GraphDirection) => void;
   setLayout3d: (layout: Layout3d) => void;
+  setNodeShadows: (on: boolean) => void;
   setIsSettingsOpen: (isOpen: boolean) => void;
   setOcrProcessing: (isProcessing: boolean) => void;
   setOcrProgress: (progress: number | undefined) => void;
@@ -62,6 +65,7 @@ export const useJsonStore = create<JsonState>((set, get) => ({
   view: 'graph',
   graphDirection: 'LR',
   layout3d: 'constellation',
+  nodeShadows: true,
   isSettingsOpen: false,
   isOcrProcessing: false,
   ocrProgress: undefined,
@@ -94,6 +98,10 @@ export const useJsonStore = create<JsonState>((set, get) => ({
   setLayout3d: (layout3d) => {
     set({ layout3d });
     storageService.saveSettings({ layout3d });
+  },
+  setNodeShadows: (nodeShadows) => {
+    set({ nodeShadows });
+    storageService.saveSettings({ nodeShadows });
   },
   setIsSettingsOpen: (isOpen) => set({ isSettingsOpen: isOpen }),
   setOcrProcessing: (isProcessing) => set({ isOcrProcessing: isProcessing }),
