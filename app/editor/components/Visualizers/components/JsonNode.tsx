@@ -51,8 +51,7 @@ function JsonNode({ data }: NodeProps) {
 
   return (
     <div
-      // Shadow, glow and transitions live in graph.css (.vf-node…) rather than
-      // Tailwind utilities, so the export rule there can switch them off.
+      // Shadow, glow and transitions live in graph.css (.vf-node…).
       className={`vf-node rounded-[9px] border bg-vf-panel font-vf-mono text-xs ${
         shadows ? "vf-node-shadow" : ""
       } ${

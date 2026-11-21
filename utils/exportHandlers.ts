@@ -1,19 +1,31 @@
-import { toPng, toJpeg, toSvg } from "html-to-image";
 import { saveAs } from "file-saver";
 import { successToast, errorToast } from "../lib/toast";
+import {
+  buildGraph,
+  descendantsOf,
+} from "@/app/editor/components/Visualizers/graph/buildGraph";
+import { layoutGraph } from "@/app/editor/components/Visualizers/graph/graphLayout";
+import { collapseKey, useGraphStore } from "@/store/useGraphStore";
+import { useJsonStore } from "@/store/useJsonStore";
+import { renderGraphSvg, type GraphSvg, type SvgNode } from "./graphSvg";
 
 type Format = "png" | "jpeg" | "svg";
 
-const BACKGROUND = "#0e1012";
 const DEFAULT_FILENAME = "json-visualization";
-
-const renderers = { png: toPng, jpeg: toJpeg, svg: toSvg };
 const extensions: Record<Format, string> = { png: "png", jpeg: "jpg", svg: "svg" };
 const labels: Record<Format, string> = { png: "PNG", jpeg: "JPG", svg: "SVG" };
 
-/** Leaves on-canvas UI (legend, zoom buttons) out of the exported image. */
-const excludeUi = (node: HTMLElement) =>
-  !node.classList?.contains("react-flow__panel");
+/**
+ * Raster images are drawn at 2x for sharpness. Very tall or wide graphs are
+ * scaled down to stay inside what browsers can draw, and if the browser still
+ * refuses (limits vary), the export retries smaller.
+ */
+const RASTER_SCALE = 2;
+const MAX_SIDE = 32000;
+const MAX_PIXELS = 200_000_000;
+const MIN_SCALE = 0.25;
+
+const FALLBACK_FONT = "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
 
 const toDataUrl = async (url: string) => {
   const blob = await (await fetch(url)).blob();
@@ -26,80 +38,158 @@ const toDataUrl = async (url: string) => {
 };
 
 /**
- * Builds @font-face CSS with the font files inlined, for the fonts the page
- * has actually loaded. Passing this to html-to-image stops it crawling every
- * stylesheet itself, which fails noisily on cross-origin ones (Monaco's CDN).
+ * The node font as CSS with the font files inlined, limited to the weights
+ * and character ranges the page has actually loaded. Embedding it means the
+ * image looks the same on a machine without the font. Cached after first use.
  */
-async function buildFontCss(): Promise<string> {
-  const loaded = new Set(
-    [...document.fonts]
-      .filter((f) => f.status === "loaded")
-      .map((f) => `${f.family.replace(/["']/g, "")}|${f.weight}|${f.unicodeRange}`)
-  );
+let fontCache: Promise<{ family: string; css: string }> | null = null;
+function nodeFont(): Promise<{ family: string; css: string }> {
+  fontCache ??= (async () => {
+    const family = getComputedStyle(document.documentElement)
+      .getPropertyValue("--font-jetbrains-mono")
+      .trim();
+    if (!family) return { family: FALLBACK_FONT, css: "" };
+    const names = family.split(",").map((f) => f.trim().replace(/["']/g, ""));
 
-  const faces: string[] = [];
-  for (const sheet of Array.from(document.styleSheets)) {
-    let rules: CSSRuleList;
-    try {
-      rules = sheet.cssRules;
-    } catch {
-      continue; // cross-origin stylesheet
+    const loaded = new Set(
+      [...document.fonts]
+        .filter((f) => f.status === "loaded")
+        .map((f) => `${f.family.replace(/["']/g, "")}|${f.weight}|${f.unicodeRange}`)
+    );
+
+    const faces: string[] = [];
+    for (const sheet of Array.from(document.styleSheets)) {
+      let rules: CSSRuleList;
+      try {
+        rules = sheet.cssRules;
+      } catch {
+        continue; // cross-origin stylesheet
+      }
+      for (const rule of Array.from(rules)) {
+        if (!(rule instanceof CSSFontFaceRule)) continue;
+        const style = rule.style;
+        const name = style.getPropertyValue("font-family").replace(/["']/g, "");
+        if (!names.includes(name)) continue;
+        const key = `${name}|${style.getPropertyValue("font-weight")}|${style.getPropertyValue("unicode-range")}`;
+        const url = /url\(["']?([^"')]+)["']?\)/.exec(style.getPropertyValue("src"))?.[1];
+        if (!loaded.has(key) || !url) continue;
+        const data = await toDataUrl(new URL(url, sheet.href ?? location.href).href);
+        faces.push(rule.cssText.replace(/url\([^)]+\)/, `url(${data})`));
+      }
     }
-    for (const rule of Array.from(rules)) {
-      if (!(rule instanceof CSSFontFaceRule)) continue;
-      const style = rule.style;
-      const family = style.getPropertyValue("font-family").replace(/["']/g, "");
-      const key = `${family}|${style.getPropertyValue("font-weight")}|${style.getPropertyValue("unicode-range")}`;
-      const url = /url\(["']?([^"')]+)["']?\)/.exec(style.getPropertyValue("src"))?.[1];
-      if (!loaded.has(key) || !url) continue;
-      const data = await toDataUrl(new URL(url, sheet.href ?? location.href).href);
-      faces.push(rule.cssText.replace(/url\([^)]+\)/, `url(${data})`));
-    }
-  }
-  return faces.join("\n");
+    return { family: `${family}, ${FALLBACK_FONT}`, css: faces.join("") };
+  })().catch(() => ({ family: FALLBACK_FONT, css: "" }));
+  return fontCache;
 }
 
-/** Fits the whole graph in view and waits for the animation to settle. */
-async function fitGraphToView() {
+/**
+ * Gathers what to draw from the current document and settings. Node
+ * positions come from the graph on screen when it's open (so dragged nodes
+ * stay where they were put); otherwise from a fresh layout.
+ */
+function collectGraph() {
+  const { visualizationJson, graphDirection, edgeType, showGrid } =
+    useJsonStore.getState();
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(visualizationJson);
+  } catch {
+    return null;
+  }
+  const graph = buildGraph(parsed);
+
+  const { collapsed } = useGraphStore.getState();
+  const foldedRoots: string[] = [];
+  const collapsedRows = new Map<string, Set<number>>();
+  for (const node of graph.nodes) {
+    node.rows.forEach((row, i) => {
+      if (row.children.length && collapsed.has(collapseKey(node.id, i))) {
+        foldedRoots.push(...row.children);
+        if (!collapsedRows.has(node.id)) collapsedRows.set(node.id, new Set());
+        collapsedRows.get(node.id)!.add(i);
+      }
+    });
+  }
+  const hidden = descendantsOf(graph, foldedRoots);
+  foldedRoots.forEach((id) => hidden.add(id));
+
+  const onScreen = new Map<string, { x: number; y: number }>();
   const instance = (window as any).reactFlowInstance;
-  if (typeof instance?.fitView !== "function") return;
-  instance.fitView({ padding: 0.12 });
-  await new Promise((resolve) => setTimeout(resolve, 400));
+  if (document.querySelector(".react-flow") && typeof instance?.getNodes === "function") {
+    for (const n of instance.getNodes()) onScreen.set(n.id, n.position);
+  }
+  const usable = graph.nodes.every((node) => onScreen.has(node.id));
+  const positions = usable ? onScreen : layoutGraph(graph, graphDirection);
+
+  const nodes: SvgNode[] = graph.nodes
+    .filter((node) => !hidden.has(node.id))
+    .map((node) => ({
+      node,
+      ...positions.get(node.id)!,
+      collapsedRows: collapsedRows.get(node.id),
+    }));
+
+  return { nodes, edges: graph.edges, graphDirection, edgeType, showGrid };
 }
 
-async function exportGraph(
-  format: Format,
-  selector: string,
-  filename: string,
-  quality?: number
-) {
-  const element = document.querySelector<HTMLElement>(selector);
-  if (!element) {
-    errorToast("Switch to the Graph view to export an image.");
-    return;
+/** Draws the SVG onto a canvas and returns it as PNG or JPEG. */
+async function rasterise(image: GraphSvg, format: "png" | "jpeg", quality?: number) {
+  const url = URL.createObjectURL(
+    new Blob([image.svg], { type: "image/svg+xml;charset=utf-8" })
+  );
+  try {
+    const img = new Image();
+    img.src = url;
+    await img.decode();
+
+    let scale = Math.min(
+      RASTER_SCALE,
+      MAX_SIDE / image.width,
+      MAX_SIDE / image.height,
+      Math.sqrt(MAX_PIXELS / (image.width * image.height))
+    );
+    for (; scale >= MIN_SCALE; scale /= 2) {
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(image.width * scale);
+      canvas.height = Math.round(image.height * scale);
+      const ctx = canvas.getContext("2d");
+      if (!ctx) continue;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const blob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(resolve, `image/${format}`, quality)
+      );
+      if (blob) return blob;
+    }
+    throw new Error("This graph is too large for an image. Try SVG instead.");
+  } finally {
+    URL.revokeObjectURL(url);
   }
-  if (element.querySelectorAll(".react-flow__node").length === 0) {
+}
+
+async function exportGraph(format: Format, filename: string, quality?: number) {
+  const scene = collectGraph();
+  if (!scene || scene.nodes.length === 0) {
     errorToast("No data to export. Please add valid JSON data first.");
     return;
   }
 
-  // Shadows are dropped for the capture (see .vf-exporting in graph.css).
-  element.classList.add("vf-exporting");
   try {
-    await fitGraphToView();
-
-    const dataUrl = await renderers[format](element, {
-      backgroundColor: BACKGROUND,
-      width: element.clientWidth,
-      height: element.clientHeight,
-      filter: excludeUi,
-      fontEmbedCSS: await buildFontCss(),
-      ...(format === "svg" ? {} : { pixelRatio: 3 }),
-      ...(quality !== undefined ? { quality } : {}),
+    const font = await nodeFont();
+    const image = renderGraphSvg(scene.nodes, scene.edges, {
+      direction: scene.graphDirection,
+      edgeType: scene.edgeType,
+      showGrid: scene.showGrid,
+      fontFamily: font.family,
+      fontCss: font.css,
     });
 
-    saveAs(dataUrl, `${filename}.${extensions[format]}`);
-    successToast(`${labels[format]} image exported successfully!`);
+    const blob =
+      format === "svg"
+        ? new Blob([image.svg], { type: "image/svg+xml;charset=utf-8" })
+        : await rasterise(image, format, quality);
+
+    saveAs(blob, `${filename}.${extensions[format]}`);
+    successToast(`${labels[format]} image exported`);
   } catch (error) {
     console.error(`Error exporting as ${labels[format]}:`, error);
     errorToast(
@@ -107,23 +197,16 @@ async function exportGraph(
         error instanceof Error ? error.message : "Unknown error"
       }`
     );
-  } finally {
-    element.classList.remove("vf-exporting");
   }
 }
 
-export const exportAsPng = (
-  selector: string = ".react-flow",
-  filename: string = DEFAULT_FILENAME
-) => exportGraph("png", selector, filename);
+export const exportAsPng = (filename: string = DEFAULT_FILENAME) =>
+  exportGraph("png", filename);
 
 export const exportAsJpeg = (
-  selector: string = ".react-flow",
   filename: string = DEFAULT_FILENAME,
-  quality: number = 0.95
-) => exportGraph("jpeg", selector, filename, quality);
+  quality: number = 0.92
+) => exportGraph("jpeg", filename, quality);
 
-export const exportAsSvg = (
-  selector: string = ".react-flow",
-  filename: string = DEFAULT_FILENAME
-) => exportGraph("svg", selector, filename);
+export const exportAsSvg = (filename: string = DEFAULT_FILENAME) =>
+  exportGraph("svg", filename);

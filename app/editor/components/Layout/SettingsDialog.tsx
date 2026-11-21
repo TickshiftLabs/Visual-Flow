@@ -151,7 +151,7 @@ export default function SettingsDialog({
             />
             <Choice
               label="Node shadows"
-              hint="Always left out of exported images."
+              hint="Exported images never have them."
               value={nodeShadows ? "on" : "off"}
               onChange={(v) => setNodeShadows(v === "on")}
               options={ON_OFF}

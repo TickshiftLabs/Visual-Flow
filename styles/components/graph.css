@@ -35,13 +35,6 @@
     0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
-/* Image export: flat cards, switched off instantly (no fade mid-capture).
-   Soft shadows add file size and nothing else. */
-.vf-flow.vf-exporting .vf-node.vf-node {
-  box-shadow: none;
-  transition: none;
-}
-
 .react-flow__attribution {
   display: none !important;
 }
