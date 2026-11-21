@@ -1,35 +1,19 @@
 "use client";
 
-import { useTheme } from "next-themes";
 import { Toaster as Sonner, ToasterProps } from "sonner";
 
-const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme();
-
-  return (
-    <Sonner
-      theme={theme as ToasterProps["theme"]}
-      className="toaster group"
-      position="bottom-center"
-      closeButton
-      richColors
-      toastOptions={{
-        classNames: {
-          toast:
-            "group toast group-[.toaster]:bg-[#1e1e1e] group-[.toaster]:text-white group-[.toaster]:border-gray-800 group-[.toaster]:shadow-lg group-[.toaster]:rounded-lg",
-          description: "group-[.toast]:text-gray-300",
-          actionButton:
-            "group-[.toast]:bg-blue-600 group-[.toast]:text-white group-[.toast]:hover:bg-blue-700 font-medium",
-          cancelButton:
-            "group-[.toast]:bg-gray-700 group-[.toast]:text-white group-[.toast]:hover:bg-gray-600 font-medium",
-          closeButton:
-            "group-[.toast]:text-gray-400 group-[.toast]:hover:text-white group-[.toast]:bg-gray-800/50 group-[.toast]:hover:bg-gray-700/50",
-        },
-        duration: 3000,
-      }}
-      {...props}
-    />
-  );
-};
+/** Toast container. Individual toasts are drawn by lib/toast.tsx. */
+const Toaster = (props: ToasterProps) => (
+  <Sonner
+    theme="dark"
+    // Top right, just under the top bar. It's the one corner of the editor
+    // with nothing in it: the view switcher is top-left and the zoom buttons,
+    // legend and status bar run along the bottom.
+    position="top-right"
+    offset={{ top: 60, right: 16 }}
+    visibleToasts={3}
+    {...props}
+  />
+);
 
 export { Toaster };

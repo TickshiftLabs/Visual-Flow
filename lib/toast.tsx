@@ -1,85 +1,44 @@
 "use client";
-import { toast as sonnerToast } from "sonner";
-import { CheckCircle2, AlertCircle } from "lucide-react";
+import { toast as sonnerToast, type ExternalToast } from "sonner";
+import { Check, CircleAlert, Info } from "lucide-react";
 import React from "react";
 
-// Base toast options
-const baseToastOptions = {
-  duration: 3000,
-  className: "custom-toast border shadow-lg z-[9999]",
+type Tone = "success" | "error" | "info";
+
+const icons: Record<Tone, React.ReactNode> = {
+  success: <Check className="size-[15px] text-vf-acc" strokeWidth={2.5} />,
+  error: <CircleAlert className="size-[15px] text-vf-err" strokeWidth={2.2} />,
+  info: <Info className="size-[15px] text-vf-dim" strokeWidth={2.2} />,
 };
 
-// Success toast with improved styling
-export function successToast(message: string, options?: any) {
+/**
+ * One compact line: an icon that carries the meaning, then the message.
+ * No "Success"/"Error" heading; the icon and wording already say it.
+ */
+function show(tone: Tone, message: string, options?: ExternalToast) {
   return sonnerToast.custom(
     () => (
-      <div className="flex items-center w-full p-2">
-        <div className="flex items-center gap-3 w-full">
-          <div className="bg-green-500/30 p-2 rounded-full flex-shrink-0">
-            <CheckCircle2 className="h-5 w-5 text-green-500" />
-          </div>
-          <div className="flex-1">
-            <h3 className="font-medium text-white">Success</h3>
-            <p className="text-sm text-white mt-1">{message}</p>
-          </div>
-        </div>
+      <div
+        role={tone === "error" ? "alert" : "status"}
+        data-tone={tone}
+        className="vf-toast ml-auto flex w-fit max-w-[420px] items-start gap-2.5 rounded-[9px] border border-vf-line bg-vf-panel px-3.5 py-2.5 font-vf-sans text-[13.5px] leading-[1.45] text-vf-text shadow-[0_12px_32px_rgba(0,0,0,0.45)]"
+      >
+        <span className="mt-[2.5px] shrink-0">{icons[tone]}</span>
+        <span>{message}</span>
       </div>
     ),
-    {
-      ...baseToastOptions,
-      ...options,
-      className: `${baseToastOptions.className} border-green-600/40 bg-gradient-to-r from-green-900/50 to-green-800/40`,
-    }
+    { duration: tone === "error" ? 4500 : 3000, ...options }
   );
 }
 
-// Error toast with improved styling
-export function errorToast(message: string, options?: any) {
-  return sonnerToast.custom(
-    () => (
-      <div className="flex items-center w-full p-2">
-        <div className="flex items-center gap-3 w-full">
-          <div className="bg-red-500/30 p-2 rounded-full flex-shrink-0">
-            <AlertCircle className="h-5 w-5 text-red-500" />
-          </div>
-          <div className="flex-1">
-            <h3 className="font-medium text-white">Error</h3>
-            <p className="text-sm text-white mt-1">{message}</p>
-          </div>
-        </div>
-      </div>
-    ),
-    {
-      ...baseToastOptions,
-      ...options,
-      className: `${baseToastOptions.className} border-red-600/40 bg-gradient-to-r from-red-900/50 to-red-800/40`,
-    }
-  );
-}
+export const successToast = (message: string, options?: ExternalToast) =>
+  show("success", message, options);
 
-// Info toast with consistent styling
-export function infoToast(message: string, options?: any) {
-  return sonnerToast.custom(
-    () => (
-      <div className="flex items-center w-full p-2">
-        <div className="flex items-center gap-3 w-full">
-          <div className="bg-blue-500/30 p-2 rounded-full flex-shrink-0">
-            <AlertCircle className="h-5 w-5 text-blue-500" />
-          </div>
-          <div className="flex-1">
-            <h3 className="font-medium text-white">Info</h3>
-            <p className="text-sm text-white mt-1">{message}</p>
-          </div>
-        </div>
-      </div>
-    ),
-    {
-      ...baseToastOptions,
-      ...options,
-      className: `${baseToastOptions.className} border-blue-600/40 bg-gradient-to-r from-blue-900/50 to-blue-800/40`,
-    }
-  );
-}
+export const errorToast = (message: string, options?: ExternalToast) =>
+  show("error", message, options);
+
+export const infoToast = (message: string, options?: ExternalToast) =>
+  show("info", message, options);
 
 // Re-export the original toast for other use cases
 export const toast = sonnerToast;
