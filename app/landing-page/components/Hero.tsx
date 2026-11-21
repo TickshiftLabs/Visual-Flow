@@ -6,8 +6,22 @@ export default function Hero() {
   return (
     <>
       <header className={`${WRAP} pb-14 pt-24 text-center`}>
-        <Mono className="mb-[26px] inline-block rounded-full border border-vf-rule px-3 py-[5px]">
-          JSON <span className="text-vf-acc">→</span> graph, in your browser
+        <Mono className="mb-[26px] inline-flex items-center gap-[1ch] rounded-full border border-vf-rule px-3 py-[5px]">
+          JSON
+          {/* Drawn rather than typed: the font's → glyph sits low on the line. */}
+          <svg
+            aria-hidden
+            viewBox="0 0 12 10"
+            className="h-[0.7em] w-[0.85em] text-vf-acc"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M1 5h10M7.5 1.5 11 5 7.5 8.5" />
+          </svg>
+          graph, in your browser
         </Mono>
         <h1 className="mx-auto mb-[22px] max-w-[12ch] text-[clamp(44px,7.4vw,84px)] font-semibold leading-[0.98] tracking-[-0.045em]">
           See the shape of your JSON.
