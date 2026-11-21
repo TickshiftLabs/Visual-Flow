@@ -1,45 +1,35 @@
-"use client";
-
-import React from "react";
+import { Inter_Tight, JetBrains_Mono } from "next/font/google";
 import Header from "./landing-page/components/Header";
+import Hero from "./landing-page/components/Hero";
+import Features from "./landing-page/components/Features";
+import HowItWorks from "./landing-page/components/HowItWorks";
+import Pricing from "./landing-page/components/Pricing";
 import Footer from "./landing-page/components/Footer";
-import HeroSection from "./landing-page/components/HeroSection";
-import DemoSection from "./landing-page/components/DemoSection";
-import FeaturesSection from "./landing-page/components/FeaturesSection";
-import WorkflowSection from "./landing-page/components/WorkflowSection";
-import PricingSection from "./landing-page/components/PricingSection";
-import CtaSection from "./landing-page/components/CtaSection";
-import Scene from "./landing-page/components/Scene";
 
-const sampleJson = {
-  app: "Visual Flow",
-  version: "2.0",
-  features: ["3D Visualization", "Real-time Parsing", "Schema Detection"],
-  settings: {
-    theme: "dark",
-    autoSave: true,
-    notifications: {
-      enabled: true,
-      frequency: "daily",
-    },
-  },
-};
+const interTight = Inter_Tight({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-inter-tight",
+});
 
-export default function LandingPageThree() {
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-jetbrains-mono",
+});
+
+export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
-      <div className="fixed inset-0 z-0">
-        <div className="absolute top-0 left-0 right-0 h-[500px] bg-gradient-to-b from-indigo-900/20 to-transparent"></div>
-        <div className="absolute bottom-0 left-0 right-0 h-[500px] bg-gradient-to-t from-purple-900/20 to-transparent"></div>
-      </div>
-
+    <div
+      className={`${interTight.variable} ${jetbrainsMono.variable} min-h-screen scroll-smooth bg-vf-bg font-vf-sans text-base leading-[1.55] text-vf-text antialiased`}
+    >
       <Header />
-      <HeroSection LocalScene={Scene} />
-      <FeaturesSection />
-      <DemoSection LocalScene={Scene} sampleJson={sampleJson} />
-      <WorkflowSection />
-      <PricingSection />
-      <CtaSection />
+      <main>
+        <Hero />
+        <Features />
+        <HowItWorks />
+        <Pricing />
+      </main>
       <Footer />
     </div>
   );

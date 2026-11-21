@@ -1,0 +1,53 @@
+import GraphIllustration from "./GraphIllustration";
+import { Mono, SectionHead, WRAP } from "./parts";
+import Reveal from "./Reveal";
+
+const steps = [
+  {
+    title: "Paste or drop a file",
+    body: "Into the editor, or drag a .json file onto the page.",
+  },
+  {
+    title: "Read the graph",
+    body: "The structure appears beside your text, colour-coded by type.",
+  },
+  {
+    title: "Dig in",
+    body: "Collapse branches, search, and click nodes to inspect them.",
+  },
+  {
+    title: "Take it with you",
+    body: "Download the JSON or export the graph as an image.",
+  },
+];
+
+export default function HowItWorks() {
+  return (
+    <section id="how" className={`${WRAP} scroll-mt-20 pt-[104px]`}>
+      <Reveal>
+        <SectionHead label="02 / How it works">
+          Four steps, about ten seconds.
+        </SectionHead>
+        <div className="grid items-center gap-14 md:grid-cols-[1fr_1.15fr]">
+          <ol className="border-b border-vf-rule">
+            {steps.map((s, i) => (
+              <li
+                key={s.title}
+                className="grid grid-cols-[44px_1fr] border-t border-vf-rule py-[18px]"
+              >
+                <Mono>{String(i + 1).padStart(2, "0")}</Mono>
+                <div>
+                  <b className="block font-semibold">{s.title}</b>
+                  <span className="text-[15px] text-vf-dim">{s.body}</span>
+                </div>
+              </li>
+            ))}
+          </ol>
+          <div className="rounded-xl border border-vf-rule bg-vf-bg2 p-[22px]">
+            <GraphIllustration />
+          </div>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
