@@ -8,6 +8,7 @@ import { layoutGraph } from "@/app/editor/components/Visualizers/graph/graphLayo
 import { collapseKey, useGraphStore } from "@/store/useGraphStore";
 import { useJsonStore } from "@/store/useJsonStore";
 import { renderGraphSvg, type GraphSvg, type SvgNode } from "./graphSvg";
+import { getViewExporter } from "./exportSource";
 
 type Format = "png" | "jpeg" | "svg";
 
@@ -166,29 +167,66 @@ async function rasterise(image: GraphSvg, format: "png" | "jpeg", quality?: numb
   }
 }
 
-async function exportGraph(format: Format, filename: string, quality?: number) {
-  const scene = collectGraph();
-  if (!scene || scene.nodes.length === 0) {
-    errorToast("No data to export. Please add valid JSON data first.");
-    return;
-  }
+const canvasBlob = (canvas: HTMLCanvasElement, format: "png" | "jpeg", quality?: number) =>
+  new Promise<Blob>((resolve, reject) =>
+    canvas.toBlob(
+      (blob) => (blob ? resolve(blob) : reject(new Error("Could not create the image"))),
+      `image/${format}`,
+      quality
+    )
+  );
+
+/** Exports whichever view is on screen: the graph, the tree, or the 3D scene. */
+async function exportView(format: Format, filename: string, quality?: number) {
+  const { view } = useJsonStore.getState();
 
   try {
-    const font = await nodeFont();
-    const image = renderGraphSvg(scene.nodes, scene.edges, {
-      direction: scene.graphDirection,
-      edgeType: scene.edgeType,
-      showGrid: scene.showGrid,
-      fontFamily: font.family,
-      fontCss: font.css,
-    });
+    let blob: Blob;
+    let suffix = "";
 
-    const blob =
-      format === "svg"
-        ? new Blob([image.svg], { type: "image/svg+xml;charset=utf-8" })
-        : await rasterise(image, format, quality);
+    if (view === "graph") {
+      const scene = collectGraph();
+      if (!scene || scene.nodes.length === 0) {
+        errorToast("No data to export. Please add valid JSON data first.");
+        return;
+      }
+      const font = await nodeFont();
+      const image = renderGraphSvg(scene.nodes, scene.edges, {
+        direction: scene.graphDirection,
+        edgeType: scene.edgeType,
+        showGrid: scene.showGrid,
+        fontFamily: font.family,
+        fontCss: font.css,
+      });
+      blob =
+        format === "svg"
+          ? new Blob([image.svg], { type: "image/svg+xml;charset=utf-8" })
+          : await rasterise(image, format, quality);
+    } else {
+      const exporter = getViewExporter(view);
+      if (!exporter) {
+        errorToast("Nothing to export yet. Please add valid JSON data first.");
+        return;
+      }
+      suffix = view === "tree" ? "-tree" : "-3d";
 
-    saveAs(blob, `${filename}.${extensions[format]}`);
+      if (exporter.kind === "svg") {
+        const image = exporter.render(await nodeFont());
+        blob =
+          format === "svg"
+            ? new Blob([image.svg], { type: "image/svg+xml;charset=utf-8" })
+            : await rasterise(image, format, quality);
+      } else {
+        if (format === "svg") {
+          // A 3D scene is pixels, not shapes; an "SVG" would only wrap a picture.
+          errorToast("The 3D view exports as PNG or JPG. SVG is for the Graph and Tree views.");
+          return;
+        }
+        blob = await canvasBlob(exporter.render(), format, quality);
+      }
+    }
+
+    saveAs(blob, `${filename}${suffix}.${extensions[format]}`);
     successToast(`${labels[format]} image exported`);
   } catch (error) {
     console.error(`Error exporting as ${labels[format]}:`, error);
@@ -201,12 +239,12 @@ async function exportGraph(format: Format, filename: string, quality?: number) {
 }
 
 export const exportAsPng = (filename: string = DEFAULT_FILENAME) =>
-  exportGraph("png", filename);
+  exportView("png", filename);
 
 export const exportAsJpeg = (
   filename: string = DEFAULT_FILENAME,
   quality: number = 0.92
-) => exportGraph("jpeg", filename, quality);
+) => exportView("jpeg", filename, quality);
 
 export const exportAsSvg = (filename: string = DEFAULT_FILENAME) =>
-  exportGraph("svg", filename);
+  exportView("svg", filename);

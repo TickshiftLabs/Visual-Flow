@@ -6,7 +6,8 @@ import {
   CSS2DRenderer,
 } from "three/addons/renderers/CSS2DRenderer.js";
 import { useGraphStore } from "@/store/useGraphStore";
-import { useJsonStore } from "@/store/useJsonStore";
+import { setViewExporter } from "@/utils/exportSource";
+import { useJsonStore, type Layout3d } from "@/store/useJsonStore";
 import { buildGraph, type Graph, type GraphNode } from "./graph/buildGraph";
 import { KIND_COLOR } from "./components/JsonNode";
 import { layout3d } from "./three/layout3d";
@@ -43,14 +44,32 @@ const matchesQuery = (node: GraphNode, query: string) =>
 
 interface Graph3DProps {
   jsonData: string;
+  /** Overrides the layout from settings (used where there are no settings, e.g. the landing page). */
+  layout?: Layout3d;
+  /**
+   * Set false to rotate only: no zoom or pan, so the mouse wheel keeps
+   * scrolling the page the view is embedded in.
+   */
+  zoomable?: boolean;
+  /**
+   * Graphs up to this many nodes have every node named; bigger ones name
+   * only the top levels until something is selected. 0 always keeps it sparse.
+   */
+  nameAllUpTo?: number;
 }
 
 /** 3D view: every node as a point in space, linked to its parent. Shows structure, not values. */
-export default function Graph3D({ jsonData }: Graph3DProps) {
+export default function Graph3D({
+  jsonData,
+  layout,
+  zoomable = true,
+  nameAllUpTo = LABEL_ALL_LIMIT,
+}: Graph3DProps) {
   const container = useRef<HTMLDivElement>(null);
   const state = useRef<SceneState | null>(null);
 
-  const layoutKind = useJsonStore((s) => s.layout3d);
+  const storedLayout = useJsonStore((s) => s.layout3d);
+  const layoutKind = layout ?? storedLayout;
   const selectedId = useGraphStore((s) => s.selectedId);
   const query = useGraphStore((s) => s.query.trim().toLowerCase());
 
@@ -93,6 +112,8 @@ export default function Graph3D({ jsonData }: Graph3DProps) {
     const camera = new THREE.PerspectiveCamera(50, 1, 1, 20000);
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
+    controls.enableZoom = zoomable;
+    controls.enablePan = zoomable;
     controls.autoRotateSpeed = 0.9;
     controls.autoRotate = !window.matchMedia("(prefers-reduced-motion: reduce)")
       .matches;
@@ -161,6 +182,12 @@ export default function Graph3D({ jsonData }: Graph3DProps) {
       labels.render(scene, camera);
     });
 
+    // Image export captures the scene exactly as it's currently turned.
+    setViewExporter("3d", {
+      kind: "canvas",
+      render: () => snapshot(state.current!),
+    });
+
     if (process.env.NODE_ENV !== "production") {
       // Lets browser tests find where a node is drawn on screen.
       (window as any).__vf3d = {
@@ -182,6 +209,7 @@ export default function Graph3D({ jsonData }: Graph3DProps) {
 
     return () => {
       observer.disconnect();
+      setViewExporter("3d", null);
       renderer.setAnimationLoop(null);
       renderer.domElement.removeEventListener("pointerdown", onDown);
       renderer.domElement.removeEventListener("pointerup", onUp);
@@ -193,6 +221,8 @@ export default function Graph3D({ jsonData }: Graph3DProps) {
       state.current = null;
       if (process.env.NODE_ENV !== "production") delete (window as any).__vf3d;
     };
+    // `zoomable` is fixed for the life of the component.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // --- rebuild when the document or layout changes --------------------------
@@ -272,15 +302,17 @@ export default function Graph3D({ jsonData }: Graph3DProps) {
     (s.scene.fog as THREE.Fog).near = distance * 1.5;
     (s.scene.fog as THREE.Fog).far = distance * 4;
 
-    applyHighlight(s, graph, useGraphStore.getState().selectedId, query);
+    applyHighlight(s, graph, useGraphStore.getState().selectedId, query, nameAllUpTo);
     // `query` is applied by the effect below; rebuilding for it would reset the camera.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [graph, layoutKind]);
 
   // --- restyle when selection or search changes -----------------------------
   useEffect(() => {
-    if (state.current) applyHighlight(state.current, graph, selectedId, query);
-  }, [graph, selectedId, query, layoutKind]);
+    if (state.current) {
+      applyHighlight(state.current, graph, selectedId, query, nameAllUpTo);
+    }
+  }, [graph, selectedId, query, layoutKind, nameAllUpTo]);
 
   return (
     <div
@@ -290,6 +322,53 @@ export default function Graph3D({ jsonData }: Graph3DProps) {
       data-layout={layoutKind}
     />
   );
+}
+
+/**
+ * The scene as a flat image. The WebGL canvas holds the points and links;
+ * name tags are separate DOM elements, so they're redrawn on top here.
+ */
+function snapshot(s: SceneState): HTMLCanvasElement {
+  // Render now so the drawing buffer is fresh when it's copied.
+  s.renderer.render(s.scene, s.camera);
+  const source = s.renderer.domElement;
+  const out = document.createElement("canvas");
+  out.width = source.width;
+  out.height = source.height;
+  const ctx = out.getContext("2d")!;
+  ctx.drawImage(source, 0, 0);
+
+  const ratio = source.width / source.clientWidth;
+  const point = new THREE.Vector3();
+  ctx.textBaseline = "middle";
+  ctx.textAlign = "center";
+
+  s.labelById.forEach((label) => {
+    const el = label.element;
+    if (el.style.display === "none") return; // off screen or behind the camera
+    point.copy(label.position).project(s.camera);
+    if (point.z > 1) return;
+    const w = el.offsetWidth * ratio;
+    const h = el.offsetHeight * ratio;
+    const cx = ((point.x + 1) / 2) * out.width;
+    const top = ((1 - point.y) / 2) * out.height - label.center.y * h;
+    const left = cx - w / 2;
+
+    const selected = el.classList.contains("vf-3d-label-selected");
+    ctx.globalAlpha = el.classList.contains("vf-3d-label-dim") ? 0.35 : 1;
+    ctx.beginPath();
+    ctx.roundRect(left, top, w, h, 5 * ratio);
+    ctx.fillStyle = selected ? "#c8f169" : "rgba(14,16,18,0.78)";
+    ctx.fill();
+    ctx.lineWidth = ratio;
+    ctx.strokeStyle = selected ? "#c8f169" : "#1c1f23";
+    ctx.stroke();
+    ctx.fillStyle = selected ? "#0b0c0e" : "#c4c8cd";
+    ctx.font = `${11.5 * ratio}px ${getComputedStyle(el).fontFamily}`;
+    ctx.fillText(el.textContent ?? "", cx, top + h / 2 + ratio * 0.5);
+  });
+  ctx.globalAlpha = 1;
+  return out;
 }
 
 function disposeGroup(s: SceneState | null) {
@@ -319,7 +398,8 @@ function applyHighlight(
   s: SceneState,
   graph: Graph,
   selectedId: string | null,
-  query: string
+  query: string,
+  nameAllUpTo: number
 ) {
   if (!s.group) return;
   const byId = new Map(graph.nodes.map((n) => [n.id, n]));
@@ -361,7 +441,7 @@ function applyHighlight(
     // Which nodes are named: everything on small graphs; otherwise the top
     // levels, the selection's route and children, and search matches.
     const depth = node.path.length;
-    const small = graph.nodes.length <= LABEL_ALL_LIMIT;
+    const small = graph.nodes.length <= nameAllUpTo;
     let show = isSelected || onRoute || isChild;
     if (!show && isMatch && matchLabels < MAX_MATCH_LABELS) {
       show = true;

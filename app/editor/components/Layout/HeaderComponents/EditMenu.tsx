@@ -12,6 +12,7 @@ import {
 import { useJsonStore } from "@/store/useJsonStore";
 
 import { successToast, errorToast } from "@/lib/toast";
+import { copyText } from "@/lib/clipboard";
 
 export default function EditMenu() {
   const { jsonData, setJsonData } = useJsonStore();
@@ -50,17 +51,13 @@ export default function EditMenu() {
     }
   };
 
-  const handleCopyJson = () => {
-    try {
-      if (jsonData.trim()) {
-        navigator.clipboard.writeText(jsonData);
-        successToast("JSON copied to clipboard");
-      } else {
-        errorToast("No JSON to copy");
-      }
-    } catch (e) {
-      errorToast("Failed to copy JSON to clipboard");
+  const handleCopyJson = async () => {
+    if (!jsonData.trim()) {
+      errorToast("No JSON to copy");
+      return;
     }
+    if (await copyText(jsonData)) successToast("JSON copied to clipboard");
+    else errorToast("Failed to copy JSON to clipboard");
   };
 
   return (

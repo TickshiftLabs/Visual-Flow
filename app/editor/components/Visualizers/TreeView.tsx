@@ -1,5 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useGraphStore } from "@/store/useGraphStore";
+import { setViewExporter } from "@/utils/exportSource";
+import { renderTreeSvg } from "@/utils/treeSvg";
 import type { ValueKind } from "./graph/buildGraph";
 import {
   ancestorIds,
@@ -77,6 +79,24 @@ export default function TreeView({ jsonData }: TreeViewProps) {
     () => (parsed.ok ? buildRows(parsed.value, { closed, query }) : []),
     [parsed, closed, query]
   );
+
+  // Image export draws the list as it stands: same folds, same search filter,
+  // but every row, not only the ones scrolled into view.
+  const rowsRef = useRef(rows);
+  useEffect(() => {
+    rowsRef.current = rows;
+  }, [rows]);
+  useEffect(() => {
+    setViewExporter("tree", {
+      kind: "svg",
+      render: (font) =>
+        renderTreeSvg(rowsRef.current, {
+          fontFamily: font.family,
+          fontCss: font.css,
+        }),
+    });
+    return () => setViewExporter("tree", null);
+  }, []);
 
   // Windowing: only rows near the viewport are in the page.
   const scroller = useRef<HTMLDivElement>(null);

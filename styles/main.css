@@ -64,3 +64,12 @@ body {
     }
   }
 }
+
+/* Toasts are custom-drawn (lib/toast.tsx). Sonner shrink-wraps custom toasts
+   to their text and pins them to the left of its column, so a short message
+   sat left of centre. Make each one span the column and centre its content. */
+[data-sonner-toast]:has(.vf-toast) {
+  display: flex;
+  justify-content: center;
+  width: var(--width);
+}

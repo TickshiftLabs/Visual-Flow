@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import {
   Background,
   BackgroundVariant,
@@ -18,6 +18,8 @@ import JsonNode, { KIND_COLOR } from "./components/JsonNode";
 import {
   buildGraph,
   descendantsOf,
+  getAtPath,
+  pathToId,
   ROOT_ID,
   type Graph,
   type GraphNode,
@@ -95,11 +97,12 @@ function Chart({
   const reset = useGraphStore((s) => s.reset);
 
   // Graph + layout only change when the document does.
-  const graph = useMemo(() => {
+  const { graph, value } = useMemo(() => {
     try {
-      return buildGraph(JSON.parse(jsonData));
+      const parsed: unknown = JSON.parse(jsonData);
+      return { graph: buildGraph(parsed), value: parsed };
     } catch {
-      return EMPTY_GRAPH;
+      return { graph: EMPTY_GRAPH, value: undefined };
     }
   }, [jsonData]);
 
@@ -197,18 +200,86 @@ function Chart({
 
   // Drop selection/folds that no longer exist in the new document.
   useEffect(() => {
-    const { selectedId: current, collapsed: folds } = useGraphStore.getState();
+    const { selectedPath: current, collapsed: folds } = useGraphStore.getState();
     const ids = new Set(graph.nodes.map((n) => n.id));
-    const staleSelection = current !== null && !ids.has(current);
+    // A selected single value (picked in the Tree view) has no node of its
+    // own, so judge by whether its path still exists, not by node ids.
+    const staleSelection =
+      current !== null && getAtPath(value, current) === undefined;
     const staleFolds = [...folds].some((k) => !ids.has(k.slice(0, k.lastIndexOf("#"))));
     if (staleSelection || staleFolds) reset();
-  }, [graph, reset]);
+  }, [graph, value, reset]);
+
+  // The node the selection belongs to: itself, or for a single value picked in
+  // the Tree view, the nearest node above it.
+  const selectedPath = useGraphStore((s) => s.selectedPath);
+  const anchorId = useMemo(() => {
+    if (!selectedPath) return null;
+    const ids = new Set(graph.nodes.map((n) => n.id));
+    for (let length = selectedPath.length; length >= 0; length--) {
+      const id = pathToId(selectedPath.slice(0, length));
+      if (ids.has(id)) return id;
+    }
+    return null;
+  }, [graph, selectedPath]);
+
+  // When the canvas changes width (the inspector opening or closing): if the
+  // whole graph was in view, keep it that way; otherwise leave the view alone.
+  const width = useStore((s) => s.width);
+  const previousWidth = useRef(0);
+  useEffect(() => {
+    const before = previousWidth.current;
+    previousWidth.current = width;
+    if (!before || !width || before === width) return;
+    const { transform, height, nodeLookup } = store.getState();
+    const [tx, ty, zoom] = transform;
+    let allVisible = nodeLookup.size > 0;
+    for (const node of nodeLookup.values()) {
+      if (node.hidden) continue;
+      const left = node.position.x * zoom + tx;
+      const top = node.position.y * zoom + ty;
+      const right = left + (node.measured.width ?? NODE_WIDTH) * zoom;
+      const bottom = top + (node.measured.height ?? 0) * zoom;
+      if (left < 0 || top < 0 || right > before || bottom > height) {
+        allVisible = false;
+        break;
+      }
+    }
+    if (allVisible) fitView(FIT_OPTIONS);
+  }, [width, store, fitView]);
+
+  // Keep the selected node on screen (it may have been picked in another
+  // view, or be behind where the inspector just opened).
+  useEffect(() => {
+    if (!anchorId) return;
+    const timer = setTimeout(() => {
+      const { transform, width: w, height: h, nodeLookup } = store.getState();
+      const node = nodeLookup.get(anchorId);
+      if (!node || node.hidden) return;
+      const [tx, ty, zoom] = transform;
+      const nodeW = (node.measured.width ?? NODE_WIDTH) * zoom;
+      const nodeH = (node.measured.height ?? 0) * zoom;
+      const left = node.position.x * zoom + tx;
+      const top = node.position.y * zoom + ty;
+      const margin = 24;
+      let dx = 0;
+      let dy = 0;
+      if (left < margin) dx = margin - left;
+      else if (left + nodeW > w - margin) dx = w - margin - (left + nodeW);
+      if (top < margin) dy = margin - top;
+      else if (top + nodeH > h - margin) dy = h - margin - (top + nodeH);
+      if (dx || dy) {
+        setViewport({ x: tx + dx, y: ty + dy, zoom }, { duration: 200 });
+      }
+    }, 320);
+    return () => clearTimeout(timer);
+  }, [anchorId, width, store, setViewport]);
 
   // Edges on the route from the root to the selected node are highlighted.
   const edges = useMemo<Edge[]>(() => {
     const route = new Set<string>();
     const parentOf = new Map(graph.nodes.map((n) => [n.id, n.parentId]));
-    for (let id = selectedId; id; id = parentOf.get(id) ?? null) route.add(id);
+    for (let id = anchorId; id; id = parentOf.get(id) ?? null) route.add(id);
 
     // Stroke is set inline (not only via CSS) so image export captures it.
     return graph.edges.map((e) => ({
@@ -228,7 +299,7 @@ function Chart({
       selectable: false,
       focusable: false,
     }));
-  }, [graph, edgeType, hidden, selectedId, direction]);
+  }, [graph, edgeType, hidden, anchorId, direction]);
 
   return (
     <ReactFlow

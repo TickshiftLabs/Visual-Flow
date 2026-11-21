@@ -21,7 +21,7 @@ function show(tone: Tone, message: string, options?: ExternalToast) {
       <div
         role={tone === "error" ? "alert" : "status"}
         data-tone={tone}
-        className="vf-toast ml-auto flex w-fit max-w-[420px] items-start gap-2.5 rounded-[9px] border border-vf-line bg-vf-panel px-3.5 py-2.5 font-vf-sans text-[13.5px] leading-[1.45] text-vf-text shadow-[0_12px_32px_rgba(0,0,0,0.45)]"
+        className="vf-toast mx-auto flex w-fit max-w-[420px] items-start gap-2.5 rounded-[9px] border border-vf-line bg-vf-panel px-3.5 py-2.5 font-vf-sans text-[13.5px] leading-[1.45] text-vf-text shadow-[0_12px_32px_rgba(0,0,0,0.45)]"
       >
         <span className="mt-[2.5px] shrink-0">{icons[tone]}</span>
         <span>{message}</span>

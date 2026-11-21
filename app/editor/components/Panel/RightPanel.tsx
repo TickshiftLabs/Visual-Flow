@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
 import JsonFlowChart from "../Visualizers/JsonFlowChart";
 import TreeView from "../Visualizers/TreeView";
+import Inspector from "./Inspector";
 import { countJsonNodes } from "@/constants/limits";
 import { useJsonStore, type ViewMode } from "@/store/useJsonStore";
 import { useFileOperations } from "@/hooks/useFileOperations";
@@ -55,6 +56,16 @@ export default function RightPanel() {
   // only fall back to the empty screen when the editor is actually empty.
   const hasGraph = !!visualizationJson && jsonData.trim() !== "";
 
+  // Parsed once here for the inspector; the views parse for themselves.
+  const parsed = useMemo(() => {
+    if (!hasGraph) return undefined;
+    try {
+      return JSON.parse(visualizationJson) as unknown;
+    } catch {
+      return undefined;
+    }
+  }, [hasGraph, visualizationJson]);
+
   // The graph reports its own node count; in other views nothing would,
   // so keep the status bar right from here.
   useEffect(() => {
@@ -67,77 +78,82 @@ export default function RightPanel() {
   }, [view, hasGraph, visualizationJson, setNodeCount]);
 
   return (
-    <div className="relative h-full min-w-0 flex-1 overflow-hidden bg-vf-bg2">
-      {hasGraph && (
-        <div
-          role="tablist"
-          aria-label="View"
-          className="absolute left-3.5 top-3.5 z-10 flex gap-0.5 rounded-[9px] border border-vf-line bg-vf-panel/90 p-[3px] backdrop-blur"
-        >
-          {VIEWS.map((v) => (
-            <button
-              key={v.id}
-              role="tab"
-              aria-selected={view === v.id}
-              onClick={() => setView(v.id)}
-              className={`cursor-pointer rounded-md px-[11px] py-1 font-vf-mono text-xs transition-colors ${
-                view === v.id
-                  ? "bg-vf-line text-vf-text"
-                  : "text-vf-dim hover:text-vf-text"
-              }`}
-            >
-              {v.label}
-            </button>
-          ))}
-        </div>
-      )}
+    <div className="flex h-full min-w-0 flex-1 overflow-hidden bg-vf-bg2">
+      <div className="relative h-full min-w-0 flex-1 overflow-hidden">
+        {hasGraph && (
+          <div
+            role="tablist"
+            aria-label="View"
+            className="absolute left-3.5 top-3.5 z-10 flex gap-0.5 rounded-[9px] border border-vf-line bg-vf-panel/90 p-[3px] backdrop-blur"
+          >
+            {VIEWS.map((v) => (
+              <button
+                key={v.id}
+                role="tab"
+                aria-selected={view === v.id}
+                onClick={() => setView(v.id)}
+                className={`cursor-pointer rounded-md px-[11px] py-1 font-vf-mono text-xs transition-colors ${
+                  view === v.id
+                    ? "bg-vf-line text-vf-text"
+                    : "text-vf-dim hover:text-vf-text"
+                }`}
+              >
+                {v.label}
+              </button>
+            ))}
+          </div>
+        )}
 
-      {hasGraph ? (
-        view === "tree" ? (
-          <TreeView jsonData={visualizationJson} />
-        ) : view === "3d" ? (
-          <Graph3D jsonData={visualizationJson} />
+        {hasGraph ? (
+          view === "tree" ? (
+            <TreeView jsonData={visualizationJson} />
+          ) : view === "3d" ? (
+            <Graph3D jsonData={visualizationJson} />
+          ) : (
+            <JsonFlowChart
+              jsonData={visualizationJson}
+              onNodeCountChange={setNodeCount}
+              edgeType={edgeType}
+              showGrid={showGrid}
+            />
+          )
         ) : (
-          <JsonFlowChart
-            jsonData={visualizationJson}
-            onNodeCountChange={setNodeCount}
-            edgeType={edgeType}
-            showGrid={showGrid}
-          />
-        )
-      ) : (
-        <div className="grid h-full place-items-center bg-[radial-gradient(rgba(255,255,255,0.055)_1px,transparent_1px)] bg-[length:22px_22px] px-6 text-center">
-          <div>
-            <span className="font-vf-mono text-xs text-vf-dim">
-              JSON <span className="text-vf-acc">→</span> graph
-            </span>
-            <h3 className="mb-2 mt-3.5 text-[26px] font-semibold tracking-[-0.03em] text-vf-text">
-              Nothing to draw yet.
-            </h3>
-            <p className="mx-auto mb-[22px] max-w-[34ch] text-[15px] text-vf-dim">
-              Paste JSON into the editor on the left, or start from an example
-              to see how it works.
-            </p>
-            <div className="flex justify-center gap-2.5">
-              <button
-                onClick={loadExample}
-                className={`${emptyButton} bg-vf-acc text-vf-bg hover:brightness-110`}
-              >
-                Load an example
-              </button>
-              <button
-                onClick={importFile}
-                className={`${emptyButton} border border-vf-line text-vf-text hover:border-[#4a5058]`}
-              >
-                Open a file
-              </button>
-            </div>
-            <div className="mt-[26px] font-vf-mono text-xs text-vf-dim">
-              or drop a .json file anywhere on this page
+          <div className="grid h-full place-items-center bg-[radial-gradient(rgba(255,255,255,0.055)_1px,transparent_1px)] bg-[length:22px_22px] px-6 text-center">
+            <div>
+              <span className="font-vf-mono text-xs text-vf-dim">
+                JSON <span className="text-vf-acc">→</span> graph
+              </span>
+              <h3 className="mb-2 mt-3.5 text-[26px] font-semibold tracking-[-0.03em] text-vf-text">
+                Nothing to draw yet.
+              </h3>
+              <p className="mx-auto mb-[22px] max-w-[34ch] text-[15px] text-vf-dim">
+                Paste JSON into the editor on the left, or start from an example
+                to see how it works.
+              </p>
+              <div className="flex justify-center gap-2.5">
+                <button
+                  onClick={loadExample}
+                  className={`${emptyButton} bg-vf-acc text-vf-bg hover:brightness-110`}
+                >
+                  Load an example
+                </button>
+                <button
+                  onClick={importFile}
+                  className={`${emptyButton} border border-vf-line text-vf-text hover:border-[#4a5058]`}
+                >
+                  Open a file
+                </button>
+              </div>
+              <div className="mt-[26px] font-vf-mono text-xs text-vf-dim">
+                or drop a .json file anywhere on this page
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
+
+      {/* Docked beside the view, not floating over it, so it never hides nodes. */}
+      {hasGraph && parsed !== undefined && <Inspector document={parsed} />}
     </div>
   );
 }
