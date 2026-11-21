@@ -1,0 +1,39 @@
+{
+  "id": 4821,
+  "status": "paid",
+  "customer": {
+    "name": "Ada Lovelace",
+    "email": "ada@example.com",
+    "tier": "pro"
+  },
+  "items": [
+    {
+      "sku": "A-12",
+      "name": "Mechanical keyboard",
+      "qty": 1,
+      "price": 89
+    },
+    {
+      "sku": "B-07",
+      "name": "USB-C hub",
+      "qty": 2,
+      "price": 42
+    }
+  ],
+  "shipping": {
+    "method": "express",
+    "gift": false,
+    "address": {
+      "city": "Leeds",
+      "zip": "LS1",
+      "country": "GB"
+    },
+    "tracking": null
+  },
+  "tags": [
+    "priority",
+    "repeat-customer"
+  ],
+  "total": 173,
+  "currency": "GBP"
+}

@@ -1,0 +1,1968 @@
+{
+  "exportedAt": "2026-11-21T20:45:00Z",
+  "count": 50,
+  "orders": [
+    {
+      "id": 4801,
+      "status": "paid",
+      "placedAt": "2026-06-19T08:58:00Z",
+      "customer": {
+        "name": "Alan Stroustrup",
+        "email": "alan.stroustrup@example.com",
+        "tier": "team"
+      },
+      "items": [
+        {
+          "sku": "G-44",
+          "name": "Noise-cancelling headphones",
+          "qty": 1,
+          "price": 179.0
+        }
+      ],
+      "shipping": {
+        "method": "standard",
+        "gift": true,
+        "address": {
+          "city": "Toronto",
+          "zip": "M5H",
+          "country": "CA"
+        },
+        "trackingCode": "VF565623510"
+      },
+      "tags": [
+        "priority",
+        "repeat-customer",
+        "promo"
+      ],
+      "total": 179.0,
+      "currency": "USD"
+    },
+    {
+      "id": 4802,
+      "status": "paid",
+      "placedAt": "2026-10-19T14:03:00Z",
+      "customer": {
+        "name": "Ken Easley",
+        "email": "ken.easley@example.com",
+        "tier": "free"
+      },
+      "items": [
+        {
+          "sku": "K-60",
+          "name": "Cable kit",
+          "qty": 1,
+          "price": 12.25
+        }
+      ],
+      "shipping": {
+        "method": "standard",
+        "gift": false,
+        "address": {
+          "city": "Osaka",
+          "zip": "530-0001",
+          "country": "JP"
+        },
+        "trackingCode": "VF242995371"
+      },
+      "tags": [
+        "fragile",
+        "repeat-customer"
+      ],
+      "total": 12.25,
+      "currency": "USD"
+    },
+    {
+      "id": 4803,
+      "status": "paid",
+      "placedAt": "2026-10-02T17:13:00Z",
+      "customer": {
+        "name": "Linus Stroustrup",
+        "email": "linus.stroustrup@example.com",
+        "tier": "pro"
+      },
+      "items": [
+        {
+          "sku": "E-08",
+          "name": "Webcam",
+          "qty": 1,
+          "price": 59.0
+        },
+        {
+          "sku": "J-76",
+          "name": "Monitor arm",
+          "qty": 2,
+          "price": 74.0
+        },
+        {
+          "sku": "C-33",
+          "name": "27in monitor",
+          "qty": 3,
+          "price": 249.99
+        }
+      ],
+      "shipping": {
+        "method": "pickup",
+        "gift": false,
+        "address": {
+          "city": "Manchester",
+          "zip": "M1",
+          "country": "GB"
+        },
+        "trackingCode": "VF934543046"
+      },
+      "tags": [
+        "fragile",
+        "bulk"
+      ],
+      "total": 956.97,
+      "currency": "GBP"
+    },
+    {
+      "id": 4804,
+      "status": "delivered",
+      "placedAt": "2026-09-16T13:46:00Z",
+      "customer": {
+        "name": "Alan Easley",
+        "email": "alan.easley@example.com",
+        "tier": "pro"
+      },
+      "items": [
+        {
+          "sku": "E-08",
+          "name": "Webcam",
+          "qty": 2,
+          "price": 59.0
+        },
+        {
+          "sku": "D-51",
+          "name": "Laptop stand",
+          "qty": 2,
+          "price": 34.5
+        }
+      ],
+      "shipping": {
+        "method": "express",
+        "gift": false,
+        "address": {
+          "city": "Porto",
+          "zip": "4000-001",
+          "country": "PT"
+        },
+        "trackingCode": "VF178598835"
+      },
+      "tags": [],
+      "total": 187.0,
+      "currency": "EUR"
+    },
+    {
+      "id": 4805,
+      "status": "paid",
+      "placedAt": "2026-11-03T20:35:00Z",
+      "customer": {
+        "name": "Guido Knuth",
+        "email": "guido.knuth@example.com",
+        "tier": "team"
+      },
+      "items": [
+        {
+          "sku": "F-19",
+          "name": "Desk mat",
+          "qty": 2,
+          "price": 19.5
+        }
+      ],
+      "shipping": {
+        "method": "express",
+        "gift": false,
+        "address": {
+          "city": "Osaka",
+          "zip": "530-0001",
+          "country": "JP"
+        },
+        "trackingCode": "VF476001182"
+      },
+      "tags": [
+        "bulk",
+        "fragile",
+        "priority"
+      ],
+      "total": 39.0,
+      "currency": "USD"
+    },
+    {
+      "id": 4806,
+      "status": "delivered",
+      "placedAt": "2026-07-22T13:01:00Z",
+      "customer": {
+        "name": "Annie Clarke",
+        "email": "annie.clarke@example.com",
+        "tier": "pro"
+      },
+      "items": [
+        {
+          "sku": "H-02",
+          "name": "Wireless mouse",
+          "qty": 1,
+          "price": 29.99
+        },
+        {
+          "sku": "B-07",
+          "name": "USB-C hub",
+          "qty": 3,
+          "price": 42.0
+        }
+      ],
+      "shipping": {
+        "method": "express",
+        "gift": true,
+        "address": {
+          "city": "Manchester",
+          "zip": "M1",
+          "country": "GB"
+        },
+        "trackingCode": "VF225730654"
+      },
+      "tags": [
+        "priority",
+        "repeat-customer",
+        "gift"
+      ],
+      "total": 155.99,
+      "currency": "GBP"
+    },
+    {
+      "id": 4807,
+      "status": "pending",
+      "placedAt": "2026-05-05T21:27:00Z",
+      "customer": {
+        "name": "Joan Johnson",
+        "email": "joan.johnson@example.com",
+        "tier": "team"
+      },
+      "items": [
+        {
+          "sku": "D-51",
+          "name": "Laptop stand",
+          "qty": 4,
+          "price": 34.5
+        },
+        {
+          "sku": "G-44",
+          "name": "Noise-cancelling headphones",
+          "qty": 1,
+          "price": 179.0
+        },
+        {
+          "sku": "J-76",
+          "name": "Monitor arm",
+          "qty": 2,
+          "price": 74.0
+        }
+      ],
+      "shipping": {
+        "method": "express",
+        "gift": false,
+        "address": {
+          "city": "Berlin",
+          "zip": "10115",
+          "country": "DE"
+        },
+        "trackingCode": null
+      },
+      "tags": [
+        "first-order",
+        "fragile"
+      ],
+      "total": 465.0,
+      "currency": "EUR"
+    },
+    {
+      "id": 4808,
+      "status": "shipped",
+      "placedAt": "2026-01-16T21:37:00Z",
+      "customer": {
+        "name": "Margaret Thompson",
+        "email": "margaret.thompson@example.com",
+        "tier": "free"
+      },
+      "items": [
+        {
+          "sku": "B-07",
+          "name": "USB-C hub",
+          "qty": 2,
+          "price": 42.0
+        }
+      ],
+      "shipping": {
+        "method": "express",
+        "gift": false,
+        "address": {
+          "city": "Lyon",
+          "zip": "69001",
+          "country": "FR"
+        },
+        "trackingCode": "VF256418835"
+      },
+      "tags": [
+        "bulk",
+        "gift",
+        "promo"
+      ],
+      "total": 84.0,
+      "currency": "EUR"
+    },
+    {
+      "id": 4809,
+      "status": "refunded",
+      "placedAt": "2026-07-13T14:06:00Z",
+      "customer": {
+        "name": "Joan Stroustrup",
+        "email": "joan.stroustrup@example.com",
+        "tier": "pro"
+      },
+      "items": [
+        {
+          "sku": "J-76",
+          "name": "Monitor arm",
+          "qty": 1,
+          "price": 74.0
+        }
+      ],
+      "shipping": {
+        "method": "pickup",
+        "gift": false,
+        "address": {
+          "city": "Toronto",
+          "zip": "M5H",
+          "country": "CA"
+        },
+        "trackingCode": "VF304665439"
+      },
+      "tags": [],
+      "total": 74.0,
+      "currency": "USD"
+    },
+    {
+      "id": 4810,
+      "status": "pending",
+      "placedAt": "2026-03-18T09:23:00Z",
+      "customer": {
+        "name": "Linus Lovelace",
+        "email": "linus.lovelace@example.com",
+        "tier": "team"
+      },
+      "items": [
+        {
+          "sku": "C-33",
+          "name": "27in monitor",
+          "qty": 3,
+          "price": 249.99
+        },
+        {
+          "sku": "B-07",
+          "name": "USB-C hub",
+          "qty": 1,
+          "price": 42.0
+        }
+      ],
+      "shipping": {
+        "method": "standard",
+        "gift": true,
+        "address": {
+          "city": "Lyon",
+          "zip": "69001",
+          "country": "FR"
+        },
+        "trackingCode": null
+      },
+      "tags": [
+        "bulk"
+      ],
+      "total": 791.97,
+      "currency": "EUR"
+    },
+    {
+      "id": 4811,
+      "status": "refunded",
+      "placedAt": "2026-02-04T21:31:00Z",
+      "customer": {
+        "name": "Claude Dijkstra",
+        "email": "claude.dijkstra@example.com",
+        "tier": "pro"
+      },
+      "items": [
+        {
+          "sku": "E-08",
+          "name": "Webcam",
+          "qty": 3,
+          "price": 59.0
+        }
+      ],
+      "shipping": {
+        "method": "express",
+        "gift": false,
+        "address": {
+          "city": "Osaka",
+          "zip": "530-0001",
+          "country": "JP"
+        },
+        "trackingCode": "VF192217959"
+      },
+      "tags": [
+        "priority"
+      ],
+      "total": 177.0,
+      "currency": "USD"
+    },
+    {
+      "id": 4812,
+      "status": "paid",
+      "placedAt": "2026-09-10T18:55:00Z",
+      "customer": {
+        "name": "Margaret Stroustrup",
+        "email": "margaret.stroustrup@example.com",
+        "tier": "free"
+      },
+      "items": [
+        {
+          "sku": "E-08",
+          "name": "Webcam",
+          "qty": 1,
+          "price": 59.0
+        },
+        {
+          "sku": "H-02",
+          "name": "Wireless mouse",
+          "qty": 2,
+          "price": 29.99
+        },
+        {
+          "sku": "C-33",
+          "name": "27in monitor",
+          "qty": 3,
+          "price": 249.99
+        }
+      ],
+      "shipping": {
+        "method": "pickup",
+        "gift": false,
+        "address": {
+          "city": "Toronto",
+          "zip": "M5H",
+          "country": "CA"
+        },
+        "trackingCode": "VF656624390"
+      },
+      "tags": [
+        "repeat-customer",
+        "gift"
+      ],
+      "total": 868.95,
+      "currency": "USD"
+    },
+    {
+      "id": 4813,
+      "status": "shipped",
+      "placedAt": "2026-09-16T13:46:00Z",
+      "customer": {
+        "name": "Katherine Thompson",
+        "email": "katherine.thompson@example.com",
+        "tier": "free"
+      },
+      "items": [
+        {
+          "sku": "J-76",
+          "name": "Monitor arm",
+          "qty": 2,
+          "price": 74.0
+        },
+        {
+          "sku": "K-60",
+          "name": "Cable kit",
+          "qty": 2,
+          "price": 12.25
+        },
+        {
+          "sku": "F-19",
+          "name": "Desk mat",
+          "qty": 2,
+          "price": 19.5
+        }
+      ],
+      "shipping": {
+        "method": "standard",
+        "gift": false,
+        "address": {
+          "city": "Lyon",
+          "zip": "69001",
+          "country": "FR"
+        },
+        "trackingCode": "VF607063907"
+      },
+      "tags": [
+        "repeat-customer",
+        "first-order"
+      ],
+      "total": 211.5,
+      "currency": "EUR"
+    },
+    {
+      "id": 4814,
+      "status": "refunded",
+      "placedAt": "2026-04-11T11:30:00Z",
+      "customer": {
+        "name": "Linus Thompson",
+        "email": "linus.thompson@example.com",
+        "tier": "team"
+      },
+      "items": [
+        {
+          "sku": "F-19",
+          "name": "Desk mat",
+          "qty": 1,
+          "price": 19.5
+        },
+        {
+          "sku": "K-60",
+          "name": "Cable kit",
+          "qty": 2,
+          "price": 12.25
+        }
+      ],
+      "shipping": {
+        "method": "pickup",
+        "gift": false,
+        "address": {
+          "city": "Toronto",
+          "zip": "M5H",
+          "country": "CA"
+        },
+        "trackingCode": "VF614830670"
+      },
+      "tags": [
+        "promo",
+        "first-order"
+      ],
+      "total": 44.0,
+      "currency": "USD"
+    },
+    {
+      "id": 4815,
+      "status": "refunded",
+      "placedAt": "2026-08-13T19:05:00Z",
+      "customer": {
+        "name": "Hedy Turing",
+        "email": "hedy.turing@example.com",
+        "tier": "team"
+      },
+      "items": [
+        {
+          "sku": "B-07",
+          "name": "USB-C hub",
+          "qty": 4,
+          "price": 42.0
+        },
+        {
+          "sku": "G-44",
+          "name": "Noise-cancelling headphones",
+          "qty": 2,
+          "price": 179.0
+        },
+        {
+          "sku": "D-51",
+          "name": "Laptop stand",
+          "qty": 4,
+          "price": 34.5
+        }
+      ],
+      "shipping": {
+        "method": "standard",
+        "gift": true,
+        "address": {
+          "city": "Manchester",
+          "zip": "M1",
+          "country": "GB"
+        },
+        "trackingCode": "VF236406413"
+      },
+      "tags": [],
+      "total": 664.0,
+      "currency": "GBP"
+    },
+    {
+      "id": 4816,
+      "status": "paid",
+      "placedAt": "2026-09-24T10:27:00Z",
+      "customer": {
+        "name": "Ada Lovelace",
+        "email": "ada.lovelace@example.com",
+        "tier": "free"
+      },
+      "items": [
+        {
+          "sku": "H-02",
+          "name": "Wireless mouse",
+          "qty": 3,
+          "price": 29.99
+        },
+        {
+          "sku": "C-33",
+          "name": "27in monitor",
+          "qty": 2,
+          "price": 249.99
+        },
+        {
+          "sku": "K-60",
+          "name": "Cable kit",
+          "qty": 2,
+          "price": 12.25
+        }
+      ],
+      "shipping": {
+        "method": "standard",
+        "gift": true,
+        "address": {
+          "city": "Berlin",
+          "zip": "10115",
+          "country": "DE"
+        },
+        "trackingCode": "VF328470563"
+      },
+      "tags": [
+        "bulk",
+        "repeat-customer"
+      ],
+      "total": 614.45,
+      "currency": "EUR"
+    },
+    {
+      "id": 4817,
+      "status": "pending",
+      "placedAt": "2026-09-14T21:58:00Z",
+      "customer": {
+        "name": "Edsger Clarke",
+        "email": "edsger.clarke@example.com",
+        "tier": "team"
+      },
+      "items": [
+        {
+          "sku": "J-76",
+          "name": "Monitor arm",
+          "qty": 2,
+          "price": 74.0
+        },
+        {
+          "sku": "G-44",
+          "name": "Noise-cancelling headphones",
+          "qty": 1,
+          "price": 179.0
+        }
+      ],
+      "shipping": {
+        "method": "standard",
+        "gift": false,
+        "address": {
+          "city": "Toronto",
+          "zip": "M5H",
+          "country": "CA"
+        },
+        "trackingCode": null
+      },
+      "tags": [],
+      "total": 327.0,
+      "currency": "USD"
+    },
+    {
+      "id": 4818,
+      "status": "shipped",
+      "placedAt": "2026-08-20T19:07:00Z",
+      "customer": {
+        "name": "Margaret Ritchie",
+        "email": "margaret.ritchie@example.com",
+        "tier": "team"
+      },
+      "items": [
+        {
+          "sku": "K-60",
+          "name": "Cable kit",
+          "qty": 1,
+          "price": 12.25
+        }
+      ],
+      "shipping": {
+        "method": "standard",
+        "gift": false,
+        "address": {
+          "city": "Porto",
+          "zip": "4000-001",
+          "country": "PT"
+        },
+        "trackingCode": "VF656572693"
+      },
+      "tags": [
+        "promo",
+        "priority",
+        "bulk"
+      ],
+      "total": 12.25,
+      "currency": "EUR"
+    },
+    {
+      "id": 4819,
+      "status": "pending",
+      "placedAt": "2026-08-18T08:48:00Z",
+      "customer": {
+        "name": "Grace Torvalds",
+        "email": "grace.torvalds@example.com",
+        "tier": "free"
+      },
+      "items": [
+        {
+          "sku": "D-51",
+          "name": "Laptop stand",
+          "qty": 3,
+          "price": 34.5
+        }
+      ],
+      "shipping": {
+        "method": "express",
+        "gift": false,
+        "address": {
+          "city": "Leeds",
+          "zip": "LS1",
+          "country": "GB"
+        },
+        "trackingCode": null
+      },
+      "tags": [
+        "first-order"
+      ],
+      "total": 103.5,
+      "currency": "GBP"
+    },
+    {
+      "id": 4820,
+      "status": "pending",
+      "placedAt": "2026-04-27T15:08:00Z",
+      "customer": {
+        "name": "Frances Perlman",
+        "email": "frances.perlman@example.com",
+        "tier": "pro"
+      },
+      "items": [
+        {
+          "sku": "J-76",
+          "name": "Monitor arm",
+          "qty": 4,
+          "price": 74.0
+        },
+        {
+          "sku": "K-60",
+          "name": "Cable kit",
+          "qty": 2,
+          "price": 12.25
+        }
+      ],
+      "shipping": {
+        "method": "standard",
+        "gift": false,
+        "address": {
+          "city": "Austin",
+          "zip": "73301",
+          "country": "US"
+        },
+        "trackingCode": null
+      },
+      "tags": [
+        "priority",
+        "first-order"
+      ],
+      "total": 320.5,
+      "currency": "USD"
+    },
+    {
+      "id": 4821,
+      "status": "shipped",
+      "placedAt": "2026-05-05T15:14:00Z",
+      "customer": {
+        "name": "Margaret Dijkstra",
+        "email": "margaret.dijkstra@example.com",
+        "tier": "team"
+      },
+      "items": [
+        {
+          "sku": "B-07",
+          "name": "USB-C hub",
+          "qty": 3,
+          "price": 42.0
+        },
+        {
+          "sku": "D-51",
+          "name": "Laptop stand",
+          "qty": 1,
+          "price": 34.5
+        }
+      ],
+      "shipping": {
+        "method": "standard",
+        "gift": false,
+        "address": {
+          "city": "Lyon",
+          "zip": "69001",
+          "country": "FR"
+        },
+        "trackingCode": "VF623192278"
+      },
+      "tags": [
+        "first-order"
+      ],
+      "total": 160.5,
+      "currency": "EUR"
+    },
+    {
+      "id": 4822,
+      "status": "shipped",
+      "placedAt": "2026-06-11T09:46:00Z",
+      "customer": {
+        "name": "Hedy Knuth",
+        "email": "hedy.knuth@example.com",
+        "tier": "pro"
+      },
+      "items": [
+        {
+          "sku": "G-44",
+          "name": "Noise-cancelling headphones",
+          "qty": 4,
+          "price": 179.0
+        }
+      ],
+      "shipping": {
+        "method": "standard",
+        "gift": false,
+        "address": {
+          "city": "Lyon",
+          "zip": "69001",
+          "country": "FR"
+        },
+        "trackingCode": "VF592493986"
+      },
+      "tags": [
+        "first-order",
+        "priority",
+        "fragile"
+      ],
+      "total": 716.0,
+      "currency": "EUR"
+    },
+    {
+      "id": 4823,
+      "status": "delivered",
+      "placedAt": "2026-01-25T10:17:00Z",
+      "customer": {
+        "name": "Alan Perlman",
+        "email": "alan.perlman@example.com",
+        "tier": "free"
+      },
+      "items": [
+        {
+          "sku": "K-60",
+          "name": "Cable kit",
+          "qty": 1,
+          "price": 12.25
+        },
+        {
+          "sku": "E-08",
+          "name": "Webcam",
+          "qty": 2,
+          "price": 59.0
+        },
+        {
+          "sku": "B-07",
+          "name": "USB-C hub",
+          "qty": 1,
+          "price": 42.0
+        }
+      ],
+      "shipping": {
+        "method": "express",
+        "gift": false,
+        "address": {
+          "city": "Toronto",
+          "zip": "M5H",
+          "country": "CA"
+        },
+        "trackingCode": "VF825821165"
+      },
+      "tags": [
+        "fragile",
+        "repeat-customer"
+      ],
+      "total": 172.25,
+      "currency": "USD"
+    },
+    {
+      "id": 4824,
+      "status": "paid",
+      "placedAt": "2026-11-03T20:16:00Z",
+      "customer": {
+        "name": "Alan Perlman",
+        "email": "alan.perlman@example.com",
+        "tier": "free"
+      },
+      "items": [
+        {
+          "sku": "F-19",
+          "name": "Desk mat",
+          "qty": 1,
+          "price": 19.5
+        },
+        {
+          "sku": "B-07",
+          "name": "USB-C hub",
+          "qty": 2,
+          "price": 42.0
+        },
+        {
+          "sku": "E-08",
+          "name": "Webcam",
+          "qty": 4,
+          "price": 59.0
+        }
+      ],
+      "shipping": {
+        "method": "pickup",
+        "gift": false,
+        "address": {
+          "city": "Porto",
+          "zip": "4000-001",
+          "country": "PT"
+        },
+        "trackingCode": "VF171535405"
+      },
+      "tags": [
+        "promo",
+        "priority"
+      ],
+      "total": 339.5,
+      "currency": "EUR"
+    },
+    {
+      "id": 4825,
+      "status": "shipped",
+      "placedAt": "2026-01-17T19:15:00Z",
+      "customer": {
+        "name": "Radia Shannon",
+        "email": "radia.shannon@example.com",
+        "tier": "free"
+      },
+      "items": [
+        {
+          "sku": "F-19",
+          "name": "Desk mat",
+          "qty": 4,
+          "price": 19.5
+        }
+      ],
+      "shipping": {
+        "method": "standard",
+        "gift": false,
+        "address": {
+          "city": "Porto",
+          "zip": "4000-001",
+          "country": "PT"
+        },
+        "trackingCode": "VF294504003"
+      },
+      "tags": [
+        "gift"
+      ],
+      "total": 78.0,
+      "currency": "EUR"
+    },
+    {
+      "id": 4826,
+      "status": "paid",
+      "placedAt": "2026-01-01T19:32:00Z",
+      "customer": {
+        "name": "Ada Perlman",
+        "email": "ada.perlman@example.com",
+        "tier": "team"
+      },
+      "items": [
+        {
+          "sku": "D-51",
+          "name": "Laptop stand",
+          "qty": 2,
+          "price": 34.5
+        },
+        {
+          "sku": "E-08",
+          "name": "Webcam",
+          "qty": 3,
+          "price": 59.0
+        },
+        {
+          "sku": "H-02",
+          "name": "Wireless mouse",
+          "qty": 3,
+          "price": 29.99
+        }
+      ],
+      "shipping": {
+        "method": "standard",
+        "gift": false,
+        "address": {
+          "city": "Austin",
+          "zip": "73301",
+          "country": "US"
+        },
+        "trackingCode": "VF363796374"
+      },
+      "tags": [
+        "priority",
+        "first-order",
+        "fragile"
+      ],
+      "total": 335.97,
+      "currency": "USD"
+    },
+    {
+      "id": 4827,
+      "status": "refunded",
+      "placedAt": "2026-06-02T21:08:00Z",
+      "customer": {
+        "name": "Barbara Hamilton",
+        "email": "barbara.hamilton@example.com",
+        "tier": "free"
+      },
+      "items": [
+        {
+          "sku": "G-44",
+          "name": "Noise-cancelling headphones",
+          "qty": 2,
+          "price": 179.0
+        },
+        {
+          "sku": "J-76",
+          "name": "Monitor arm",
+          "qty": 2,
+          "price": 74.0
+        },
+        {
+          "sku": "E-08",
+          "name": "Webcam",
+          "qty": 3,
+          "price": 59.0
+        }
+      ],
+      "shipping": {
+        "method": "standard",
+        "gift": false,
+        "address": {
+          "city": "Porto",
+          "zip": "4000-001",
+          "country": "PT"
+        },
+        "trackingCode": "VF374441836"
+      },
+      "tags": [
+        "repeat-customer",
+        "priority",
+        "first-order"
+      ],
+      "total": 683.0,
+      "currency": "EUR"
+    },
+    {
+      "id": 4828,
+      "status": "refunded",
+      "placedAt": "2026-01-09T13:21:00Z",
+      "customer": {
+        "name": "Dennis Perlman",
+        "email": "dennis.perlman@example.com",
+        "tier": "team"
+      },
+      "items": [
+        {
+          "sku": "E-08",
+          "name": "Webcam",
+          "qty": 1,
+          "price": 59.0
+        },
+        {
+          "sku": "D-51",
+          "name": "Laptop stand",
+          "qty": 4,
+          "price": 34.5
+        },
+        {
+          "sku": "K-60",
+          "name": "Cable kit",
+          "qty": 2,
+          "price": 12.25
+        }
+      ],
+      "shipping": {
+        "method": "express",
+        "gift": false,
+        "address": {
+          "city": "Osaka",
+          "zip": "530-0001",
+          "country": "JP"
+        },
+        "trackingCode": "VF432374551"
+      },
+      "tags": [
+        "gift"
+      ],
+      "total": 221.5,
+      "currency": "USD"
+    },
+    {
+      "id": 4829,
+      "status": "delivered",
+      "placedAt": "2026-09-21T11:15:00Z",
+      "customer": {
+        "name": "Alan van Rossum",
+        "email": "alan.vanrossum@example.com",
+        "tier": "team"
+      },
+      "items": [
+        {
+          "sku": "F-19",
+          "name": "Desk mat",
+          "qty": 4,
+          "price": 19.5
+        }
+      ],
+      "shipping": {
+        "method": "standard",
+        "gift": true,
+        "address": {
+          "city": "Berlin",
+          "zip": "10115",
+          "country": "DE"
+        },
+        "trackingCode": "VF977294617"
+      },
+      "tags": [],
+      "total": 78.0,
+      "currency": "EUR"
+    },
+    {
+      "id": 4830,
+      "status": "shipped",
+      "placedAt": "2026-02-19T16:54:00Z",
+      "customer": {
+        "name": "Tim Berners-Lee",
+        "email": "tim.berners-lee@example.com",
+        "tier": "free"
+      },
+      "items": [
+        {
+          "sku": "K-60",
+          "name": "Cable kit",
+          "qty": 4,
+          "price": 12.25
+        },
+        {
+          "sku": "A-12",
+          "name": "Mechanical keyboard",
+          "qty": 1,
+          "price": 89.0
+        }
+      ],
+      "shipping": {
+        "method": "pickup",
+        "gift": false,
+        "address": {
+          "city": "Berlin",
+          "zip": "10115",
+          "country": "DE"
+        },
+        "trackingCode": "VF941857727"
+      },
+      "tags": [
+        "promo",
+        "gift",
+        "fragile"
+      ],
+      "total": 138.0,
+      "currency": "EUR"
+    },
+    {
+      "id": 4831,
+      "status": "pending",
+      "placedAt": "2026-09-19T21:52:00Z",
+      "customer": {
+        "name": "Frances Hamilton",
+        "email": "frances.hamilton@example.com",
+        "tier": "free"
+      },
+      "items": [
+        {
+          "sku": "K-60",
+          "name": "Cable kit",
+          "qty": 1,
+          "price": 12.25
+        },
+        {
+          "sku": "C-33",
+          "name": "27in monitor",
+          "qty": 4,
+          "price": 249.99
+        }
+      ],
+      "shipping": {
+        "method": "pickup",
+        "gift": false,
+        "address": {
+          "city": "Berlin",
+          "zip": "10115",
+          "country": "DE"
+        },
+        "trackingCode": null
+      },
+      "tags": [
+        "priority"
+      ],
+      "total": 1012.21,
+      "currency": "EUR"
+    },
+    {
+      "id": 4832,
+      "status": "refunded",
+      "placedAt": "2026-09-02T18:01:00Z",
+      "customer": {
+        "name": "Linus Johnson",
+        "email": "linus.johnson@example.com",
+        "tier": "team"
+      },
+      "items": [
+        {
+          "sku": "C-33",
+          "name": "27in monitor",
+          "qty": 3,
+          "price": 249.99
+        }
+      ],
+      "shipping": {
+        "method": "pickup",
+        "gift": false,
+        "address": {
+          "city": "Leeds",
+          "zip": "LS1",
+          "country": "GB"
+        },
+        "trackingCode": "VF625375771"
+      },
+      "tags": [
+        "priority",
+        "fragile"
+      ],
+      "total": 749.97,
+      "currency": "GBP"
+    },
+    {
+      "id": 4833,
+      "status": "shipped",
+      "placedAt": "2026-04-08T19:41:00Z",
+      "customer": {
+        "name": "Alan Perlman",
+        "email": "alan.perlman@example.com",
+        "tier": "pro"
+      },
+      "items": [
+        {
+          "sku": "J-76",
+          "name": "Monitor arm",
+          "qty": 1,
+          "price": 74.0
+        },
+        {
+          "sku": "K-60",
+          "name": "Cable kit",
+          "qty": 4,
+          "price": 12.25
+        },
+        {
+          "sku": "B-07",
+          "name": "USB-C hub",
+          "qty": 3,
+          "price": 42.0
+        }
+      ],
+      "shipping": {
+        "method": "express",
+        "gift": false,
+        "address": {
+          "city": "Manchester",
+          "zip": "M1",
+          "country": "GB"
+        },
+        "trackingCode": "VF182398815"
+      },
+      "tags": [
+        "first-order",
+        "gift",
+        "priority"
+      ],
+      "total": 249.0,
+      "currency": "GBP"
+    },
+    {
+      "id": 4834,
+      "status": "delivered",
+      "placedAt": "2026-10-19T10:00:00Z",
+      "customer": {
+        "name": "Hedy Perlman",
+        "email": "hedy.perlman@example.com",
+        "tier": "pro"
+      },
+      "items": [
+        {
+          "sku": "K-60",
+          "name": "Cable kit",
+          "qty": 2,
+          "price": 12.25
+        }
+      ],
+      "shipping": {
+        "method": "standard",
+        "gift": false,
+        "address": {
+          "city": "Lyon",
+          "zip": "69001",
+          "country": "FR"
+        },
+        "trackingCode": "VF821556201"
+      },
+      "tags": [],
+      "total": 24.5,
+      "currency": "EUR"
+    },
+    {
+      "id": 4835,
+      "status": "shipped",
+      "placedAt": "2026-05-03T15:01:00Z",
+      "customer": {
+        "name": "Linus Stroustrup",
+        "email": "linus.stroustrup@example.com",
+        "tier": "pro"
+      },
+      "items": [
+        {
+          "sku": "H-02",
+          "name": "Wireless mouse",
+          "qty": 4,
+          "price": 29.99
+        },
+        {
+          "sku": "E-08",
+          "name": "Webcam",
+          "qty": 4,
+          "price": 59.0
+        },
+        {
+          "sku": "J-76",
+          "name": "Monitor arm",
+          "qty": 4,
+          "price": 74.0
+        }
+      ],
+      "shipping": {
+        "method": "express",
+        "gift": true,
+        "address": {
+          "city": "Lyon",
+          "zip": "69001",
+          "country": "FR"
+        },
+        "trackingCode": "VF643977481"
+      },
+      "tags": [
+        "gift",
+        "fragile",
+        "repeat-customer"
+      ],
+      "total": 651.96,
+      "currency": "EUR"
+    },
+    {
+      "id": 4836,
+      "status": "delivered",
+      "placedAt": "2026-06-05T17:52:00Z",
+      "customer": {
+        "name": "Margaret Allen",
+        "email": "margaret.allen@example.com",
+        "tier": "team"
+      },
+      "items": [
+        {
+          "sku": "K-60",
+          "name": "Cable kit",
+          "qty": 1,
+          "price": 12.25
+        }
+      ],
+      "shipping": {
+        "method": "pickup",
+        "gift": false,
+        "address": {
+          "city": "Lyon",
+          "zip": "69001",
+          "country": "FR"
+        },
+        "trackingCode": "VF220986608"
+      },
+      "tags": [
+        "repeat-customer",
+        "fragile"
+      ],
+      "total": 12.25,
+      "currency": "EUR"
+    },
+    {
+      "id": 4837,
+      "status": "delivered",
+      "placedAt": "2026-03-14T13:24:00Z",
+      "customer": {
+        "name": "Joan Johnson",
+        "email": "joan.johnson@example.com",
+        "tier": "pro"
+      },
+      "items": [
+        {
+          "sku": "A-12",
+          "name": "Mechanical keyboard",
+          "qty": 1,
+          "price": 89.0
+        },
+        {
+          "sku": "C-33",
+          "name": "27in monitor",
+          "qty": 4,
+          "price": 249.99
+        }
+      ],
+      "shipping": {
+        "method": "standard",
+        "gift": false,
+        "address": {
+          "city": "Porto",
+          "zip": "4000-001",
+          "country": "PT"
+        },
+        "trackingCode": "VF101869793"
+      },
+      "tags": [
+        "promo",
+        "gift"
+      ],
+      "total": 1088.96,
+      "currency": "EUR"
+    },
+    {
+      "id": 4838,
+      "status": "delivered",
+      "placedAt": "2026-02-13T14:55:00Z",
+      "customer": {
+        "name": "Tim Perlman",
+        "email": "tim.perlman@example.com",
+        "tier": "team"
+      },
+      "items": [
+        {
+          "sku": "D-51",
+          "name": "Laptop stand",
+          "qty": 1,
+          "price": 34.5
+        }
+      ],
+      "shipping": {
+        "method": "standard",
+        "gift": false,
+        "address": {
+          "city": "Osaka",
+          "zip": "530-0001",
+          "country": "JP"
+        },
+        "trackingCode": "VF559618139"
+      },
+      "tags": [
+        "promo",
+        "priority"
+      ],
+      "total": 34.5,
+      "currency": "USD"
+    },
+    {
+      "id": 4839,
+      "status": "delivered",
+      "placedAt": "2026-07-17T13:12:00Z",
+      "customer": {
+        "name": "Margaret Thompson",
+        "email": "margaret.thompson@example.com",
+        "tier": "pro"
+      },
+      "items": [
+        {
+          "sku": "A-12",
+          "name": "Mechanical keyboard",
+          "qty": 3,
+          "price": 89.0
+        }
+      ],
+      "shipping": {
+        "method": "express",
+        "gift": false,
+        "address": {
+          "city": "Austin",
+          "zip": "73301",
+          "country": "US"
+        },
+        "trackingCode": "VF971837845"
+      },
+      "tags": [
+        "bulk",
+        "promo",
+        "repeat-customer"
+      ],
+      "total": 267.0,
+      "currency": "USD"
+    },
+    {
+      "id": 4840,
+      "status": "delivered",
+      "placedAt": "2026-08-02T16:08:00Z",
+      "customer": {
+        "name": "Claude Hamilton",
+        "email": "claude.hamilton@example.com",
+        "tier": "free"
+      },
+      "items": [
+        {
+          "sku": "G-44",
+          "name": "Noise-cancelling headphones",
+          "qty": 4,
+          "price": 179.0
+        }
+      ],
+      "shipping": {
+        "method": "express",
+        "gift": false,
+        "address": {
+          "city": "Manchester",
+          "zip": "M1",
+          "country": "GB"
+        },
+        "trackingCode": "VF402522508"
+      },
+      "tags": [
+        "gift",
+        "first-order"
+      ],
+      "total": 716.0,
+      "currency": "GBP"
+    },
+    {
+      "id": 4841,
+      "status": "shipped",
+      "placedAt": "2026-02-07T16:57:00Z",
+      "customer": {
+        "name": "Linus Ritchie",
+        "email": "linus.ritchie@example.com",
+        "tier": "pro"
+      },
+      "items": [
+        {
+          "sku": "D-51",
+          "name": "Laptop stand",
+          "qty": 4,
+          "price": 34.5
+        },
+        {
+          "sku": "E-08",
+          "name": "Webcam",
+          "qty": 4,
+          "price": 59.0
+        }
+      ],
+      "shipping": {
+        "method": "pickup",
+        "gift": false,
+        "address": {
+          "city": "Austin",
+          "zip": "73301",
+          "country": "US"
+        },
+        "trackingCode": "VF457378061"
+      },
+      "tags": [
+        "fragile",
+        "repeat-customer",
+        "bulk"
+      ],
+      "total": 374.0,
+      "currency": "USD"
+    },
+    {
+      "id": 4842,
+      "status": "paid",
+      "placedAt": "2026-06-08T13:16:00Z",
+      "customer": {
+        "name": "Hedy Stroustrup",
+        "email": "hedy.stroustrup@example.com",
+        "tier": "team"
+      },
+      "items": [
+        {
+          "sku": "B-07",
+          "name": "USB-C hub",
+          "qty": 2,
+          "price": 42.0
+        }
+      ],
+      "shipping": {
+        "method": "standard",
+        "gift": false,
+        "address": {
+          "city": "Lyon",
+          "zip": "69001",
+          "country": "FR"
+        },
+        "trackingCode": "VF904938723"
+      },
+      "tags": [
+        "fragile",
+        "promo",
+        "bulk"
+      ],
+      "total": 84.0,
+      "currency": "EUR"
+    },
+    {
+      "id": 4843,
+      "status": "delivered",
+      "placedAt": "2026-03-22T16:33:00Z",
+      "customer": {
+        "name": "Radia Easley",
+        "email": "radia.easley@example.com",
+        "tier": "team"
+      },
+      "items": [
+        {
+          "sku": "E-08",
+          "name": "Webcam",
+          "qty": 1,
+          "price": 59.0
+        },
+        {
+          "sku": "F-19",
+          "name": "Desk mat",
+          "qty": 4,
+          "price": 19.5
+        }
+      ],
+      "shipping": {
+        "method": "standard",
+        "gift": true,
+        "address": {
+          "city": "Lyon",
+          "zip": "69001",
+          "country": "FR"
+        },
+        "trackingCode": "VF366775073"
+      },
+      "tags": [
+        "fragile",
+        "first-order",
+        "promo"
+      ],
+      "total": 137.0,
+      "currency": "EUR"
+    },
+    {
+      "id": 4844,
+      "status": "refunded",
+      "placedAt": "2026-01-03T14:59:00Z",
+      "customer": {
+        "name": "Guido Easley",
+        "email": "guido.easley@example.com",
+        "tier": "team"
+      },
+      "items": [
+        {
+          "sku": "A-12",
+          "name": "Mechanical keyboard",
+          "qty": 1,
+          "price": 89.0
+        },
+        {
+          "sku": "C-33",
+          "name": "27in monitor",
+          "qty": 4,
+          "price": 249.99
+        }
+      ],
+      "shipping": {
+        "method": "express",
+        "gift": false,
+        "address": {
+          "city": "Osaka",
+          "zip": "530-0001",
+          "country": "JP"
+        },
+        "trackingCode": "VF366787564"
+      },
+      "tags": [],
+      "total": 1088.96,
+      "currency": "USD"
+    },
+    {
+      "id": 4845,
+      "status": "pending",
+      "placedAt": "2026-01-01T20:08:00Z",
+      "customer": {
+        "name": "Joan Turing",
+        "email": "joan.turing@example.com",
+        "tier": "free"
+      },
+      "items": [
+        {
+          "sku": "C-33",
+          "name": "27in monitor",
+          "qty": 1,
+          "price": 249.99
+        }
+      ],
+      "shipping": {
+        "method": "pickup",
+        "gift": false,
+        "address": {
+          "city": "Lyon",
+          "zip": "69001",
+          "country": "FR"
+        },
+        "trackingCode": null
+      },
+      "tags": [
+        "repeat-customer",
+        "first-order"
+      ],
+      "total": 249.99,
+      "currency": "EUR"
+    },
+    {
+      "id": 4846,
+      "status": "shipped",
+      "placedAt": "2026-10-01T08:34:00Z",
+      "customer": {
+        "name": "Katherine Perlman",
+        "email": "katherine.perlman@example.com",
+        "tier": "pro"
+      },
+      "items": [
+        {
+          "sku": "G-44",
+          "name": "Noise-cancelling headphones",
+          "qty": 1,
+          "price": 179.0
+        },
+        {
+          "sku": "B-07",
+          "name": "USB-C hub",
+          "qty": 3,
+          "price": 42.0
+        },
+        {
+          "sku": "J-76",
+          "name": "Monitor arm",
+          "qty": 2,
+          "price": 74.0
+        }
+      ],
+      "shipping": {
+        "method": "express",
+        "gift": false,
+        "address": {
+          "city": "Austin",
+          "zip": "73301",
+          "country": "US"
+        },
+        "trackingCode": "VF439685769"
+      },
+      "tags": [
+        "fragile"
+      ],
+      "total": 453.0,
+      "currency": "USD"
+    },
+    {
+      "id": 4847,
+      "status": "refunded",
+      "placedAt": "2026-02-09T11:42:00Z",
+      "customer": {
+        "name": "Barbara van Rossum",
+        "email": "barbara.vanrossum@example.com",
+        "tier": "pro"
+      },
+      "items": [
+        {
+          "sku": "D-51",
+          "name": "Laptop stand",
+          "qty": 3,
+          "price": 34.5
+        },
+        {
+          "sku": "A-12",
+          "name": "Mechanical keyboard",
+          "qty": 1,
+          "price": 89.0
+        },
+        {
+          "sku": "G-44",
+          "name": "Noise-cancelling headphones",
+          "qty": 1,
+          "price": 179.0
+        }
+      ],
+      "shipping": {
+        "method": "express",
+        "gift": false,
+        "address": {
+          "city": "Lyon",
+          "zip": "69001",
+          "country": "FR"
+        },
+        "trackingCode": "VF136611830"
+      },
+      "tags": [
+        "first-order",
+        "fragile"
+      ],
+      "total": 371.5,
+      "currency": "EUR"
+    },
+    {
+      "id": 4848,
+      "status": "delivered",
+      "placedAt": "2026-04-08T15:14:00Z",
+      "customer": {
+        "name": "Guido Liskov",
+        "email": "guido.liskov@example.com",
+        "tier": "pro"
+      },
+      "items": [
+        {
+          "sku": "G-44",
+          "name": "Noise-cancelling headphones",
+          "qty": 3,
+          "price": 179.0
+        },
+        {
+          "sku": "D-51",
+          "name": "Laptop stand",
+          "qty": 1,
+          "price": 34.5
+        },
+        {
+          "sku": "A-12",
+          "name": "Mechanical keyboard",
+          "qty": 2,
+          "price": 89.0
+        }
+      ],
+      "shipping": {
+        "method": "express",
+        "gift": true,
+        "address": {
+          "city": "Toronto",
+          "zip": "M5H",
+          "country": "CA"
+        },
+        "trackingCode": "VF769582197"
+      },
+      "tags": [
+        "bulk",
+        "repeat-customer",
+        "first-order"
+      ],
+      "total": 749.5,
+      "currency": "USD"
+    },
+    {
+      "id": 4849,
+      "status": "pending",
+      "placedAt": "2026-03-14T08:45:00Z",
+      "customer": {
+        "name": "Barbara Lovelace",
+        "email": "barbara.lovelace@example.com",
+        "tier": "free"
+      },
+      "items": [
+        {
+          "sku": "A-12",
+          "name": "Mechanical keyboard",
+          "qty": 4,
+          "price": 89.0
+        },
+        {
+          "sku": "C-33",
+          "name": "27in monitor",
+          "qty": 1,
+          "price": 249.99
+        }
+      ],
+      "shipping": {
+        "method": "standard",
+        "gift": false,
+        "address": {
+          "city": "Porto",
+          "zip": "4000-001",
+          "country": "PT"
+        },
+        "trackingCode": null
+      },
+      "tags": [
+        "first-order",
+        "priority"
+      ],
+      "total": 605.99,
+      "currency": "EUR"
+    },
+    {
+      "id": 4850,
+      "status": "refunded",
+      "placedAt": "2026-01-10T18:46:00Z",
+      "customer": {
+        "name": "Dennis Allen",
+        "email": "dennis.allen@example.com",
+        "tier": "pro"
+      },
+      "items": [
+        {
+          "sku": "F-19",
+          "name": "Desk mat",
+          "qty": 2,
+          "price": 19.5
+        }
+      ],
+      "shipping": {
+        "method": "express",
+        "gift": false,
+        "address": {
+          "city": "Manchester",
+          "zip": "M1",
+          "country": "GB"
+        },
+        "trackingCode": "VF575061127"
+      },
+      "tags": [
+        "priority"
+      ],
+      "total": 39.0,
+      "currency": "GBP"
+    }
+  ]
+}
