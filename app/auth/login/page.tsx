@@ -7,7 +7,7 @@ import { ArrowLeft } from "lucide-react";
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: any;
+  searchParams: Promise<{ returnTo?: string | string[] }>;
 }) {
   const supabase = await createClient();
 
@@ -22,7 +22,7 @@ export default async function LoginPage({
 
   // Get the returnTo parameter from the URL or default to "/"
   // Use optional chaining and nullish coalescing to safely access the property
-  const returnTo = searchParams?.returnTo ?? "/";
+  const returnTo = (await searchParams)?.returnTo ?? "/";
 
   // Convert to string if it's an array
   const returnToPath = Array.isArray(returnTo) ? returnTo[0] : returnTo;

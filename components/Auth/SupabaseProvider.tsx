@@ -7,7 +7,7 @@ import {
   useState,
   useCallback,
 } from "react";
-import { createClient } from "@/utils/superbase/client";
+import { createClient, isSupabaseConfigured } from "@/utils/superbase/client";
 import { User, Session } from "@supabase/supabase-js";
 
 // Define the type only once and include refreshSubscription
@@ -34,9 +34,15 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isPro, setIsPro] = useState(false);
-  const supabase = createClient();
+  // Null when Supabase env vars are missing: the app then runs logged-out.
+  const supabase = isSupabaseConfigured ? createClient() : null;
 
   useEffect(() => {
+    if (!supabase) {
+      setIsLoading(false);
+      return;
+    }
+
     const getSession = async () => {
       setIsLoading(true);
 
@@ -72,15 +78,15 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
     return () => {
       subscription.unsubscribe();
     };
-  }, [supabase.auth]);
+  }, [supabase]);
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    await supabase?.auth.signOut();
   };
 
   // Extract the subscription check to a separate function and wrap in useCallback
   const checkSubscriptionStatus = useCallback(async () => {
-    if (user) {
+    if (user && supabase) {
       try {
         // First check if the profile exists
         const { data: profileData, error: profileError } = await supabase
