@@ -1,0 +1,37 @@
+{
+  "mission": "Aurora-7",
+  "status": "scheduled",
+  "launch": {
+    "site": "Kourou",
+    "window": "2027-03-14T09:20:00Z",
+    "weatherGo": true
+  },
+  "vehicle": {
+    "name": "Halcyon II",
+    "stages": 3,
+    "payloadKg": 2300
+  },
+  "crew": [
+    {
+      "name": "Ada Reyes",
+      "role": "commander"
+    },
+    {
+      "name": "Kenji Sato",
+      "role": "pilot"
+    }
+  ],
+  "payload": {
+    "type": "satellite",
+    "orbit": {
+      "kind": "sun-synchronous",
+      "altitudeKm": 620
+    },
+    "instruments": [
+      "imager",
+      "spectrometer",
+      "radar"
+    ]
+  },
+  "abort": null
+}

@@ -28,18 +28,11 @@ export default function Hero() {
 
       <Reveal className={WRAP}>
         <div className="overflow-hidden rounded-xl border border-vf-line bg-vf-bg2 shadow-[0_40px_120px_-40px_rgba(200,241,105,0.16)]">
-          <div className="flex items-center gap-3.5 border-b border-vf-rule px-3.5 py-2.5">
-            <Mono>data.json</Mono>
-            <Mono className="hidden sm:inline">46 lines</Mono>
-            <Mono className="ml-auto">
-              <span className="text-vf-acc">●</span> valid · 19 nodes
-            </Mono>
-          </div>
           <Image
-            src="/demos/demo.jpg"
-            alt="The Visual Flow editor: JSON on the left, node graph on the right"
-            width={2555}
-            height={1268}
+            src="/demos/editor.png"
+            alt="The Visual Flow editor: a mission JSON file on the left and the same data as eight connected nodes on the right, with one node selected and its lines highlighted in the code"
+            width={3200}
+            height={2000}
             priority
             sizes="(max-width: 1120px) 100vw, 1072px"
             className="block h-auto w-full"

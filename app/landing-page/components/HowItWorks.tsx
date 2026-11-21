@@ -1,4 +1,4 @@
-import GraphIllustration from "./GraphIllustration";
+import Image from "next/image";
 import { Mono, SectionHead, WRAP } from "./parts";
 import Reveal from "./Reveal";
 
@@ -43,8 +43,15 @@ export default function HowItWorks() {
               </li>
             ))}
           </ol>
-          <div className="rounded-xl border border-vf-rule bg-vf-bg2 p-[22px]">
-            <GraphIllustration />
+          <div className="overflow-hidden rounded-xl border border-vf-rule bg-vf-bg2">
+            <Image
+              src="/demos/graph-closeup.png"
+              alt="Close-up of the graph: a root node linked to a customer node and two item nodes, with the first item selected"
+              width={1284}
+              height={832}
+              sizes="(max-width: 768px) 100vw, 560px"
+              className="block h-auto w-full"
+            />
           </div>
         </div>
       </Reveal>
