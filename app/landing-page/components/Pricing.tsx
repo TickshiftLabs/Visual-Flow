@@ -38,7 +38,7 @@ export default function Pricing() {
   return (
     <section id="pricing" className={`${WRAP} scroll-mt-20 pt-[104px]`}>
       <Reveal>
-        <SectionHead label="03 / Pricing">
+        <SectionHead label="04 / Pricing">
           Free to use. Pro when the files get big.
         </SectionHead>
         <div className="grid gap-4 md:grid-cols-2">

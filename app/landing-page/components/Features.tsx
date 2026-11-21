@@ -5,27 +5,27 @@ const features = [
   {
     tag: "graph",
     title: "Objects become nodes",
-    body: "Every object and array is a node, laid out left to right automatically. Drag them anywhere.",
+    body: "Every object and array is a node, laid out automatically, left to right or top to bottom. Drag them anywhere.",
   },
   {
-    tag: "validate",
-    title: "Checked as you type",
-    body: "A full code editor on the left. Syntax errors are flagged the moment they appear.",
+    tag: "views",
+    title: "Graph, tree or 3D",
+    body: "Switch between a node graph, a foldable outline and a 3D model of the same file, without losing your place.",
   },
   {
     tag: "search",
     title: "Find any key or value",
-    body: "Type a term and matching nodes light up while everything else dims.",
+    body: "Type a term and matches light up in whichever view you're in, while everything else fades.",
   },
   {
-    tag: "inspect",
-    title: "Click to see the full data",
-    body: "Open any node to see its contents and the path that leads to it from the root.",
+    tag: "link",
+    title: "Click a node, find its code",
+    body: "Select anything and its lines are highlighted in the editor, which scrolls to them. Syntax errors are flagged as you type.",
   },
   {
     tag: "export",
     title: "Save it as an image",
-    body: "Export the graph as PNG, JPG or SVG for docs, tickets and slides.",
+    body: "Export the whole graph as PNG, JPG or true vector SVG, in a fraction of a second, for docs, tickets and slides.",
     pro: true,
   },
   {

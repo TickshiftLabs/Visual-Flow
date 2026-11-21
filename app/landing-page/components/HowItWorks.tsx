@@ -13,7 +13,7 @@ const steps = [
   },
   {
     title: "Dig in",
-    body: "Collapse branches, search, and click nodes to inspect them.",
+    body: "Fold branches, search, switch views, and click a node to find it in the code.",
   },
   {
     title: "Take it with you",
@@ -25,7 +25,7 @@ export default function HowItWorks() {
   return (
     <section id="how" className={`${WRAP} scroll-mt-20 pt-[104px]`}>
       <Reveal>
-        <SectionHead label="02 / How it works">
+        <SectionHead label="03 / How it works">
           Four steps, about ten seconds.
         </SectionHead>
         <div className="grid items-center gap-14 md:grid-cols-[1fr_1.15fr]">

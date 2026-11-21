@@ -7,6 +7,7 @@ import { Btn, GITHUB_URL, WRAP } from "./parts";
 
 const links = [
   { href: "#features", label: "Features" },
+  { href: "#views", label: "Views" },
   { href: "#how", label: "How it works" },
   { href: "#pricing", label: "Pricing" },
 ];
