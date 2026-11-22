@@ -7,8 +7,9 @@ import { useEffect, useRef } from "react";
  * (scripts/record-demo.mjs).
  *
  * There are two, and CSS shows one of them:
- * - wide screens get the whole editor (code, views, inspector), in a small
- *   or large file depending on the screen's pixel density;
+ * - wide screens get the whole editor (code, views, inspector). One 2400px
+ *   file serves them all: a half-size version looked soft even on standard
+ *   monitors, because small interface text doesn't survive being resized twice;
  * - phones get a tall close-up (code above its graph), because the whole
  *   editor shrunk to phone width can't be read.
  *
@@ -24,8 +25,6 @@ const PHONE_LABEL =
   "A short tour: a few lines of JSON above the graph they become; nodes are selected, which highlights their lines in the code; then the same file is shown as a tree and as a 3D model.";
 
 const WIDE = "(min-width: 768px)";
-/** Screens dense enough to benefit from the 2400px file. */
-const DENSE = "(min-resolution: 1.5dppx)";
 
 export default function HeroDemo() {
   const desktop = useRef<HTMLVideoElement>(null);
@@ -47,9 +46,7 @@ export default function HeroDemo() {
       }
       if (!active.getAttribute("src")) {
         active.src = wide.matches
-          ? window.matchMedia(DENSE).matches
-            ? "/demos/editor-demo.mp4"
-            : "/demos/editor-demo-small.mp4"
+          ? "/demos/editor-demo.mp4"
           : "/demos/editor-demo-phone.mp4";
       }
       // Autoplay can be refused (e.g. data saver); the poster stays instead.

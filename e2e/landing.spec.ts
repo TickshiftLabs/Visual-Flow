@@ -12,7 +12,7 @@ test("landing page shows the product and leads to the editor", async ({ page }) 
   await expect(demo).toBeVisible();
   await expect(page.locator("video[data-clip=phone]")).toBeHidden();
   await expect(demo).toHaveAttribute("poster", /editor-demo-poster/);
-  await expect(demo).toHaveAttribute("src", /editor-demo(-small)?\.mp4/);
+  await expect(demo).toHaveAttribute("src", /editor-demo\.mp4/);
   await expect.poll(() => demo.evaluate((v: HTMLVideoElement) => v.currentTime)).toBeGreaterThan(0);
 
   await page.getByRole("link", { name: "Open the editor" }).first().click();

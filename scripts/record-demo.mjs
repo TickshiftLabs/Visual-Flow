@@ -8,8 +8,7 @@
 // Uses the graphics card by default; SOFTWARE=1 forces software rendering.
 //
 // Writes to public/demos:
-//   editor-demo.mp4          desktop, full size (high-resolution screens)
-//   editor-demo-small.mp4    desktop, half size (standard screens)
+//   editor-demo.mp4          the whole editor, for wide screens
 //   editor-demo-phone.mp4    tall close-up for phones
 //   plus a -poster.jpg (first frame) for the desktop and phone clips
 //
@@ -52,10 +51,7 @@ const VARIANTS = {
     settings: {},
     hide: [],
     css: "",
-    outputs: [
-      { file: "editor-demo.mp4", crf: 23 },
-      { file: "editor-demo-small.mp4", crf: 24, scaleTo: 1200 },
-    ],
+    outputs: [{ file: "editor-demo.mp4", crf: 23 }],
     poster: "editor-demo-poster.jpg",
     async steps(d) {
       await d.hold(1000);
