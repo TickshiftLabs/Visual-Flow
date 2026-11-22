@@ -3,6 +3,7 @@ import {
   FileIcon,
   Save,
   Upload,
+  Link2,
   Download,
   FileImage,
   FileText,
@@ -24,6 +25,7 @@ import { useFileOperations } from "@/hooks/useFileOperations";
 import { exportAsPng, exportAsJpeg, exportAsSvg } from "@/utils/exportHandlers";
 import { errorToast, infoToast } from "@/lib/toast";
 import { useSupabase } from "@/components/Auth/SupabaseProvider";
+import { copyShareLink } from "@/utils/shareActions";
 
 interface FileMenuProps {
   onUpgradeClick?: (featureName: string) => void;
@@ -146,6 +148,14 @@ export default function FileMenu({ onUpgradeClick }: FileMenuProps) {
           <span className="ml-auto font-vf-mono text-[10.5px] text-vf-dim">
             .json .txt
           </span>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem
+          onClick={copyShareLink}
+          className="cursor-pointer hover:bg-vf-line hover:text-vf-text transition-colors focus:bg-vf-line focus:text-vf-text focus:ring-0 focus:outline-none"
+        >
+          <Link2 className="h-4 w-4" />
+          <span>Copy share link</span>
         </DropdownMenuItem>
 
         {/* Export submenu with image format options */}

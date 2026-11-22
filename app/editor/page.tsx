@@ -14,6 +14,7 @@ import SettingsDialog from "./components/Layout/SettingsDialog";
 import { useJsonStore } from "@/store/useJsonStore";
 import { useSupabase } from "@/components/Auth/SupabaseProvider";
 import { NARROW_QUERY } from "@/hooks/useIsNarrow";
+import { useSharedLink } from "@/hooks/useSharedLink";
 
 export default function Home() {
   const {
@@ -75,6 +76,9 @@ export default function Home() {
     }
   }, [setJsonData, setEdgeType, setShowGrid, setVisualizationJson]);
 
+  // After the saved work is loaded (above), open a share link if there is one.
+  const { isViewingShared, keep, restore } = useSharedLink();
+
   // Validate JSON whenever it changes
   useEffect(() => {
     // Handle empty or whitespace-only JSON
@@ -96,14 +100,16 @@ export default function Home() {
   // Auto-save effect
   useEffect(() => {
     const settings = storageService.getSettings();
-    if (settings.autoSaveEnabled && isValidJson && jsonData) {
+    // Paused while looking at someone's shared file, so it can't overwrite
+    // the visitor's own saved work before they've chosen to keep it.
+    if (settings.autoSaveEnabled && isValidJson && jsonData && !isViewingShared) {
       const debounceTimer = setTimeout(() => {
         storageService.saveJsonData(jsonData);
       }, 1000); // 1 second debounce
 
       return () => clearTimeout(debounceTimer);
     }
-  }, [jsonData, isValidJson]);
+  }, [jsonData, isValidJson, isViewingShared]);
 
   // Update visualization when JSON is valid
   useEffect(() => {
@@ -171,6 +177,34 @@ export default function Home() {
       <Header />
 
       <SettingsDialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
+
+      {isViewingShared && (
+        <div
+          role="status"
+          className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-2 border-b border-vf-acc/25 bg-vf-acc/[0.06] px-3.5 py-2 text-[13px]"
+        >
+          <span className="text-vf-soft">
+            <b className="font-semibold text-vf-text">
+              You&apos;re viewing a shared file.
+            </b>{" "}
+            Your own work is safe until you choose.
+          </span>
+          <span className="ml-auto flex gap-2">
+            <button
+              onClick={restore}
+              className="cursor-pointer rounded-md border border-vf-line px-2.5 py-1 font-semibold text-vf-text transition-colors hover:border-[#4a5058]"
+            >
+              Back to mine
+            </button>
+            <button
+              onClick={keep}
+              className="cursor-pointer rounded-md bg-vf-acc px-2.5 py-1 font-semibold text-vf-bg transition hover:brightness-110"
+            >
+              Keep this
+            </button>
+          </span>
+        </div>
+      )}
 
       {/* Side by side on wide screens; code above the views on phones. */}
       <div className="flex min-h-0 flex-1 overflow-hidden max-md:flex-col">

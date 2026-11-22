@@ -14,6 +14,7 @@ import {
 import Logo from "@/components/Logo";
 import UpgradeModal from "@/components/PremiumFeatures/UpgradeModal";
 import { useJsonStore } from "@/store/useJsonStore";
+import { copyShareLink } from "@/utils/shareActions";
 import { useGraphStore } from "@/store/useGraphStore";
 
 import FileMenu from "./HeaderComponents/FileMenu";
@@ -112,6 +113,14 @@ export default function Header() {
             </span>
           )}
         </label>
+
+        <button
+          className={`${barButton} border-vf-line text-vf-text hover:border-[#4a5058]`}
+          onClick={copyShareLink}
+          title="Copy a link to this file, view and selection"
+        >
+          Share
+        </button>
 
         {!isPro && (
           <button
