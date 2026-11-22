@@ -23,6 +23,7 @@ import {
   ROOT_ID,
   type Graph,
   type GraphNode,
+  type NodeKind,
 } from "./graph/buildGraph";
 import { layoutGraph, nodeHeight, NODE_WIDTH } from "./graph/graphLayout";
 import { collapseKey, useGraphStore } from "@/store/useGraphStore";
@@ -50,11 +51,12 @@ interface JsonFlowChartProps {
   embedded?: boolean;
 }
 
-const legend: Array<{ label: string; color: string }> = [
-  { label: "root", color: KIND_COLOR.root },
-  { label: "object", color: KIND_COLOR.object },
-  { label: "array", color: KIND_COLOR.array },
-  { label: "value", color: KIND_COLOR.value },
+/** Legend entries, each covering the node kinds drawn in that colour. */
+const LEGEND: Array<{ label: string; color: string; kinds: NodeKind[] }> = [
+  { label: "root", color: KIND_COLOR.root, kinds: ["root"] },
+  { label: "object", color: KIND_COLOR.object, kinds: ["object"] },
+  { label: "array", color: KIND_COLOR.array, kinds: ["array", "item"] },
+  { label: "value", color: KIND_COLOR.value, kinds: ["value"] },
 ];
 
 const panelClass =
@@ -233,6 +235,16 @@ function Chart({
     if (staleSelection || staleFolds) reset();
   }, [graph, value, reset]);
 
+  // The legend lists only the kinds of node currently on the canvas, so it
+  // never explains a colour that isn't there (folded-away nodes don't count).
+  const legendItems = useMemo(() => {
+    const present = new Set<NodeKind>();
+    for (const node of graph.nodes) {
+      if (!hidden.has(node.id)) present.add(node.kind);
+    }
+    return LEGEND.filter((item) => item.kinds.some((kind) => present.has(kind)));
+  }, [graph, hidden]);
+
   // The node the selection belongs to: itself, or for a single value picked in
   // the Tree view, the nearest node above it.
   const selectedPath = useGraphStore((s) => s.selectedPath);
@@ -362,7 +374,7 @@ function Chart({
           position="bottom-right"
           className={`${panelClass} flex gap-3.5 px-3 py-[7px]`}
         >
-          {legend.map((item) => (
+          {legendItems.map((item) => (
             <span key={item.label} className="flex items-center gap-1.5">
               <span
                 className="block size-2 rounded-[2px]"

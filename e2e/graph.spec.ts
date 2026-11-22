@@ -10,6 +10,7 @@ import {
   nodes,
   openEditor,
   ORDERS,
+  setJson,
   setSetting,
   test,
 } from "./helpers";
@@ -104,6 +105,20 @@ test("node shadows can be switched off", async ({ page }) => {
   await expect(card).toHaveCSS("box-shadow", /30px/);
   await setSetting(page, "Node shadows", "Off");
   await expect(card).toHaveCSS("box-shadow", "none");
+});
+
+test("the legend lists only the kinds of node on the canvas", async ({ page }) => {
+  const legend = page.locator(".react-flow__panel.bottom.right");
+  await openEditor(page, '{"a": {"b": 1}}');
+  await expect(legend).toHaveText("rootobject");
+
+  // A list of plain values is one array node; a mixed list adds value nodes.
+  await setJson(page, '{"tags": ["x", "y"], "mix": [1, {"k": 2}]}');
+  await expect(legend).toHaveText("rootarrayvalue");
+
+  // Folding a branch away removes its kinds from the legend.
+  await node(page).getByTitle("Click to collapse").filter({ hasText: "mix" }).click();
+  await expect(legend).toHaveText("rootarray");
 });
 
 test("unusual documents draw without errors", async ({ page }) => {
