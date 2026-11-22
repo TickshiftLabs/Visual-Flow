@@ -38,6 +38,5 @@ export default defineConfig({
     reuseExistingServer: true,
     timeout: 120_000,
     // Paid features (image export) are tested without an account.
-    env: { NEXT_PUBLIC_FORCE_PRO: "true" },
   },
 });

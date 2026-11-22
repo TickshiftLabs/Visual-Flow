@@ -12,7 +12,6 @@ import { useMouseInteractions } from "@/hooks/useMouseInteractions";
 import { storageService } from "@/utils/storageService";
 import SettingsDialog from "./components/Layout/SettingsDialog";
 import { useJsonStore } from "@/store/useJsonStore";
-import { useSupabase } from "@/components/Auth/SupabaseProvider";
 import { NARROW_QUERY } from "@/hooks/useIsNarrow";
 import { useSharedLink } from "@/hooks/useSharedLink";
 
@@ -32,8 +31,6 @@ export default function Home() {
     setIsSettingsOpen,
   } = useJsonStore();
 
-  // Add the useSupabase hook to get isPro
-  const { isPro } = useSupabase();
 
   const lastParsedJsonRef = useRef<any>(null);
 
@@ -150,7 +147,6 @@ export default function Home() {
     handleDrop,
   } = useDragAndDrop({
     onFilesDrop: handleFiles,
-    isPremiumUser: isPro,
   });
 
   const { mainRef, handleMouseDown } = useMouseInteractions();

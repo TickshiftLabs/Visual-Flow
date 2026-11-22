@@ -1,7 +1,5 @@
 import { useCallback, useRef } from "react";
 import { successToast, errorToast } from "../lib/toast";
-import { validateJsonAgainstFreeLimits } from "../constants/limits";
-import { useSupabase } from "../components/Auth/SupabaseProvider";
 import { useJsonStore } from "../store/useJsonStore";
 
 /** What the file picker offers: JSON files, and text files that hold JSON. */
@@ -23,7 +21,6 @@ export function useFileOperations({
   onSuccessfulLoad,
 }: UseFileOperationsProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const { isPro } = useSupabase(); // Get premium status
 
   const handleFiles = useCallback(
     (files: FileList) => {
@@ -41,21 +38,6 @@ export function useFileOperations({
           // Try to parse the JSON to validate it
           JSON.parse(content);
           
-          // For free users, validate against limits
-          if (!isPro) {
-            const validation = validateJsonAgainstFreeLimits(content, isPro);
-            if (!validation.isValid) {
-              // Only add "Upgrade for more!" if it's not a format error
-              const errorMessage = validation.isFormatError
-                ? validation.message
-                : `${validation.message}. Upgrade for more!`;
-                
-              errorToast(errorMessage || "Error validating JSON");
-              return;
-            }
-          }
-          
-          // If validation passes or user is premium, update the content
           setJsonData(content);
           useJsonStore.getState().setFileName(file.name);
           // Call the callback if provided
@@ -69,7 +51,7 @@ export function useFileOperations({
       };
       reader.readAsText(file);
     },
-    [setJsonData, onSuccessfulLoad, isPro]
+    [setJsonData, onSuccessfulLoad]
   );
 
   const importFile = useCallback(() => {

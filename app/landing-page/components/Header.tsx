@@ -1,23 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { useSupabase } from "@/components/Auth/SupabaseProvider";
 import Logo from "@/components/Logo";
+import { SUPPORT_URL } from "@/constants/site";
 import { Btn, GITHUB_URL, WRAP } from "./parts";
 
 const links = [
   { href: "#features", label: "Features" },
   { href: "#views", label: "Views" },
   { href: "#how", label: "How it works" },
-  { href: "#pricing", label: "Pricing" },
+  { href: "#free", label: "Free" },
 ];
 
 const linkClass =
   "hidden text-vf-dim transition-colors hover:text-vf-text md:block";
 
 export default function Header() {
-  const { user, isLoading } = useSupabase();
-
   // The resting look is set inline, not with Tailwind utilities: this project
   // marks utilities !important, which would stop the scroll animation
   // (.vf-nav in main.css) from fading the bar in over the hero.
@@ -48,16 +46,14 @@ export default function Header() {
         >
           GitHub
         </a>
-        {!isLoading &&
-          (user ? (
-            <Link href="/protected/settings" className={linkClass}>
-              Account
-            </Link>
-          ) : (
-            <Link href="/auth/login" className={linkClass}>
-              Sign in
-            </Link>
-          ))}
+        <a
+          href={SUPPORT_URL}
+          target="_blank"
+          rel="noreferrer"
+          className={linkClass}
+        >
+          Support
+        </a>
 
         <Btn href="/editor">Open editor</Btn>
       </div>

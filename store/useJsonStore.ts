@@ -45,7 +45,6 @@ interface JsonState {
   setIsSettingsOpen: (isOpen: boolean) => void;
   setIsLoading: (isLoading: boolean) => void;
   applyChangesToVisualization: () => void;
-  isPremiumUser: boolean;
 }
 
 export const useJsonStore = create<JsonState>((set, get) => ({
@@ -64,7 +63,6 @@ export const useJsonStore = create<JsonState>((set, get) => ({
   nodeShadows: true,
   isSettingsOpen: false,
   isLoading: false,
-  isPremiumUser: false,
   
   // Actions
   setJsonData: (data) => set({ jsonData: data }),
@@ -109,5 +107,4 @@ export const useJsonStore = create<JsonState>((set, get) => ({
   },
   
   // If you need to add a setter for this property:
-  setIsPremiumUser: (isPremium: boolean) => set({ isPremiumUser: isPremium }),
 }));

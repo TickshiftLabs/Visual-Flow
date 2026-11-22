@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { SUPPORT_URL } from "@/constants/site";
 import { Btn, GITHUB_URL, Mono, WRAP } from "./parts";
 import Reveal from "./Reveal";
 
@@ -20,11 +20,9 @@ export default function Footer() {
           <a href={GITHUB_URL} target="_blank" rel="noreferrer">
             <Mono className="transition-colors hover:text-vf-text">GitHub</Mono>
           </a>
-          <Link href="/auth/login">
-            <Mono className="transition-colors hover:text-vf-text">
-              Sign in
-            </Mono>
-          </Link>
+          <a href={SUPPORT_URL} target="_blank" rel="noreferrer">
+            <Mono className="transition-colors hover:text-vf-text">Support</Mono>
+          </a>
         </div>
       </footer>
     </>

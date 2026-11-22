@@ -2,9 +2,8 @@ import Editor, { type Monaco, type OnMount } from "@monaco-editor/react";
 import { useState, useRef, useEffect } from "react";
 import JsonErrorMessage from "./JsonErrorMessage";
 import { useJsonStore } from "@/store/useJsonStore";
-import { validateJsonAgainstFreeLimits } from "@/constants/limits";
-import { errorToast } from "@/lib/toast";
-import { useSupabase } from "@/components/Auth/SupabaseProvider";
+import { largeDocumentNote } from "@/constants/limits";
+import { infoToast } from "@/lib/toast";
 import { useGraphStore } from "@/store/useGraphStore";
 import { useIsNarrow } from "@/hooks/useIsNarrow";
 import { locatePath } from "../Visualizers/graph/locatePath";
@@ -79,7 +78,6 @@ const editorOptions = {
 export default function LeftPanel() {
   const { jsonData, setJsonData, collapseLeftPanel, isValidJson } =
     useJsonStore();
-  const { isPro } = useSupabase();
 
   const narrow = useIsNarrow();
   const limits = narrow ? NARROW : WIDE;
@@ -149,18 +147,11 @@ export default function LeftPanel() {
   const handleEditorChange = (value: string | undefined) => {
     const newValue = value || "";
 
-    // Warn free users once per distinct limit message, not on every keystroke.
-    if (newValue.trim() && !isPro) {
-      const validation = validateJsonAgainstFreeLimits(newValue, isPro);
-      if (!validation.isValid && !validation.isFormatError) {
-        if (lastLimitWarning.current !== validation.message) {
-          errorToast(`${validation.message}. Upgrade for more!`);
-          lastLimitWarning.current = validation.message ?? null;
-        }
-      } else if (validation.isValid) {
-        lastLimitWarning.current = null;
-      }
-    }
+    // Mention once when a file is big enough to be slow; say it again only
+    // if the file shrinks back and then grows large a second time.
+    const note = newValue.trim() ? largeDocumentNote(newValue) : null;
+    if (note && !lastLimitWarning.current) infoToast(note, { duration: 6000 });
+    lastLimitWarning.current = note;
 
     setJsonData(newValue);
   };

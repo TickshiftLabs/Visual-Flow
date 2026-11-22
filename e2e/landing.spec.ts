@@ -3,7 +3,7 @@ import { expect, test } from "./helpers";
 test("landing page shows the product and leads to the editor", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("See the shape of your JSON.");
-  for (const id of ["features", "views", "how", "pricing"]) {
+  for (const id of ["features", "views", "how", "free"]) {
     await expect(page.locator(`#${id}`)).toBeAttached();
   }
   // The hero's demo clip: the whole-editor one on a wide screen, playing,

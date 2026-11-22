@@ -27,8 +27,9 @@ test("phone layout: code on top, views underneath, nothing off screen", async ({
   const canvas = page.locator(".react-flow");
   await expect(nodes(page)).toHaveCount(3);
 
+  // The code editor sizes itself a moment after it appears, so wait for it.
+  await expect.poll(async () => (await code.boundingBox())?.width ?? 0).toBeGreaterThan(370); // full width
   const [codeBox, canvasBox] = [(await code.boundingBox())!, (await canvas.boundingBox())!];
-  expect(codeBox.width).toBeGreaterThan(370); // full width
   expect(canvasBox.width).toBeGreaterThan(370);
   expect(canvasBox.y).toBeGreaterThanOrEqual(codeBox.y + codeBox.height - 1); // stacked
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);

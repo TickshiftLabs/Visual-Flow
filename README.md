@@ -23,9 +23,9 @@ Visit the live application at [visualflowapp.vercel.app](https://visualflowapp.v
 - **Search Functionality**: Quickly find specific values or keys in complex structures.
 - **Export Options**: Save visualizations as SVG, PNG, or JPEG for documentation or presentations.
 - **Local Storage**: Automatically save your work with configurable auto-save functionality.
-- **Sharing Capabilities**: Share your visualizations with team members.
+- **Share Links**: Copy a link that holds the file, the open view and the selection. The data lives in the link itself.
 - **Dark Mode**: Optimized for comfortable viewing in any environment.
-- **Premium Features**: Access advanced visualization options with subscription plans.
+- **Free, with no account**: Every feature is free and nothing is uploaded; your JSON stays in your browser.
 - **Monaco Editor Integration**: Professional code editing experience with syntax highlighting.
 
 ---
@@ -86,14 +86,6 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
   - [Three.js 0.174](https://threejs.org)
   - [React Three Fiber 9.1](https://docs.pmnd.rs/react-three-fiber)
   - [Drei 10.0](https://github.com/pmndrs/drei)
-- **Animation**:
-  - [Framer Motion 12.5](https://www.framer.com/motion/)
-- **Authentication & Backend**:
-  - [Supabase JS 2.49](https://supabase.com)
-  - [Supabase SSR 0.5](https://supabase.com)
-- **Payment Processing**:
-  - [Stripe 17.7](https://stripe.com)
-  - [Stripe JS 6.0](https://stripe.com)
 - **State Management**:
   - [Zustand 5.0](https://github.com/pmndrs/zustand)
 - **UI Components**:
@@ -126,23 +118,7 @@ npm run test:coverage
 
 ## 🔐 Environment Variables
 
-To run this project, you'll need to set up the following environment variables in a `.env.local` file at the root of your project:
-
-- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`: Stripe publishable key for payments
-- `STRIPE_SECRET_KEY`: Stripe secret key for payments
-- `NEXT_PUBLIC_STRIPE_BUY_BUTTON_ID`: Stripe buy button ID for payments
-- `MONTHLY_PRICE_ID`: Stripe price ID for monthly subscriptions
-- `YEARLY_PRICE_ID`: Stripe price ID for yearly subscriptions
-- `NEXT_PUBLIC_APP_URL`: Application URL
-- `NEXT_PUBLIC_SUPABASE_URL`: Supabase URL for authentication and database
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Supabase anonymous key for authentication and database
-
-To obtain these keys:
-
-1.  Create a Supabase project at [supabase.com](https://supabase.com)
-2.  Set up a Stripe account at [stripe.com](https://stripe.com)
-
-⚠️ **Important**: Never commit your `.env.local` file to version control. It's already included in `.gitignore` to prevent accidental exposure of your API keys.
+None. The app runs entirely in the browser: there are no accounts, no database and no API keys.
 
 ---
 
@@ -151,22 +127,15 @@ To obtain these keys:
 ```
 json-visualiser/
 ├── app/                # Next.js app directory
-│   ├── api/            # API routes
-│   ├── auth/           # Authentication pages
 │   ├── editor/         # JSON editor and visualization
-│   ├── landing-page/   # Marketing landing page
-│   ├── pricing/        # Subscription plans
-│   └── protected/      # Premium features
+│   └── landing-page/   # Marketing landing page
 ├── components/         # Global UI components
-│   ├── Auth/           # Authentication components
-│   ├── PremiumFeatures/# Premium subscription features
 │   ├── ui/             # UI components
 │   └── Visualizers/    # Visualization components
 ├── constants/          # Application constants
 ├── hooks/              # Custom React hooks
 ├── lib/                # Utility functions
 ├── public/             # Static assets
-├── services/           # API service functions
 ├── store/              # State management with Zustand
 ├── styles/             # CSS styles
 │   ├── base/           # Base styles

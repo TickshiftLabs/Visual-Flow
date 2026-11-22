@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter_Tight, JetBrains_Mono } from "next/font/google";
 import "@/styles/main.css";
 import { Toaster } from "@/components/ui/sonner";
-import { SupabaseProvider } from "@/components/Auth/SupabaseProvider";
 
 const interTight = Inter_Tight({
   subsets: ["latin"],
@@ -40,7 +39,7 @@ export default function RootLayout({
       className={`${interTight.variable} ${jetbrainsMono.variable}`}
     >
       <body>
-        <SupabaseProvider>{children}</SupabaseProvider>
+        {children}
         <Toaster />
       </body>
     </html>

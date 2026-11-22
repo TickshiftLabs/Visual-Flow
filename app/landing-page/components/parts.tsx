@@ -85,4 +85,4 @@ export function SectionHead({
 }
 
 export const WRAP = "mx-auto w-full max-w-[1120px] px-6";
-export const GITHUB_URL = "https://github.com/samizak/Visual-Flow";
+export { GITHUB_URL } from "@/constants/site";

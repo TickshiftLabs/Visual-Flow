@@ -24,14 +24,9 @@ import { useJsonStore } from "@/store/useJsonStore";
 import { useFileOperations } from "@/hooks/useFileOperations";
 import { exportAsPng, exportAsJpeg, exportAsSvg } from "@/utils/exportHandlers";
 import { errorToast, infoToast } from "@/lib/toast";
-import { useSupabase } from "@/components/Auth/SupabaseProvider";
 import { copyShareLink } from "@/utils/shareActions";
 
-interface FileMenuProps {
-  onUpgradeClick?: (featureName: string) => void;
-}
-
-export default function FileMenu({ onUpgradeClick }: FileMenuProps) {
+export default function FileMenu() {
   // Get state and actions from Zustand store
   const {
     jsonData,
@@ -40,9 +35,7 @@ export default function FileMenu({ onUpgradeClick }: FileMenuProps) {
     setVisualizationJson,
   } = useJsonStore();
 
-  const { user, isPro } = useSupabase();
 
-  const isPremiumUser = isPro;
 
   const handleSaveJson = () => {
     try {
@@ -84,38 +77,26 @@ export default function FileMenu({ onUpgradeClick }: FileMenuProps) {
 
   // Export handlers - pass jsonData to ensure they have access to current data
   const handleExportPngClick = () => {
-    if (isPremiumUser) {
-      if (jsonData && jsonData.trim()) {
-        exportAsPng();
-      } else {
-        errorToast("No JSON data to export");
-      }
-    } else if (onUpgradeClick) {
-      onUpgradeClick("PNG Export");
+    if (jsonData && jsonData.trim()) {
+      exportAsPng();
+    } else {
+      errorToast("No JSON data to export");
     }
   };
 
   const handleExportJpgClick = () => {
-    if (isPremiumUser) {
-      if (jsonData && jsonData.trim()) {
-        exportAsJpeg();
-      } else {
-        errorToast("No JSON data to export");
-      }
-    } else if (onUpgradeClick) {
-      onUpgradeClick("JPG Export");
+    if (jsonData && jsonData.trim()) {
+      exportAsJpeg();
+    } else {
+      errorToast("No JSON data to export");
     }
   };
 
   const handleExportSvgClick = () => {
-    if (isPremiumUser) {
-      if (jsonData && jsonData.trim()) {
-        exportAsSvg();
-      } else {
-        errorToast("No JSON data to export");
-      }
-    } else if (onUpgradeClick) {
-      onUpgradeClick("SVG Export");
+    if (jsonData && jsonData.trim()) {
+      exportAsSvg();
+    } else {
+      errorToast("No JSON data to export");
     }
   };
 
@@ -172,9 +153,6 @@ export default function FileMenu({ onUpgradeClick }: FileMenuProps) {
             >
               <FileImage className="mr-2 h-4 w-4" />
               <span>PNG Image</span>
-              {!isPremiumUser && (
-                <span className="ml-auto font-vf-mono text-[10.5px] text-vf-acc">PRO</span>
-              )}
             </DropdownMenuItem>
 
             {/* JPG export - premium feature */}
@@ -184,9 +162,6 @@ export default function FileMenu({ onUpgradeClick }: FileMenuProps) {
             >
               <FileImage className="mr-2 h-4 w-4" />
               <span>JPG Image</span>
-              {!isPremiumUser && (
-                <span className="ml-auto font-vf-mono text-[10.5px] text-vf-acc">PRO</span>
-              )}
             </DropdownMenuItem>
 
             {/* SVG export - premium feature */}
@@ -196,9 +171,6 @@ export default function FileMenu({ onUpgradeClick }: FileMenuProps) {
             >
               <FileText className="mr-2 h-4 w-4" />
               <span>SVG Vector</span>
-              {!isPremiumUser && (
-                <span className="ml-auto font-vf-mono text-[10.5px] text-vf-acc">PRO</span>
-              )}
             </DropdownMenuItem>
           </DropdownMenuSubContent>
         </DropdownMenuSub>

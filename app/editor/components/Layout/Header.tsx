@@ -1,18 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { CreditCard, LogOut, Settings, User } from "lucide-react";
-import { useSupabase } from "@/components/Auth/SupabaseProvider";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Heart } from "lucide-react";
+import { SUPPORT_URL } from "@/constants/site";
 import Logo from "@/components/Logo";
-import UpgradeModal from "@/components/PremiumFeatures/UpgradeModal";
 import { useJsonStore } from "@/store/useJsonStore";
 import { copyShareLink } from "@/utils/shareActions";
 import { useGraphStore } from "@/store/useGraphStore";
@@ -21,27 +11,11 @@ import FileMenu from "./HeaderComponents/FileMenu";
 import EditMenu from "./HeaderComponents/EditMenu";
 import ViewMenu from "./HeaderComponents/ViewMenu";
 
-const itemClass =
-  "cursor-pointer hover:bg-vf-line hover:text-vf-text focus:bg-vf-line focus:text-vf-text";
 const barButton =
   "inline-flex h-[30px] cursor-pointer items-center rounded-[7px] border px-3 text-[13px] font-semibold transition-colors";
 
 export default function Header() {
-  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
-  const [currentFeature, setCurrentFeature] = useState<string | undefined>();
-  const { user, isPro, signOut } = useSupabase();
-  const router = useRouter();
   const { fileName, jsonData, isValidJson, setIsSettingsOpen } = useJsonStore();
-
-  const handleUpgradeClick = (featureName?: string) => {
-    setCurrentFeature(featureName);
-    setUpgradeModalOpen(true);
-  };
-
-  const handleSignOut = async () => {
-    await signOut();
-    router.push("/");
-  };
 
   const hasContent = jsonData.trim() !== "";
 
@@ -68,7 +42,7 @@ export default function Header() {
         <Logo wordClassName="max-sm:hidden" />
       </Link>
 
-      <FileMenu onUpgradeClick={handleUpgradeClick} />
+      <FileMenu />
       <EditMenu />
       <ViewMenu onOpenSettings={() => setIsSettingsOpen(true)} />
 
@@ -122,90 +96,17 @@ export default function Header() {
           Share
         </button>
 
-        {!isPro && (
-          <button
-            className={`${barButton} border-vf-acc/35 text-vf-acc hover:border-vf-acc/70`}
-            onClick={() => handleUpgradeClick("")}
-          >
-            Upgrade
-          </button>
-        )}
-
-        {user ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="ml-1 cursor-pointer overflow-hidden rounded-full focus:outline-none">
-                <Avatar className="size-[30px]">
-                  <AvatarImage src={user.user_metadata?.avatar_url || ""} />
-                  <AvatarFallback className="bg-vf-line text-xs text-vf-text">
-                    {user.email ? (
-                      user.email.substring(0, 2).toUpperCase()
-                    ) : (
-                      <User size={16} />
-                    )}
-                  </AvatarFallback>
-                </Avatar>
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="z-50 w-56 border border-vf-line bg-vf-panel font-vf-sans text-vf-soft shadow-xl"
-            >
-              <div className="px-3 py-2.5">
-                <p className="truncate text-sm font-medium text-vf-text">
-                  {user.email}
-                </p>
-                <p className="font-vf-mono text-[11px] text-vf-dim">
-                  {isPro ? "Pro plan" : "Free plan"}
-                </p>
-              </div>
-              <DropdownMenuSeparator className="bg-vf-line" />
-              <DropdownMenuItem
-                onClick={() => setIsSettingsOpen(true)}
-                className={itemClass}
-              >
-                <Settings className="mr-2 h-4 w-4" />
-                <span>Settings</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => router.push("/pricing")}
-                className={itemClass}
-              >
-                <CreditCard className="mr-2 h-4 w-4" />
-                <span>Plans</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator className="bg-vf-line" />
-              <DropdownMenuItem onClick={handleSignOut} className={itemClass}>
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Sign out</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : (
-          <button
-            onClick={() =>
-              router.push(
-                `/auth/login?returnTo=${encodeURIComponent(
-                  window.location.pathname
-                )}`
-              )
-            }
-            className={`${barButton} border-vf-line text-vf-text hover:border-[#4a5058]`}
-          >
-            Sign in
-          </button>
-        )}
+        <a
+          href={SUPPORT_URL}
+          target="_blank"
+          rel="noreferrer"
+          title="Visual Flow is free. Chip in if it's useful."
+          className={`${barButton} gap-1.5 border-vf-line text-vf-soft hover:border-[#4a5058] hover:text-vf-text max-sm:px-2`}
+        >
+          <Heart className="size-3.5 text-vf-acc" />
+          <span className="max-sm:hidden">Support</span>
+        </a>
       </div>
-
-      <UpgradeModal
-        isOpen={upgradeModalOpen}
-        onClose={() => setUpgradeModalOpen(false)}
-        onUpgrade={() => {
-          setUpgradeModalOpen(false);
-          router.push("/pricing");
-        }}
-        featureName={currentFeature}
-      />
     </header>
   );
 }

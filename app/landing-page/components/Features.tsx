@@ -26,7 +26,6 @@ const features = [
     tag: "export",
     title: "Save it as an image",
     body: "Export the whole graph as PNG, JPG or true vector SVG, in a fraction of a second, for docs, tickets and slides.",
-    pro: true,
   },
   {
     tag: "inspect",
@@ -55,11 +54,6 @@ export default function Features() {
               <Mono>{f.tag}</Mono>
               <h3 className="mb-1.5 mt-3.5 text-[17px] font-semibold tracking-[-0.01em]">
                 {f.title}
-                {f.pro && (
-                  <span className="ml-2 rounded border border-vf-line px-1.5 py-px align-[2px] font-vf-mono text-[10.5px] font-normal text-vf-acc">
-                    PRO
-                  </span>
-                )}
               </h3>
               <p className="text-[15px] text-vf-dim">{f.body}</p>
             </div>
