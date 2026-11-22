@@ -1,0 +1,9 @@
+{
+  "city": "Lisbon",
+  "country": "Portugal",
+  "forecast": [
+    { "day": "Mon", "high": 24, "rain": false },
+    { "day": "Tue", "high": 21, "rain": true }
+  ],
+  "units": { "temperature": "celsius" }
+}

@@ -1,0 +1,5 @@
+Notes from Tuesday's call
+
+- Ask Priya about the forecast numbers
+- city: Lisbon, country: Portugal
+- Send the weather file once it's exported as JSON

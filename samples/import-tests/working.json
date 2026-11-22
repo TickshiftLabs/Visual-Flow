@@ -1,0 +1,11 @@
+{
+  "recipe": "Pancakes",
+  "serves": 4,
+  "vegetarian": true,
+  "ingredients": [
+    { "item": "flour", "grams": 200 },
+    { "item": "milk", "ml": 300 },
+    { "item": "eggs", "count": 2 }
+  ],
+  "steps": ["Whisk", "Rest 10 minutes", "Fry"]
+}
