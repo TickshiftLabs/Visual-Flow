@@ -15,7 +15,7 @@ const eslintConfig = [
     files: ["e2e/**"],
     rules: { "react-hooks/rules-of-hooks": "off" },
   },
-  { ignores: [".next/**", "next-env.d.ts", "jest.config.js", "tailwind.config.js", "test-results/**", "playwright-report/**"] },
+  { ignores: [".next/**", "next-env.d.ts", "jest.config.js", "test-results/**", "playwright-report/**"] },
 ];
 
 export default eslintConfig;

@@ -4,7 +4,7 @@ Visual Flow is a powerful web application that transforms complex JSON data into
 
 ---
 
-![Visual Flow Preview](public/visual-flow-preview.png)
+![Visual Flow Preview](public/demos/editor-demo-poster.jpg)
 
 ---
 
