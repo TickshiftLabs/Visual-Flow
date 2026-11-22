@@ -28,6 +28,7 @@ import {
 import { layoutGraph, nodeHeight, NODE_WIDTH } from "./graph/graphLayout";
 import { collapseKey, useGraphStore } from "@/store/useGraphStore";
 import { useJsonStore } from "@/store/useJsonStore";
+import { NARROW_QUERY } from "@/hooks/useIsNarrow";
 
 const nodeTypes = { json: JsonNode };
 const proOptions = { hideAttribution: true };
@@ -68,8 +69,12 @@ function ZoomControls() {
   const button =
     "grid h-[30px] w-8 cursor-pointer place-items-center border-r border-vf-rule text-vf-soft transition-colors hover:bg-white/[0.05] hover:text-vf-text";
 
+  // Hidden on phones, where pinching zooms and space is short.
   return (
-    <Panel position="bottom-left" className={`${panelClass} flex overflow-hidden`}>
+    <Panel
+      position="bottom-left"
+      className={`${panelClass} flex overflow-hidden max-md:hidden`}
+    >
       <button className={button} onClick={() => zoomOut()} title="Zoom out">
         −
       </button>
@@ -325,12 +330,18 @@ function Chart({
       const left = node.position.x * zoom + tx;
       const top = node.position.y * zoom + ty;
       const margin = 24;
+      // On phones the inspector is a sheet over the bottom of the canvas
+      // (up to 58% of it), so only the area above it counts as visible.
+      const usable = window.matchMedia(NARROW_QUERY).matches ? h * 0.42 : h;
       let dx = 0;
       let dy = 0;
       if (left < margin) dx = margin - left;
       else if (left + nodeW > w - margin) dx = w - margin - (left + nodeW);
       if (top < margin) dy = margin - top;
-      else if (top + nodeH > h - margin) dy = h - margin - (top + nodeH);
+      else if (top + nodeH > usable - margin) {
+        // Tall nodes can't fit above the sheet; show their top instead.
+        dy = Math.max(usable - margin - (top + nodeH), margin - top);
+      }
       if (dx || dy) {
         setViewport({ x: tx + dx, y: ty + dy, zoom }, { duration: 200 });
       }
@@ -400,7 +411,7 @@ function Chart({
       {!embedded && (
         <Panel
           position="bottom-right"
-          className={`${panelClass} flex gap-3.5 px-3 py-[7px]`}
+          className={`${panelClass} flex gap-3.5 px-3 py-[7px] max-md:hidden`}
         >
           {legendItems.map((item) => (
             <span key={item.label} className="flex items-center gap-1.5">

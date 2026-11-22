@@ -14,6 +14,7 @@ import { storageService } from "@/utils/storageService";
 import SettingsDialog from "./components/Layout/SettingsDialog";
 import { useJsonStore } from "@/store/useJsonStore";
 import { useSupabase } from "@/components/Auth/SupabaseProvider";
+import { NARROW_QUERY } from "@/hooks/useIsNarrow";
 
 export default function Home() {
   const {
@@ -55,6 +56,11 @@ export default function Home() {
     }
     if (savedSettings.graphDirection) {
       useJsonStore.getState().setGraphDirection(savedSettings.graphDirection);
+    } else if (window.matchMedia(NARROW_QUERY).matches) {
+      // A tall, narrow canvas suits a graph that grows downwards. This is
+      // only the starting point: it isn't saved, so a choice made in
+      // settings always wins.
+      useJsonStore.setState({ graphDirection: "TB" });
     }
     if (savedSettings.layout3d) {
       useJsonStore.getState().setLayout3d(savedSettings.layout3d);
@@ -173,7 +179,8 @@ export default function Home() {
         isProcessing={isOcrProcessing}
         progress={ocrProgress}
       />
-      <div className="flex min-h-0 flex-1 overflow-hidden">
+      {/* Side by side on wide screens; code above the views on phones. */}
+      <div className="flex min-h-0 flex-1 overflow-hidden max-md:flex-col">
         <LeftPanel />
         <RightPanel />
       </div>

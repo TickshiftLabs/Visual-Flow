@@ -64,7 +64,7 @@ export default function Header() {
   return (
     <header className="relative flex h-12 shrink-0 items-center gap-1 border-b border-vf-rule bg-vf-bg pl-3.5 pr-3">
       <Link href="/" className="mr-3">
-        <Logo />
+        <Logo wordClassName="max-sm:hidden" />
       </Link>
 
       <FileMenu onUpgradeClick={handleUpgradeClick} />

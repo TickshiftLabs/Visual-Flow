@@ -34,9 +34,12 @@ export function LogoMark({
 export default function Logo({
   className,
   animated = false,
+  wordClassName,
 }: {
   className?: string;
   animated?: boolean;
+  /** Classes for the name, e.g. to hide it where space is tight. */
+  wordClassName?: string;
 }) {
   return (
     <span
@@ -46,7 +49,7 @@ export default function Logo({
       )}
     >
       <LogoMark className="text-vf-acc" animated={animated} />
-      Visual Flow
+      <span className={wordClassName}>Visual Flow</span>
     </span>
   );
 }

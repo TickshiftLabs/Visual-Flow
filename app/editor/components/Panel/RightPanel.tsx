@@ -78,7 +78,7 @@ export default function RightPanel() {
   }, [view, hasGraph, visualizationJson, setNodeCount]);
 
   return (
-    <div className="flex h-full min-w-0 flex-1 overflow-hidden bg-vf-bg2">
+    <div className="relative flex min-h-0 min-w-0 flex-1 overflow-hidden bg-vf-bg2">
       <div className="relative h-full min-w-0 flex-1 overflow-hidden">
         {hasGraph && (
           <div

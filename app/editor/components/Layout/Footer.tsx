@@ -40,7 +40,7 @@ export default function Footer() {
           <span>
             {nodeCount} {nodeCount === 1 ? "node" : "nodes"}
           </span>
-          <span>depth {depth}</span>
+          <span className="max-sm:hidden">depth {depth}</span>
         </>
       ) : (
         <span className="text-vf-err">● invalid JSON</span>

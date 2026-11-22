@@ -1,18 +1,20 @@
 import Editor, { type Monaco, type OnMount } from "@monaco-editor/react";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import JsonErrorMessage from "./JsonErrorMessage";
 import { useJsonStore } from "@/store/useJsonStore";
 import { validateJsonAgainstFreeLimits } from "@/constants/limits";
 import { errorToast } from "@/lib/toast";
 import { useSupabase } from "@/components/Auth/SupabaseProvider";
 import { useGraphStore } from "@/store/useGraphStore";
+import { useIsNarrow } from "@/hooks/useIsNarrow";
 import { locatePath } from "../Visualizers/graph/locatePath";
 
 type CodeEditor = Parameters<OnMount>[0];
 
-const MIN_WIDTH = 18; // % of the window
-const MAX_WIDTH = 60;
-const DEFAULT_WIDTH = 30;
+// Size of the code panel as a percentage of the window: its width beside
+// the views on wide screens, its height above them on phones.
+const WIDE = { min: 18, max: 60, initial: 30 };
+const NARROW = { min: 15, max: 70, initial: 36 };
 
 const THEME = "vf-dark";
 
@@ -79,10 +81,14 @@ export default function LeftPanel() {
     useJsonStore();
   const { isPro } = useSupabase();
 
-  const [width, setWidth] = useState(DEFAULT_WIDTH);
+  const narrow = useIsNarrow();
+  const limits = narrow ? NARROW : WIDE;
+  const [wideSize, setWideSize] = useState(WIDE.initial);
+  const [narrowSize, setNarrowSize] = useState(NARROW.initial);
+  const size = narrow ? narrowSize : wideSize;
   const [isEditorLoaded, setIsEditorLoaded] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
-  const dragStart = useRef({ x: 0, width: DEFAULT_WIDTH });
+  const dragStart = useRef({ at: 0, size: 0 });
   const lastLimitWarning = useRef<string | null>(null);
 
   const editorRef = useRef<CodeEditor | null>(null);
@@ -159,41 +165,46 @@ export default function LeftPanel() {
     setJsonData(newValue);
   };
 
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    const delta =
-      ((e.clientX - dragStart.current.x) / document.body.clientWidth) * 100;
-    setWidth(
-      Math.min(Math.max(dragStart.current.width + delta, MIN_WIDTH), MAX_WIDTH)
-    );
-  }, []);
-
-  const stopResizing = useCallback(() => setIsResizing(false), []);
-
-  useEffect(() => {
-    if (!isResizing) return;
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", stopResizing);
-    return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", stopResizing);
-    };
-  }, [isResizing, handleMouseMove, stopResizing]);
-
-  const startResizing = (e: React.MouseEvent) => {
-    dragStart.current = { x: e.clientX, width };
+  // Dragging the divider: sideways on wide screens, up and down on phones.
+  // Pointer events cover mouse, touch and pen alike.
+  const startResizing = (e: React.PointerEvent) => {
+    e.preventDefault();
+    e.currentTarget.setPointerCapture(e.pointerId);
+    dragStart.current = { at: narrow ? e.clientY : e.clientX, size };
     setIsResizing(true);
   };
+  const resize = (e: React.PointerEvent) => {
+    if (!isResizing) return;
+    const moved = narrow
+      ? ((e.clientY - dragStart.current.at) / window.innerHeight) * 100
+      : ((e.clientX - dragStart.current.at) / window.innerWidth) * 100;
+    const next = Math.min(
+      Math.max(dragStart.current.size + moved, limits.min),
+      limits.max
+    );
+    if (narrow) setNarrowSize(next);
+    else setWideSize(next);
+  };
+  const stopResizing = () => setIsResizing(false);
+
+  const shown = collapseLeftPanel ? 0 : size;
 
   return (
     <div
       className={`relative shrink-0 overflow-hidden ${
-        isResizing ? "" : "transition-[width] duration-300 ease-in-out"
+        isResizing ? "" : "transition-[width,height] duration-300 ease-in-out"
       }`}
-      style={{ width: collapseLeftPanel ? 0 : `${width}vw` }}
+      style={
+        narrow
+          ? { height: `${shown}dvh`, width: "100%" }
+          : { width: `${shown}vw` }
+      }
     >
       <div
-        className="flex h-full flex-col border-r border-vf-rule bg-vf-bg"
-        style={{ width: `${width}vw` }}
+        className={`flex flex-col bg-vf-bg ${
+          narrow ? "border-b border-vf-rule" : "h-full border-r border-vf-rule"
+        }`}
+        style={narrow ? { height: `${size}dvh` } : { width: `${size}vw` }}
       >
         <JsonErrorMessage
           isVisible={!isValidJson && jsonData !== "" && isEditorLoaded}
@@ -225,18 +236,36 @@ export default function LeftPanel() {
         </div>
       </div>
 
-      {/* Resize handle */}
+      {/* Divider: drag to resize. Taller on phones so it's easy to grab. */}
       <div
-        className="group absolute right-0 top-0 z-30 h-full w-2 cursor-col-resize"
-        onMouseDown={startResizing}
+        role="separator"
+        aria-orientation={narrow ? "horizontal" : "vertical"}
+        aria-label="Resize the code panel"
+        className={`group absolute z-30 touch-none ${
+          narrow
+            ? "bottom-0 left-0 h-4 w-full cursor-row-resize"
+            : "right-0 top-0 h-full w-2 cursor-col-resize"
+        }`}
+        onPointerDown={startResizing}
+        onPointerMove={resize}
+        onPointerUp={stopResizing}
+        onPointerCancel={stopResizing}
       >
         <div
-          className={`absolute right-0 top-0 h-full transition-all duration-150 ${
+          className={`absolute transition-all duration-150 ${
+            narrow ? "bottom-0 left-0 w-full" : "right-0 top-0 h-full"
+          } ${
             isResizing
-              ? "w-0.5 bg-vf-acc"
-              : "w-px bg-transparent group-hover:w-0.5 group-hover:bg-vf-acc/60"
+              ? `bg-vf-acc ${narrow ? "h-0.5" : "w-0.5"}`
+              : `bg-transparent group-hover:bg-vf-acc/60 ${
+                  narrow ? "h-px group-hover:h-0.5" : "w-px group-hover:w-0.5"
+                }`
           }`}
         />
+        {/* A small grip, since there's no hover on touch screens. */}
+        {narrow && (
+          <div className="absolute bottom-1 left-1/2 h-1 w-9 -translate-x-1/2 rounded-full bg-vf-line" />
+        )}
       </div>
     </div>
   );

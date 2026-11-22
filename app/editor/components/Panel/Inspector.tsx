@@ -89,17 +89,20 @@ function Section({
   action,
   children,
   grow,
+  wideOnly,
 }: {
   title: string;
   action?: React.ReactNode;
   children: React.ReactNode;
   grow?: boolean;
+  /** Left out of the phone sheet, which only has room for the essentials. */
+  wideOnly?: boolean;
 }) {
   return (
     <section
       className={`border-b border-vf-rule px-3.5 py-3 last:border-b-0 ${
         grow ? "flex min-h-0 flex-1 flex-col" : ""
-      }`}
+      } ${wideOnly ? "max-md:hidden" : ""}`}
     >
       <div className="mb-1.5 flex items-center justify-between font-vf-mono text-[10.5px] uppercase tracking-[0.08em] text-vf-faint">
         <span>{title}</span>
@@ -178,7 +181,9 @@ export default function Inspector({ document }: InspectorProps) {
   return (
     <aside
       aria-label="Inspector"
-      className="vf-inspector flex h-full w-[300px] shrink-0 flex-col overflow-hidden border-l border-vf-rule bg-vf-bg"
+      // Wide screens: a column docked beside the view. Phones: a sheet over
+      // the bottom of the view, since there's no room for a third column.
+      className="vf-inspector flex h-full w-[300px] shrink-0 flex-col overflow-hidden border-l border-vf-rule bg-vf-bg max-md:absolute max-md:inset-x-0 max-md:bottom-0 max-md:z-20 max-md:h-auto max-md:max-h-[58%] max-md:w-full max-md:rounded-t-xl max-md:border-l-0 max-md:border-t max-md:border-vf-line max-md:shadow-[0_-18px_40px_rgba(0,0,0,0.5)]"
     >
       <header className="flex items-center gap-2 border-b border-vf-rule px-3.5 py-2.5 font-vf-mono text-[12.5px]">
         <span
@@ -207,6 +212,7 @@ export default function Inspector({ document }: InspectorProps) {
       <Section
         title="In code"
         action={<CopyButton text={accessor} label="Copy JavaScript accessor" />}
+        wideOnly
       >
         <div className="break-all font-vf-mono text-xs text-vf-soft" data-field="accessor">
           {accessor}
@@ -232,7 +238,7 @@ export default function Inspector({ document }: InspectorProps) {
         </pre>
       </Section>
 
-      <Section title="Details">
+      <Section title="Details" wideOnly>
         <dl
           data-field="details"
           className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 font-vf-mono text-xs"
