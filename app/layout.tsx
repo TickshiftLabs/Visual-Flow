@@ -34,6 +34,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      // Tells Next.js the page may scroll smoothly (see main.css), so it
+      // jumps instantly when moving between pages rather than gliding.
+      data-scroll-behavior="smooth"
       className={`${interTight.variable} ${jetbrainsMono.variable}`}
     >
       <body>

@@ -179,8 +179,8 @@ export default function Views() {
                     className="relative cursor-pointer border-t border-vf-rule py-[18px] pl-4 text-left last:border-b"
                   >
                     <span
-                      className={`absolute bottom-[18px] left-0 top-[18px] w-0.5 transition-colors ${
-                        on ? "bg-vf-acc" : "bg-transparent"
+                      className={`absolute bottom-[18px] left-0 top-[18px] w-0.5 origin-top bg-vf-acc transition-transform duration-300 ease-out ${
+                        on ? "scale-y-100" : "scale-y-0"
                       }`}
                     />
                     <Mono>{String(i + 1).padStart(2, "0")}</Mono>
@@ -191,7 +191,16 @@ export default function Views() {
                     >
                       {v.label}
                     </b>
-                    {on && <p className="text-[15px] text-vf-dim">{v.body}</p>}
+                    {/* Height animates between 0 and the text's own height. */}
+                    <span
+                      className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
+                        on ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                      }`}
+                    >
+                      <span className="overflow-hidden text-[15px] text-vf-dim">
+                        {v.body}
+                      </span>
+                    </span>
                   </button>
                 );
               })}
@@ -204,7 +213,9 @@ export default function Views() {
               className={`${frame} aspect-[1050/612]`}
             >
               {seen ? (
-                <LiveView key={active} id={active} />
+                <div key={active} className="vf-fade-in h-full w-full">
+                  <LiveView id={active} />
+                </div>
               ) : (
                 <FrameNote>…</FrameNote>
               )}

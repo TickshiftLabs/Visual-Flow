@@ -43,8 +43,11 @@ export default function Features() {
         <SectionHead label="01 / Features">
           Everything you need to read a payload you didn&apos;t write.
         </SectionHead>
+      </Reveal>
+      {/* The cards stagger in themselves (.vf-stagger), so they sit outside the block reveal. */}
+      <div>
         {/* 1px gaps over a rule-coloured background draw the hairlines between cells */}
-        <div className="grid gap-px overflow-hidden rounded-xl border border-vf-rule bg-vf-rule md:grid-cols-3">
+        <div className="vf-stagger grid gap-px overflow-hidden rounded-xl border border-vf-rule bg-vf-rule md:grid-cols-3">
           {features.map((f) => (
             <div
               key={f.tag}
@@ -63,7 +66,7 @@ export default function Features() {
             </div>
           ))}
         </div>
-      </Reveal>
+      </div>
     </section>
   );
 }

@@ -65,6 +65,103 @@ body {
   }
 }
 
+/* ---- Landing page motion ------------------------------------------------
+   All of it is CSS, so content never depends on a script having loaded, and
+   all of it is off for people who ask their device for reduced motion. */
+
+@keyframes vf-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@keyframes vf-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes vf-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+
+@keyframes vf-pop {
+  from {
+    transform: scale(0);
+  }
+}
+
+@keyframes vf-nav-settle {
+  from {
+    border-bottom-color: transparent;
+    background-color: transparent;
+    backdrop-filter: blur(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Links to sections (top bar, "How it works") glide instead of jumping.
+     Scoped to the landing page; the page scroller is <html>. */
+  html:has(.vf-landing) {
+    scroll-behavior: smooth;
+  }
+
+  /* Hero entrance: each piece rises in turn. Set the order with --i. */
+  .vf-enter {
+    animation: vf-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--i, 0) * 70ms + 60ms);
+  }
+
+  /* Logo: the branches trace out from the root and swell into their end
+     dots as one movement. The dots start growing while the lines are still
+     arriving (no gap between the two), and the line eases in and out rather
+     than slowing to a stop first, which read as a pause. */
+  .vf-logo-draw path {
+    stroke-dasharray: 1;
+    animation: vf-draw 0.5s 0.15s cubic-bezier(0.45, 0, 0.55, 1) both;
+  }
+
+  .vf-logo-draw .vf-logo-end {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: vf-pop 0.3s 0.47s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* Views section: the stage fades when the view changes. */
+  .vf-fade-in {
+    animation: vf-fade 0.35s ease-out both;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* Feature cards arrive one after another as the grid scrolls in. */
+    .vf-stagger > * {
+      animation: vf-rise linear both;
+      animation-timeline: view();
+      animation-range: entry calc(var(--n, 0) * 9%) entry calc(40% + var(--n, 0) * 9%);
+    }
+
+    .vf-stagger > :nth-child(3n + 2) {
+      --n: 1;
+    }
+
+    .vf-stagger > :nth-child(3n) {
+      --n: 2;
+    }
+
+    /* Top bar: clear over the hero, then gains its border and blur on scroll. */
+    .vf-nav {
+      animation: vf-nav-settle linear both;
+      animation-timeline: scroll();
+      animation-range: 0 90px;
+    }
+  }
+}
+
 /* Toasts are custom-drawn (lib/toast.tsx). Sonner shrink-wraps custom toasts
    to their text and pins them to the left of its column, so a short message
    sat left of centre. Make each one span the column and centre its content. */

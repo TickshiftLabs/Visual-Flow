@@ -9,7 +9,7 @@ import Footer from "./landing-page/components/Footer";
 export default function LandingPage() {
   return (
     <div
-      className="min-h-screen scroll-smooth bg-vf-bg font-vf-sans text-base leading-[1.55] text-vf-text antialiased"
+      className="vf-landing min-h-screen bg-vf-bg font-vf-sans text-base leading-[1.55] text-vf-text antialiased"
     >
       <Header />
       <main>

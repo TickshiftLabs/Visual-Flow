@@ -18,11 +18,21 @@ const linkClass =
 export default function Header() {
   const { user, isLoading } = useSupabase();
 
+  // The resting look is set inline, not with Tailwind utilities: this project
+  // marks utilities !important, which would stop the scroll animation
+  // (.vf-nav in main.css) from fading the bar in over the hero.
   return (
-    <nav className="sticky top-0 z-50 border-b border-vf-rule bg-vf-bg/80 backdrop-blur-md">
+    <nav
+      className="vf-nav sticky top-0 z-50"
+      style={{
+        borderBottom: "1px solid #1c1f23",
+        backgroundColor: "rgba(11, 12, 14, 0.8)",
+        backdropFilter: "blur(12px)",
+      }}
+    >
       <div className={`${WRAP} flex h-[60px] items-center gap-7 text-sm`}>
         <Link href="/" className="mr-auto">
-          <Logo />
+          <Logo animated />
         </Link>
 
         {links.map((l) => (
