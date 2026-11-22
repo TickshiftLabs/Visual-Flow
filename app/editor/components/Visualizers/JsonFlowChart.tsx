@@ -43,6 +43,11 @@ interface JsonFlowChartProps {
   edgeType: string;
   showGrid?: boolean;
   onNodeCountChange?: (count: number) => void;
+  /**
+   * For showing the graph inside another page (the landing page): no zoom
+   * buttons or legend, and the mouse wheel scrolls the page instead of zooming.
+   */
+  embedded?: boolean;
 }
 
 const legend: Array<{ label: string; color: string }> = [
@@ -88,6 +93,7 @@ function Chart({
   edgeType,
   showGrid = true,
   onNodeCountChange,
+  embedded = false,
 }: JsonFlowChartProps) {
   const { fitView, setViewport } = useReactFlow();
   const store = useStoreApi();
@@ -338,6 +344,8 @@ function Chart({
       minZoom={0.05}
       maxZoom={2}
       onlyRenderVisibleElements
+      zoomOnScroll={!embedded}
+      preventScrolling={!embedded}
       className="vf-flow"
     >
       {showGrid && (
@@ -349,22 +357,24 @@ function Chart({
         />
       )}
 
-      <Panel
-        position="bottom-right"
-        className={`${panelClass} flex gap-3.5 px-3 py-[7px]`}
-      >
-        {legend.map((item) => (
-          <span key={item.label} className="flex items-center gap-1.5">
-            <span
-              className="block size-2 rounded-[2px]"
-              style={{ background: item.color }}
-            />
-            {item.label}
-          </span>
-        ))}
-      </Panel>
+      {!embedded && (
+        <Panel
+          position="bottom-right"
+          className={`${panelClass} flex gap-3.5 px-3 py-[7px]`}
+        >
+          {legend.map((item) => (
+            <span key={item.label} className="flex items-center gap-1.5">
+              <span
+                className="block size-2 rounded-[2px]"
+                style={{ background: item.color }}
+              />
+              {item.label}
+            </span>
+          ))}
+        </Panel>
+      )}
 
-      <ZoomControls />
+      {!embedded && <ZoomControls />}
     </ReactFlow>
   );
 }

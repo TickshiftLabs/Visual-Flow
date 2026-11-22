@@ -292,7 +292,9 @@ export default function Graph3D({
     const box = new THREE.Box3().setFromObject(group);
     const centre = box.getCenter(new THREE.Vector3());
     const span = Math.max(box.getSize(new THREE.Vector3()).length(), 200);
-    const distance = span * 1.05;
+    // The camera's field of view is vertical, so a frame taller than it is
+    // wide sees less sideways: stand further back to keep everything in shot.
+    const distance = (span * 1.05) / Math.min(1, s.camera.aspect);
     s.controls.target.copy(centre);
     s.camera.position
       .copy(centre)

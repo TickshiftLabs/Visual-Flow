@@ -31,10 +31,12 @@ const squareColor = (row: TreeRow) =>
 
 interface TreeViewProps {
   jsonData: string;
+  /** Drops the top gap that leaves room for the editor's view switcher. */
+  compact?: boolean;
 }
 
 /** Outline view: the document as an indented, foldable list. */
-export default function TreeView({ jsonData }: TreeViewProps) {
+export default function TreeView({ jsonData, compact = false }: TreeViewProps) {
   const selectedId = useGraphStore((s) => s.selectedId);
   const selectedPath = useGraphStore((s) => s.selectedPath);
   const select = useGraphStore((s) => s.select);
@@ -145,7 +147,9 @@ export default function TreeView({ jsonData }: TreeViewProps) {
       ref={scroller}
       onScroll={(e) => setScrollTop(e.currentTarget.scrollTop)}
       onClick={() => select(null)}
-      className="vf-tree h-full overflow-auto px-3.5 pb-5 pt-[58px] font-vf-mono text-[12.5px]"
+      className={`vf-tree h-full overflow-auto px-3.5 pb-5 font-vf-mono text-[12.5px] ${
+        compact ? "pt-3.5" : "pt-[58px]"
+      }`}
     >
       {rows.length === 0 ? (
         <p className="px-1 py-2 text-vf-dim">
