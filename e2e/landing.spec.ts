@@ -89,3 +89,11 @@ test.describe("on a phone", () => {
     await expect(dialog).toBeHidden();
   });
 });
+
+test("the logo in the top bar returns to the top of the page", async ({ page }) => {
+  await page.goto("/");
+  await page.locator("#how").scrollIntoViewIfNeeded();
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(500);
+  await page.locator("nav").getByRole("link", { name: /Visual Flow/ }).click();
+  await expect.poll(() => page.evaluate(() => scrollY)).toBe(0);
+});

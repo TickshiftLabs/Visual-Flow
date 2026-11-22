@@ -1,163 +1,101 @@
-# Visual Flow - Interactive JSON Visualization Tool
+<div align="center">
 
-Visual Flow is a powerful web application that transforms complex JSON data into intuitive, interactive visualizations. It helps developers understand, analyze, and share JSON structures with ease.
+# Visual Flow
 
----
+**See the shape of your JSON.**
 
-![Visual Flow Preview](public/demos/editor-demo-poster.jpg)
+Paste any JSON and explore it as a graph, a foldable tree or a 3D model.
+Free, no account, and nothing leaves your browser.
 
----
+[**Open the editor →**](https://visualflowapp.vercel.app/editor)
 
-## 🌐 Live Demo
+![Visual Flow turning a JSON file into a graph, a tree and a 3D model](docs/demo.gif)
 
-Visit the live application at [visualflowapp.vercel.app](https://visualflowapp.vercel.app)
+</div>
 
----
+## Why
 
-## ✨ Features
+JSON you didn't write is hard to read. A response with six levels of nesting tells you very little as text, and a lot once you can see which objects hang off which. Visual Flow draws that structure, lets you click around it, and points you back to the exact lines in the file.
 
-- **Interactive Visualizations**: Transform JSON into intuitive, interactive flowcharts with automatic layout.
-- **Real-time Parsing**: Instant validation and error detection as you type.
-- **Schema Detection**: Automatically identify and highlight data structures with color-coded nodes.
-- **Node Highlighting**: Easily identify relationships between data elements with interactive highlighting.
-- **Search Functionality**: Quickly find specific values or keys in complex structures.
-- **Export Options**: Save visualizations as SVG, PNG, or JPEG for documentation or presentations.
-- **Local Storage**: Automatically save your work with configurable auto-save functionality.
-- **Share Links**: Copy a link that holds the file, the open view and the selection. The data lives in the link itself.
-- **Dark Mode**: Optimized for comfortable viewing in any environment.
-- **Free, with no account**: Every feature is free and nothing is uploaded; your JSON stays in your browser.
-- **Monaco Editor Integration**: Professional code editing experience with syntax highlighting.
+## Three views of the same file
 
----
+| Graph | Tree | 3D |
+|---|---|---|
+| ![Graph view](public/demos/view-graph-tall.png) | ![Tree view](public/demos/view-tree-tall.png) | ![3D view](public/demos/view-3d-tall.png) |
+| Node cards with every key and value. Follow the links, fold branches, drag things around. Lays out left to right or top to bottom. | An indented outline you can fold, like a file explorer. The one to use when a file is too big for a graph. | Every object as a point in space. Turn it to get a feel for how big and how deep a file is. |
 
-## 🚀 Getting Started
+Your selection and search carry across all three, so you can switch views without losing your place.
 
-This is a [Next.js](https://nextjs.org) project. To run it locally:
+## Features
 
-### Prerequisites
+- **Click a node, find its code.** Select anything and its lines are highlighted in the editor, which scrolls to them.
+- **Inspector.** See a node's path, type and contents, and copy its JSONPath, a JavaScript accessor or the value.
+- **Search.** Matches for a key or value light up in whichever view you're in, and everything else fades.
+- **Share links.** Copy a link that holds the file, the open view and the selection. The data is compressed into the link itself, so nothing is uploaded or stored.
+- **Export.** Save the graph or tree as PNG, JPG or true vector SVG, and the 3D view as PNG or JPG.
+- **Import.** Open or drop in `.json` and `.txt` files, or just paste.
+- **Editor.** Monaco (the editor from VS Code), with errors flagged as you type and autosave to your browser.
+- **Works on phones.** The code sits above the views, and the inspector becomes a bottom sheet.
 
-- Node.js (version 18 or higher)
-- npm or yarn
+## Private by design
 
-### Installation Steps
+There is no server side. Parsing, layout and drawing all happen in your browser, your work is saved in your browser's own storage, and share links carry their data after the `#`, which browsers never send to a server. There are no accounts, no tracking of your files, and no API keys.
 
-1.  **Clone the repository**
+## Run it locally
 
-    ```bash
-    git clone https://github.com/samizak/Visual-Flow.git
-    ```
-
-2.  **Navigate to the project directory**
-
-    ```bash
-    cd Visual-Flow
-    ```
-
-3.  **Install dependencies**
-
-    ```bash
-    npm install
-    ```
-
-4.  **Run the development server**
-
-    ```bash
-    npm run dev
-    ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
----
-
-## 🛠️ Technologies Used
-
-- **Frontend**:
-  - [Next.js 15.2](https://nextjs.org)
-  - [React 19](https://reactjs.org)
-  - [TailwindCSS 4](https://tailwindcss.com)
-- **Visualization**:
-  - [React Flow 12.4](https://reactflow.dev) (@xyflow/react)
-  - [Dagre 1.1.4](https://github.com/dagrejs/dagre) for graph layouts
-- **Code Editing**:
-  - [Monaco Editor 4.7](https://microsoft.github.io/monaco-editor/)
-- **3D Effects**:
-  - [Three.js 0.174](https://threejs.org)
-  - [React Three Fiber 9.1](https://docs.pmnd.rs/react-three-fiber)
-  - [Drei 10.0](https://github.com/pmndrs/drei)
-- **State Management**:
-  - [Zustand 5.0](https://github.com/pmndrs/zustand)
-- **UI Components**:
-  - [Radix UI](https://www.radix-ui.com/) (various components)
-  - [Lucide React 0.479](https://lucide.dev)
-  - [Sonner 2.0](https://sonner.emilkowal.ski/) for toast notifications
-  - [Vaul 1.1](https://vaul.emilkowal.ski/) for drawers
-- **Image Processing**:
-  - [html-to-image 1.11](https://github.com/bubkoo/html-to-image)
-  - [file-saver 2.0](https://github.com/eligrey/FileSaver.js)
-
----
-
-## 🧪 Testing
-
-The project uses Jest and React Testing Library for testing:
+You need Node.js 20 or newer.
 
 ```bash
-# Run tests
-npm test
-
-# Run tests in watch mode
-npm run test:watch
-
-# Generate test coverage report
-npm run test:coverage
+git clone https://github.com/samizak/Visual-Flow.git
+cd Visual-Flow
+npm install
+npm run dev
 ```
 
----
+Then open [http://localhost:3000](http://localhost:3000). No environment variables are needed.
 
-## 🔐 Environment Variables
+Sample files to try are in [`samples/`](samples), from a small order to a 50-order export.
 
-None. The app runs entirely in the browser: there are no accounts, no database and no API keys.
+## Tests
 
----
-
-## 📁 Project Structure
-
-```
-json-visualiser/
-├── app/                # Next.js app directory
-│   ├── editor/         # JSON editor and visualization
-│   └── landing-page/   # Marketing landing page
-├── components/         # Global UI components
-│   ├── ui/             # UI components
-│   └── Visualizers/    # Visualization components
-├── constants/          # Application constants
-├── hooks/              # Custom React hooks
-├── lib/                # Utility functions
-├── public/             # Static assets
-├── store/              # State management with Zustand
-├── styles/             # CSS styles
-│   ├── base/           # Base styles
-│   ├── components/     # Component styles
-│   └── utils/          # Utility styles
-└── utils/              # Helper utilities
+```bash
+npm test            # unit tests (Jest), a few seconds
+npm run test:e2e    # browser tests (Playwright), about half a minute
 ```
 
----
+The browser tests use your installed Google Chrome and start the dev server themselves if it isn't running.
 
-## 🤝 Contributing
+## Built with
 
-Contributions are welcome! If you'd like to contribute:
+- [Next.js 16](https://nextjs.org) and [React 19](https://react.dev), with [Tailwind CSS 4](https://tailwindcss.com)
+- [React Flow](https://reactflow.dev) and [dagre](https://github.com/dagrejs/dagre) for the graph and its layout
+- [three.js](https://threejs.org) for the 3D view
+- [Monaco Editor](https://microsoft.github.io/monaco-editor/) for the code panel
+- [Zustand](https://github.com/pmndrs/zustand) for state
+- [Jest](https://jestjs.io) and [Playwright](https://playwright.dev) for tests
 
-1.  Fork the repository
-2.  Create a feature branch (`git checkout -b feature/amazing-feature`)
-3.  Commit your changes (`git commit -m 'Add some amazing feature'`)
-4.  Push to the branch (`git push origin feature/amazing-feature`)
-5.  Open a Pull Request
+## Project layout
 
----
+```
+app/
+  page.tsx            landing page (sections in landing-page/components)
+  editor/             the editor
+    components/
+      Layout/         top bar, menus, status bar, settings
+      Panel/          code panel, views panel, inspector
+      Visualizers/    graph, tree and 3D views, and the graph model they share
+components/           logo, toasts and shared UI pieces
+store/                app state (Zustand)
+utils/                export, share links, storage
+e2e/                  browser tests
+samples/              example JSON files
+scripts/              records the landing page's demo clips
+```
 
-## 📝 License
+## Support
 
-This project is licensed under the MIT License - see the `LICENSE` file for details.
+Visual Flow is free and will stay that way. If it saves you time, you can [support the project](https://github.com/sponsors/samizak).
+
+## License
+
+[MIT](LICENSE)

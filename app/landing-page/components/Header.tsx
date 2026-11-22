@@ -29,7 +29,12 @@ export default function Header() {
       }}
     >
       <div className={`${WRAP} flex h-[60px] items-center gap-7 text-sm`}>
-        <Link href="/" className="mr-auto">
+        {/* Already on this page, so the link alone wouldn't move anything. */}
+        <Link
+          href="/"
+          className="mr-auto"
+          onClick={() => window.scrollTo({ top: 0 })}
+        >
           <Logo animated />
         </Link>
 
