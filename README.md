@@ -22,7 +22,6 @@ Visit the live application at [visualflowapp.vercel.app](https://visualflowapp.v
 - **Node Highlighting**: Easily identify relationships between data elements with interactive highlighting.
 - **Search Functionality**: Quickly find specific values or keys in complex structures.
 - **Export Options**: Save visualizations as SVG, PNG, or JPEG for documentation or presentations.
-- **AI-Powered OCR**: Extract JSON from images using Google Gemini's advanced image recognition.
 - **Local Storage**: Automatically save your work with configurable auto-save functionality.
 - **Sharing Capabilities**: Share your visualizations with team members.
 - **Dark Mode**: Optimized for comfortable viewing in any environment.
@@ -105,8 +104,6 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 - **Image Processing**:
   - [html-to-image 1.11](https://github.com/bubkoo/html-to-image)
   - [file-saver 2.0](https://github.com/eligrey/FileSaver.js)
-- **AI Integration**:
-  - [Google Generative AI 0.24](https://ai.google.dev/)
 
 ---
 
@@ -131,7 +128,6 @@ npm run test:coverage
 
 To run this project, you'll need to set up the following environment variables in a `.env.local` file at the root of your project:
 
-- `NEXT_GEMINI_API_KEY`: Google Gemini AI API key for Gemini integration
 - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`: Stripe publishable key for payments
 - `STRIPE_SECRET_KEY`: Stripe secret key for payments
 - `NEXT_PUBLIC_STRIPE_BUY_BUTTON_ID`: Stripe buy button ID for payments
@@ -163,7 +159,6 @@ json-visualiser/
 │   └── protected/      # Premium features
 ├── components/         # Global UI components
 │   ├── Auth/           # Authentication components
-│   ├── OCR/            # Optical Character Recognition
 │   ├── PremiumFeatures/# Premium subscription features
 │   ├── ui/             # UI components
 │   └── Visualizers/    # Visualization components

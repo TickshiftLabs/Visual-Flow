@@ -83,7 +83,6 @@ export default function PricingPage() {
       ],
       limitations: [
         "Limited to 100 nodes per visualization",
-        "No OCR image processing",
         "No cloud storage for visualizations",
         "Basic styling options only",
       ],
@@ -99,7 +98,6 @@ export default function PricingPage() {
       features: [
         "Advanced visualization options",
         "Unlimited file size",
-        "OCR for extracting JSON from images",
         "Export as PNG, JPG, and SVG",
         "Custom themes and branding",
         "Priority support",
@@ -363,16 +361,6 @@ export default function PricingPage() {
                 <p className="text-white/70">
                   Yes, we offer discounts for teams of 5 or more. Please contact
                   us for more information.
-                </p>
-              </div>
-              <div>
-                <h4 className="font-semibold mb-2">
-                  How does the OCR feature work?
-                </h4>
-                <p className="text-white/70">
-                  Our OCR technology allows you to extract JSON data from images
-                  and screenshots. Simply upload an image containing JSON, and
-                  our system will convert it to editable JSON format.
                 </p>
               </div>
             </div>

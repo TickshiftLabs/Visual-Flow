@@ -120,10 +120,6 @@ export default function UpgradeModal({
           <ul className="space-y-2">
             <li className="flex items-start gap-2">
               <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-              <span>Import JSON from images with OCR technology</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
               <span>Export visualizations as PNG, JPG, and SVG</span>
             </li>
             <li className="flex items-start gap-2">

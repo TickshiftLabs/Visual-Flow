@@ -4,6 +4,15 @@ import { validateJsonAgainstFreeLimits } from "../constants/limits";
 import { useSupabase } from "../components/Auth/SupabaseProvider";
 import { useJsonStore } from "../store/useJsonStore";
 
+/** What the file picker offers: JSON files, and text files that hold JSON. */
+export const IMPORT_ACCEPT = ".json,.txt,application/json,text/plain";
+
+/** JSON and plain-text files can be imported; the contents must be JSON. */
+export const isImportable = (file: { name: string; type: string }) =>
+  /\.(json|txt)$/i.test(file.name) ||
+  file.type === "application/json" ||
+  file.type === "text/plain";
+
 interface UseFileOperationsProps {
   setJsonData: (data: string) => void;
   onSuccessfulLoad?: (content: string) => void;
@@ -20,9 +29,8 @@ export function useFileOperations({
     (files: FileList) => {
       const file = files[0];
 
-      // Check if file is a JSON file
-      if (!file.name.toLowerCase().endsWith(".json")) {
-        errorToast("Only JSON files are currently supported");
+      if (!isImportable(file)) {
+        errorToast("Only JSON and text files can be imported");
         return;
       }
 
@@ -56,7 +64,7 @@ export function useFileOperations({
           }
           successToast(`File "${file.name}" loaded successfully`);
         } catch (error) {
-          errorToast("Invalid JSON file. Please check for errors.");
+          errorToast(`"${file.name}" doesn't contain valid JSON`);
         }
       };
       reader.readAsText(file);
@@ -69,7 +77,7 @@ export function useFileOperations({
     if (!fileInputRef.current) {
       const input = document.createElement("input");
       input.type = "file";
-      input.accept = ".json";
+      input.accept = IMPORT_ACCEPT;
       fileInputRef.current = input;
     }
 

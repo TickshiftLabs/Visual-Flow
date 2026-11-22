@@ -29,10 +29,9 @@ const features = [
     pro: true,
   },
   {
-    tag: "ocr",
-    title: "JSON from a screenshot",
-    body: "Drop in an image of JSON and get the text back, repaired and formatted.",
-    pro: true,
+    tag: "inspect",
+    title: "Copy any path or value",
+    body: "Select a node to see where it lives and what's in it, then copy its path, a code accessor or the value in one click.",
   },
 ];
 

@@ -27,8 +27,6 @@ interface JsonState {
   isSettingsOpen: boolean;
   
   // Processing states
-  isOcrProcessing: boolean;
-  ocrProgress: number | undefined;
   isLoading: boolean;
   
   // Actions
@@ -45,8 +43,6 @@ interface JsonState {
   setLayout3d: (layout: Layout3d) => void;
   setNodeShadows: (on: boolean) => void;
   setIsSettingsOpen: (isOpen: boolean) => void;
-  setOcrProcessing: (isProcessing: boolean) => void;
-  setOcrProgress: (progress: number | undefined) => void;
   setIsLoading: (isLoading: boolean) => void;
   applyChangesToVisualization: () => void;
   isPremiumUser: boolean;
@@ -67,8 +63,6 @@ export const useJsonStore = create<JsonState>((set, get) => ({
   layout3d: 'constellation',
   nodeShadows: true,
   isSettingsOpen: false,
-  isOcrProcessing: false,
-  ocrProgress: undefined,
   isLoading: false,
   isPremiumUser: false,
   
@@ -104,8 +98,6 @@ export const useJsonStore = create<JsonState>((set, get) => ({
     storageService.saveSettings({ nodeShadows });
   },
   setIsSettingsOpen: (isOpen) => set({ isSettingsOpen: isOpen }),
-  setOcrProcessing: (isProcessing) => set({ isOcrProcessing: isProcessing }),
-  setOcrProgress: (progress) => set({ ocrProgress: progress }),
   setIsLoading: (isLoading) => set({ isLoading: isLoading }),
   
   // Complex actions

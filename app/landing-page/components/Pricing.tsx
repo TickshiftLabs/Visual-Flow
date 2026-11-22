@@ -27,7 +27,6 @@ const plans = [
       "Everything in Free",
       "No size limits",
       "Export as PNG, JPG and SVG",
-      "JSON from images",
     ],
     cta: { label: "Upgrade to Pro", href: "/pricing" },
     highlight: true,

@@ -9,7 +9,6 @@ import DragOverlay from "@/components/DragOverlay";
 import { useFileOperations } from "@/hooks/useFileOperations";
 import { useDragAndDrop } from "@/hooks/useDragAndDrop";
 import { useMouseInteractions } from "@/hooks/useMouseInteractions";
-import OcrProcessingStatus from "@/components/OCR/OcrProcessingStatus";
 import { storageService } from "@/utils/storageService";
 import SettingsDialog from "./components/Layout/SettingsDialog";
 import { useJsonStore } from "@/store/useJsonStore";
@@ -30,8 +29,6 @@ export default function Home() {
     setShowGrid,
     isSettingsOpen,
     setIsSettingsOpen,
-    isOcrProcessing,
-    ocrProgress,
   } = useJsonStore();
 
   // Add the useSupabase hook to get isPro
@@ -175,10 +172,6 @@ export default function Home() {
 
       <SettingsDialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
 
-      <OcrProcessingStatus
-        isProcessing={isOcrProcessing}
-        progress={ocrProgress}
-      />
       {/* Side by side on wide screens; code above the views on phones. */}
       <div className="flex min-h-0 flex-1 overflow-hidden max-md:flex-col">
         <LeftPanel />

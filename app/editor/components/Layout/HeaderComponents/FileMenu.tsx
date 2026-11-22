@@ -3,8 +3,6 @@ import {
   FileIcon,
   Save,
   Upload,
-  FileJson,
-  Image as ImageIcon,
   Download,
   FileImage,
   FileText,
@@ -23,7 +21,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useJsonStore } from "@/store/useJsonStore";
 import { useFileOperations } from "@/hooks/useFileOperations";
-import { handleImageImport } from "@/utils/importHandlers";
 import { exportAsPng, exportAsJpeg, exportAsSvg } from "@/utils/exportHandlers";
 import { errorToast, infoToast } from "@/lib/toast";
 import { useSupabase } from "@/components/Auth/SupabaseProvider";
@@ -38,8 +35,6 @@ export default function FileMenu({ onUpgradeClick }: FileMenuProps) {
     jsonData,
     setJsonData,
     setIsLoading,
-    setOcrProcessing,
-    setOcrProgress,
     setVisualizationJson,
   } = useJsonStore();
 
@@ -84,20 +79,6 @@ export default function FileMenu({ onUpgradeClick }: FileMenuProps) {
       setVisualizationJson(content);
     },
   });
-
-  // Handle Image import
-  const handleImportImageClick = () => {
-    if (isPremiumUser) {
-      handleImageImport(
-        setJsonData,
-        setOcrProcessing,
-        setOcrProgress,
-        isPremiumUser
-      );
-    } else if (onUpgradeClick) {
-      onUpgradeClick("Image Import (OCR)");
-    }
-  };
 
   // Export handlers - pass jsonData to ensure they have access to current data
   const handleExportPngClick = () => {
@@ -156,34 +137,16 @@ export default function FileMenu({ onUpgradeClick }: FileMenuProps) {
           <span>Save</span>
         </DropdownMenuItem>
 
-        {/* Import submenu with JSON and Image options */}
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger className="cursor-pointer hover:bg-vf-line hover:text-vf-text transition-colors focus:bg-vf-line focus:text-vf-text focus:ring-0 focus:outline-none">
-            <Upload className="mr-2 h-4 w-4" />
-            <span>Import</span>
-          </DropdownMenuSubTrigger>
-          <DropdownMenuSubContent className="border border-vf-line bg-vf-panel font-vf-sans text-vf-soft shadow-xl">
-            <DropdownMenuItem
-              onClick={importFile}
-              className="cursor-pointer hover:bg-vf-line hover:text-vf-text transition-colors focus:bg-vf-line focus:text-vf-text focus:ring-0 focus:outline-none"
-            >
-              <FileJson className="mr-2 h-4 w-4" />
-              <span>JSON File</span>
-            </DropdownMenuItem>
-
-            {/* Image import - premium feature */}
-            <DropdownMenuItem
-              onClick={handleImportImageClick}
-              className="cursor-pointer hover:bg-vf-line hover:text-vf-text transition-colors focus:bg-vf-line focus:text-vf-text focus:ring-0 focus:outline-none"
-            >
-              <ImageIcon className="mr-2 h-4 w-4" />
-              <span>Image (OCR)</span>
-              {!isPremiumUser && (
-                <span className="ml-auto font-vf-mono text-[10.5px] text-vf-acc">PRO</span>
-              )}
-            </DropdownMenuItem>
-          </DropdownMenuSubContent>
-        </DropdownMenuSub>
+        <DropdownMenuItem
+          onClick={importFile}
+          className="cursor-pointer hover:bg-vf-line hover:text-vf-text transition-colors focus:bg-vf-line focus:text-vf-text focus:ring-0 focus:outline-none"
+        >
+          <Upload className="h-4 w-4" />
+          <span>Import…</span>
+          <span className="ml-auto font-vf-mono text-[10.5px] text-vf-dim">
+            .json .txt
+          </span>
+        </DropdownMenuItem>
 
         {/* Export submenu with image format options */}
         <DropdownMenuSub>

@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from "react";
 import { infoToast, errorToast } from "../lib/toast";
 import { validateJsonAgainstFreeLimits } from "../constants/limits";
+import { isImportable } from "./useFileOperations";
 
 interface UseDragAndDropProps {
   onFilesDrop: (files: FileList) => void;
@@ -31,7 +32,13 @@ export function useDragAndDrop({
 
       const items = e.dataTransfer.items;
       if (items && items.length > 0) {
-        if (items[0].kind === "file" && items[0].type === "application/json") {
+        // While dragging, browsers only reveal the type, not the name.
+        // Some systems report no type for .json, so that's allowed through
+        // and checked properly on drop.
+        if (
+          items[0].kind === "file" &&
+          ["application/json", "text/plain", ""].includes(items[0].type)
+        ) {
           setDragError(null);
         } else {
           const fileType = items[0].type || "unknown";
@@ -90,8 +97,7 @@ export function useDragAndDrop({
 
       if (files && files.length > 0) {
         if (
-          files[0].type === "application/json" ||
-          files[0].name.endsWith(".json")
+          isImportable(files[0])
         ) {
           if (isPremiumUser === true) {
             onFilesDrop(files);
@@ -127,8 +133,8 @@ export function useDragAndDrop({
           // If we get here, the file is valid for the user's plan
           onFilesDrop(files);
         } else {
-          setDragError("Only JSON files are supported");
-          errorToast("Only JSON files are supported");
+          setDragError("Only JSON and text files can be imported");
+          errorToast("Only JSON and text files can be imported");
           // Auto-hide the error after 3 seconds
           setTimeout(() => {
             setDragError(null);

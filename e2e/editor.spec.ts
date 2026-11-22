@@ -52,16 +52,41 @@ test("Edit menu formats, minimises and copies", async ({ page }) => {
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('{"b":1,"a":[1,2]}');
 });
 
-test("dropping a file loads it; other file types are refused", async ({ page }) => {
+test("JSON and text files can be dropped in; other types and bad contents are refused", async ({ page }) => {
   await openEditor(page, '{"old": true}');
   await dropFile(page, "dropped.json", "application/json", '{"dropped": {"yes": 1}}');
   await expect(page.locator("header")).toContainText("dropped.json");
   await expect(nodes(page)).toHaveCount(2);
-  expect(await getJson(page)).toContain('"dropped"');
 
-  await dropFile(page, "notes.txt", "text/plain", "not json");
-  await expect(toast(page).last()).toContainText("Only JSON files");
-  expect(await getJson(page)).toContain('"dropped"');
+  // A text file holding JSON works the same way.
+  await dropFile(page, "notes.txt", "text/plain", '{"fromText": {"a": {"b": 1}}}');
+  await expect(page.locator("header")).toContainText("notes.txt");
+  await expect(nodes(page)).toHaveCount(3);
+
+  // Not JSON inside: refused, and what was there is kept.
+  await dropFile(page, "prose.txt", "text/plain", "just some words");
+  await expect(toast(page).last()).toContainText("valid JSON");
+  expect(await getJson(page)).toContain('"fromText"');
+
+  // Not a text or JSON file at all.
+  await dropFile(page, "photo.png", "image/png", "x");
+  await expect(toast(page).last()).toContainText("Only JSON and text files");
+  expect(await getJson(page)).toContain('"fromText"');
+});
+
+test("File > Import opens a picker for JSON and text files", async ({ page }) => {
+  await openEditor(page, '{"old": true}');
+  const [chooser] = await Promise.all([
+    page.waitForEvent("filechooser"),
+    menu(page, "File", "Import…"),
+  ]);
+  await chooser.setFiles({
+    name: "picked.txt",
+    mimeType: "text/plain",
+    buffer: Buffer.from('{"picked": {"ok": true}}'),
+  });
+  await expect(page.locator("header")).toContainText("picked.txt");
+  await expect(nodes(page)).toHaveCount(2);
 });
 
 test("work is restored after a reload", async ({ page }) => {
