@@ -280,8 +280,36 @@ function Chart({
         break;
       }
     }
-    if (allVisible) fitView(FIT_OPTIONS);
-  }, [width, store, fitView]);
+    if (!allVisible) return;
+    // Re-frame with the same sums as the first framing, so opening and
+    // closing the inspector returns to exactly the view you started with.
+    let left = Infinity;
+    let top = Infinity;
+    let right = -Infinity;
+    let bottom = -Infinity;
+    for (const node of nodeLookup.values()) {
+      if (node.hidden) continue;
+      left = Math.min(left, node.position.x);
+      top = Math.min(top, node.position.y);
+      right = Math.max(right, node.position.x + (node.measured.width ?? NODE_WIDTH));
+      bottom = Math.max(bottom, node.position.y + (node.measured.height ?? 0));
+    }
+    if (!Number.isFinite(left)) return;
+    const room = 1 - FIT_OPTIONS.padding * 2;
+    const fitted = Math.min(
+      (width * room) / (right - left || 1),
+      (height * room) / (bottom - top || 1),
+      FIT_OPTIONS.maxZoom
+    );
+    setViewport(
+      {
+        x: (width - (right - left) * fitted) / 2 - left * fitted,
+        y: (height - (bottom - top) * fitted) / 2 - top * fitted,
+        zoom: fitted,
+      },
+      { duration: FIT_OPTIONS.duration }
+    );
+  }, [width, store, setViewport]);
 
   // Keep the selected node on screen (it may have been picked in another
   // view, or be behind where the inspector just opened).

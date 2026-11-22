@@ -1,5 +1,5 @@
 import type React from "react";
-import Image from "next/image";
+import HeroDemo from "./HeroDemo";
 import { Btn, Mono, WRAP } from "./parts";
 
 export default function Hero() {
@@ -54,15 +54,7 @@ export default function Hero() {
         className={`vf-enter ${WRAP}`}
       >
         <div className="overflow-hidden rounded-xl border border-vf-line bg-vf-bg2 shadow-[0_40px_120px_-40px_rgba(200,241,105,0.16)]">
-          <Image
-            src="/demos/editor.png"
-            alt="The Visual Flow editor: a mission JSON file on the left and the same data as eight connected nodes on the right, with one node selected and its lines highlighted in the code"
-            width={3200}
-            height={2000}
-            priority
-            sizes="(max-width: 1120px) 100vw, 1072px"
-            className="block h-auto w-full"
-          />
+          <HeroDemo />
         </div>
       </div>
     </>

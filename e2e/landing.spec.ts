@@ -6,7 +6,14 @@ test("landing page shows the product and leads to the editor", async ({ page }) 
   for (const id of ["features", "views", "how", "pricing"]) {
     await expect(page.locator(`#${id}`)).toBeAttached();
   }
-  await expect(page.getByAltText(/Visual Flow editor/)).toBeVisible();
+  // The hero's demo clip: the whole-editor one on a wide screen, playing,
+  // with a still to show before it loads.
+  const demo = page.locator("video[data-clip=desktop]");
+  await expect(demo).toBeVisible();
+  await expect(page.locator("video[data-clip=phone]")).toBeHidden();
+  await expect(demo).toHaveAttribute("poster", /editor-demo-poster/);
+  await expect(demo).toHaveAttribute("src", /editor-demo(-small)?\.mp4/);
+  await expect.poll(() => demo.evaluate((v: HTMLVideoElement) => v.currentTime)).toBeGreaterThan(0);
 
   await page.getByRole("link", { name: "Open the editor" }).first().click();
   await expect(page).toHaveURL(/\/editor$/);
@@ -34,6 +41,19 @@ test("views section on a wide screen: three live views sharing a selection", asy
 
 test.describe("on a phone", () => {
   test.use({ viewport: { width: 390, height: 800 } });
+
+  test("hero plays the tall close-up clip, and never fetches the desktop one", async ({ page }) => {
+    const fetched: string[] = [];
+    page.on("request", (r) => {
+      if (r.url().endsWith(".mp4")) fetched.push(r.url().split("/").pop()!);
+    });
+    await page.goto("/");
+    const demo = page.locator("video[data-clip=phone]");
+    await expect(demo).toBeVisible();
+    await expect(page.locator("video[data-clip=desktop]")).toBeHidden();
+    await expect.poll(() => demo.evaluate((v: HTMLVideoElement) => v.currentTime)).toBeGreaterThan(0);
+    expect(fetched).toEqual(["editor-demo-phone.mp4"]);
+  });
 
   test("views section shows stills that open larger, with no live views", async ({ page }) => {
     await page.goto("/");
