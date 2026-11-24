@@ -1,5 +1,5 @@
 import { Heart } from "lucide-react";
-import { SUPPORT_URL } from "@/constants/site";
+import { LAB_NAME, SUPPORT_URL } from "@/constants/site";
 import { Btn, Mono, SectionHead, WRAP } from "./parts";
 import Reveal from "./Reveal";
 
@@ -46,11 +46,11 @@ export default function Free() {
           </span>
           <div className="md:mr-auto">
             <h3 className="text-[19px] font-semibold tracking-[-0.01em]">
-              Made by one person, free for everyone.
+              Built by {LAB_NAME}, free for everyone.
             </h3>
             <p className="mt-1.5 max-w-[52ch] text-[15px] text-vf-dim">
-              If Visual Flow saves you time, a small contribution helps keep it
-              maintained and free of ads.
+              We are a small independent lab. If Visual Flow saves you time, a
+              small contribution helps keep it maintained and free of ads.
             </p>
           </div>
           <Btn

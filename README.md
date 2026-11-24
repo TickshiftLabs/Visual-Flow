@@ -2,7 +2,7 @@
 
 **See the shape of your JSON.** Paste any JSON and explore it as a graph, a foldable tree or a 3D model. It's free, needs no account, and nothing leaves your browser.
 
-**[Open the editor →](https://visualflowapp.vercel.app/editor)** &nbsp;·&nbsp; [Try it with a sample file](https://visualflowapp.vercel.app/editor#s=dVFBTsMwEPxKtOdUCikCkRsnQL0BJ3APS7JqDI43stdUEerfke0QUiROlnbGM7OzX_AJzUUJ79DAl7JFoWDQ3mu2CppCwW1w7HBzraDMqBeU4DPo2566YKhbUIPBtn1Ek1j6oIUyfcfBcZi5ETpq2_Exg3VVX2-q7ebi8rm6aeqqqaqXNZVQenJ3HNniAkXgNLt-Uq9bQ2e2FofZ9h5NO7EtHh5Wel7wQGmN7TIbcTKM3e4Qx_W2qtYeraOU9DWzZ59zp9sOi0eaom75izvO0RS0PAxoO3IKMpzF_1HbkX3XxRMK_yM3asOySMVnP4edNzkrRKZx_udRyJh0lmV3dm9aVvw4-9A2SSjwwW78ZNveseV4_VUeNKIldLQbIveqTq39rqZAWy8uDGQl9T0XmJABD7GMlZofqRXHA8kfwGGHS2_79WXwjV2KboMxyp6ghCM0cHA49lCCh-b1pxAo86KwP30D) &nbsp;·&nbsp; [Sponsor ♥](https://github.com/sponsors/samizak)
+**[Open the editor →](https://visualflow.tickshift.dev/editor)** &nbsp;·&nbsp; [Try it with a sample file](https://visualflow.tickshift.dev/editor#s=dVFBTsMwEPxKtOdUCikCkRsnQL0BJ3APS7JqDI43stdUEerfke0QUiROlnbGM7OzX_AJzUUJ79DAl7JFoWDQ3mu2CppCwW1w7HBzraDMqBeU4DPo2566YKhbUIPBtn1Ek1j6oIUyfcfBcZi5ETpq2_Exg3VVX2-q7ebi8rm6aeqqqaqXNZVQenJ3HNniAkXgNLt-Uq9bQ2e2FofZ9h5NO7EtHh5Wel7wQGmN7TIbcTKM3e4Qx_W2qtYeraOU9DWzZ59zp9sOi0eaom75izvO0RS0PAxoO3IKMpzF_1HbkX3XxRMK_yM3asOySMVnP4edNzkrRKZx_udRyJh0lmV3dm9aVvw4-9A2SSjwwW78ZNveseV4_VUeNKIldLQbIveqTq39rqZAWy8uDGQl9T0XmJABD7GMlZofqRXHA8kfwGGHS2_79WXwjV2KboMxyp6ghCM0cHA49lCCh-b1pxAo86KwP30D) &nbsp;·&nbsp; [Sponsor ♥](https://github.com/sponsors/samizak)
 
 ![Visual Flow turning a JSON file into a graph, a tree and a 3D model](docs/demo.gif)
 
@@ -24,7 +24,7 @@ Your selection and search carry across all three, so you can switch views withou
 - **Click a node, find its code.** Select anything and its lines are highlighted in the editor, which scrolls to them.
 - **Inspector.** See a node's path, type and contents, and copy its JSONPath, a JavaScript accessor or the value.
 - **Search.** Matches for a key or value light up in whichever view you're in, and everything else fades.
-- **Share links.** Copy a link that holds the file, the open view and the selection. The data is compressed into the link itself, so nothing is uploaded or stored. [Here's one](https://visualflowapp.vercel.app/editor#s=dVFBTsMwEPxKtOdUCikCkRsnQL0BJ3APS7JqDI43stdUEerfke0QUiROlnbGM7OzX_AJzUUJ79DAl7JFoWDQ3mu2CppCwW1w7HBzraDMqBeU4DPo2566YKhbUIPBtn1Ek1j6oIUyfcfBcZi5ETpq2_Exg3VVX2-q7ebi8rm6aeqqqaqXNZVQenJ3HNniAkXgNLt-Uq9bQ2e2FofZ9h5NO7EtHh5Wel7wQGmN7TIbcTKM3e4Qx_W2qtYeraOU9DWzZ59zp9sOi0eaom75izvO0RS0PAxoO3IKMpzF_1HbkX3XxRMK_yM3asOySMVnP4edNzkrRKZx_udRyJh0lmV3dm9aVvw4-9A2SSjwwW78ZNveseV4_VUeNKIldLQbIveqTq39rqZAWy8uDGQl9T0XmJABD7GMlZofqRXHA8kfwGGHS2_79WXwjV2KboMxyp6ghCM0cHA49lCCh-b1pxAo86KwP30D): it opens a sample file with one node already selected.
+- **Share links.** Copy a link that holds the file, the open view and the selection. The data is compressed into the link itself, so nothing is uploaded or stored. [Here's one](https://visualflow.tickshift.dev/editor#s=dVFBTsMwEPxKtOdUCikCkRsnQL0BJ3APS7JqDI43stdUEerfke0QUiROlnbGM7OzX_AJzUUJ79DAl7JFoWDQ3mu2CppCwW1w7HBzraDMqBeU4DPo2566YKhbUIPBtn1Ek1j6oIUyfcfBcZi5ETpq2_Exg3VVX2-q7ebi8rm6aeqqqaqXNZVQenJ3HNniAkXgNLt-Uq9bQ2e2FofZ9h5NO7EtHh5Wel7wQGmN7TIbcTKM3e4Qx_W2qtYeraOU9DWzZ59zp9sOi0eaom75izvO0RS0PAxoO3IKMpzF_1HbkX3XxRMK_yM3asOySMVnP4edNzkrRKZx_udRyJh0lmV3dm9aVvw4-9A2SSjwwW78ZNveseV4_VUeNKIldLQbIveqTq39rqZAWy8uDGQl9T0XmJABD7GMlZofqRXHA8kfwGGHS2_79WXwjV2KboMxyp6ghCM0cHA49lCCh-b1pxAo86KwP30D): it opens a sample file with one node already selected.
 - **Export.** Save the graph or tree as PNG, JPG or true vector SVG, and the 3D view as PNG or JPG.
 - **Import.** Open or drop in `.json` and `.txt` files, or just paste.
 - **Editor.** Monaco (the editor from VS Code), with errors flagged as you type and autosave to your browser.
@@ -39,7 +39,7 @@ There is no server side. Parsing, layout and drawing all happen in your browser,
 You need Node.js 20 or newer.
 
 ```bash
-git clone https://github.com/samizak/Visual-Flow.git
+git clone https://github.com/TickshiftLabs/Visual-Flow.git
 cd Visual-Flow
 npm install
 npm run dev

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Logo from "@/components/Logo";
-import { SUPPORT_URL } from "@/constants/site";
+import { LAB_NAME, LAB_URL, SUPPORT_URL } from "@/constants/site";
 import { Btn, GITHUB_URL, WRAP } from "./parts";
 
 const links = [
@@ -30,13 +30,18 @@ export default function Header() {
     >
       <div className={`${WRAP} flex h-[60px] items-center gap-7 text-sm`}>
         {/* Already on this page, so the link alone wouldn't move anything. */}
-        <Link
-          href="/"
-          className="mr-auto"
-          onClick={() => window.scrollTo({ top: 0 })}
-        >
-          <Logo animated />
-        </Link>
+        <div className="mr-auto flex items-center gap-3">
+          <Link href="/" onClick={() => window.scrollTo({ top: 0 })}>
+            <Logo animated />
+          </Link>
+          {/* Who makes it. Hidden on the narrowest screens, where the footer says it instead. */}
+          <a
+            href={LAB_URL}
+            className="hidden whitespace-nowrap text-[13px] text-vf-dim transition-colors hover:text-vf-text sm:block"
+          >
+            by {LAB_NAME}
+          </a>
+        </div>
 
         {links.map((l) => (
           <a key={l.href} href={l.href} className={linkClass}>
