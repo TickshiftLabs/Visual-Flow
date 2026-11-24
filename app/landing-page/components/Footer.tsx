@@ -26,6 +26,11 @@ export default function Footer() {
             </a>{" "}
             · MIT licensed
           </Mono>
+          <a href={`${LAB_URL}/#work`}>
+            <Mono className="transition-colors hover:text-vf-text">
+              More from the labs
+            </Mono>
+          </a>
           <a href={GITHUB_URL} target="_blank" rel="noreferrer">
             <Mono className="transition-colors hover:text-vf-text">GitHub</Mono>
           </a>
